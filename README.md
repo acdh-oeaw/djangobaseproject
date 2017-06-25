@@ -15,4 +15,4 @@ As the name suggests, this is a basic django project. The idea of this base proj
 
 ## next steps
 
-Build your custom awesome Web App. 
+Build your custom awesome Web App.
