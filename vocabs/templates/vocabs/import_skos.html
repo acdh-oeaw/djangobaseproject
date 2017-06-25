@@ -1,0 +1,23 @@
+{% extends "webpage/base.html" %}
+{% block Titel %} Import SKOS {% endblock %}
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="container">
+<div class="panel panel-default procustom-panel-create">
+    <div class="panel-heading procustom-panel-heading">
+            <h1 style="text-align: center;">Import SKOS</h1>
+        </div>
+        <div class="panel-body">
+            <h2 style="text-align: center;">{{ worked }}</h2>
+            <br>
+            {% crispy form %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+<!-- <div class="panel panel-default">
+    <div class="panel-heading" style="text-align: center;">{{ worked }}</div>
+    <div class="panel-body">{% crispy form %}</div>
+</div> -->

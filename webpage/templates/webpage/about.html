@@ -1,0 +1,25 @@
+{% extends "webpage/base.html" %}
+{% load staticfiles %}
+{% load webpage_extras %}
+{% block title %} About {% endblock %}
+{% block content %}
+<div class="container">
+    <h1>{% projects_metadata 'title' %}</h1>
+    <p>
+        The aim of Cremation Bronze Age Burials (CBAB) is the coordinated assessment of the
+        cremation burials in the Late Bronze Age (14th – 9th century BC) based on a
+        shared database.
+    </p>
+    <p>
+        The dynamic spreading of the cremation burials and formation of the “Urnfield Culture”
+        are one of the decisive cultural appearances in the European prehistory.
+        Despite the wide distribution and various common traits, the research of urn cemeteries
+        is still characterised by regional approach, mostly within the national borders.
+        The intention of this project is to integrate and make accessible existing analogue
+        data and to provide a platform for the processing of new data. CBAB database offers a
+        unique opportunity to collect, standardize, compare and analyse data sets from different
+        regions and thus to create a solid starting point for regional and supra-regional
+        studies on Bronze Age cremation phenomena.
+    </p>
+</div>
+{% endblock %}

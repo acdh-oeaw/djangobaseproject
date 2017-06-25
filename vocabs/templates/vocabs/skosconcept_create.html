@@ -1,0 +1,21 @@
+{% extends "webpage/base.html" %}
+{% block Titel %} Create/Modify Concept {% endblock %}
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="container">
+    <div class="panel panel-default procustom-panel-create">
+        <div class="panel-heading procustom-panel-heading">
+            <h1>Create/Edit skos:Concept</h1>
+        </div>
+        <div class="panel-body">
+            <!-- <div class="panel panel-default">
+                <div class="panel-heading" style="text-align: center;">{{ object }}</div>
+                <div class="panel-body">{% crispy form %}</div> -->
+                {% crispy form %}
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
