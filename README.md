@@ -21,3 +21,13 @@ This projects uses modularized settings (to keep sensitiv information out of ver
 ## next steps
 
 Build your custom awesome Web App.
+
+## Tests
+
+To get needed software you can run
+
+    pip install -r requirements_test.txt
+
+To run the tests execute
+
+    python manage.py test --settings=djangobaseproject.settings.test
