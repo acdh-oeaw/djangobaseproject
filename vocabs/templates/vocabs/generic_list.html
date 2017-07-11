@@ -1,22 +1,14 @@
 {% extends "webpage/base.html" %}
 {% load staticfiles %}
-{% block Titel %} See all {{ object.classname }} {% endblock %}
-{% block scriptHeader %}
-
-{% endblock %}
+{% block Titel %}See all {{ object.classname }}{% endblock %}
+{% block scriptHeader %}{% endblock %}
 {% block content %}
 <div class="container">
 <div class="panel panel-default procustom-panel-list">
     <div class="panel-heading procustom-panel-heading">
-
-      <h1>
-      {% block list_title %}
-      {% endblock %}
-      </h1>
-
-      {% block create_button %}
-      {% endblock %}
-    <br>
+        <h1>{% block list_title %}{% endblock %}</h1>
+        {% block create_button %}{% endblock %}
+        <br />
     </div>
     <div class="panel-body procustom-panel-body">
         <div class="row">
