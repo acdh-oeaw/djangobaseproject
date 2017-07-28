@@ -1,13 +1,13 @@
 {% extends "webpage/base.html" %}
 {% load staticfiles %}
-{% block Titel %}Edit Places{% endblock %}
+{% block Title %}Edit Places{% endblock %}
 
 {% block scriptHeader %}
 <!-- In case you are using any autocomplete-functions, don´t forget to 
     include 'autocomplete_light/static.html
 -->
 <!--leafletjs -->
-    <link rel="stylesheet" href="{% static 'webpage/libraries/leaflet/leaflet.css' %}"/></link>
+    <link rel="stylesheet" href="{% static 'webpage/libraries/leaflet/leaflet.css' %}" />
     <script src="{% static 'webpage/libraries/leaflet/leaflet.js' %}"></script>
         <style>
             #map { height: 500px; }
