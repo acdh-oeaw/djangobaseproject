@@ -1,20 +1,22 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
+from django.template import RequestContext, loader
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login, logout
 from .forms import form_user_login
 
 
-class AboutView(TemplateView):
-    template_name = "webpage/about.html"
+class GenericWebpageView(TemplateView):
+    template_name = 'webpage/index.html'
 
-
-class StartView(TemplateView):
-    template_name = "webpage/index.html"
-
-
-class ImprintView(TemplateView):
-    template_name = "webpage/imprint.html"
+    def get_template_names(self):
+        template_name = "webpage/{}.html".format(self.kwargs.get("template", 'index'))
+        try:
+            loader.select_template([template_name])
+            template_name = "webpage/{}.html".format(self.kwargs.get("template", 'index'))
+        except:
+            template_name = "webpage/index.html"
+        return [template_name]
 
 
 #################################################################
