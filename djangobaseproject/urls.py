@@ -18,10 +18,10 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('webpage.urls', namespace='webpage')),
     url(r'^vocabs/', include('vocabs.urls', namespace='vocabs')),
     url(r'^vocabs-ac/', include('vocabs.dal_urls', namespace='vocabs-ac')),
     url(r'^datamodel/', include('django_spaghetti.urls', namespace='datamodel')),
     url(r'places/', include('places.urls', namespace='places')),
     url(r'^bib/', include('bib.urls', namespace='bib')),
+    url(r'^', include('webpage.urls', namespace='webpage')),
 ]
