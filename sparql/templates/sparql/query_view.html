@@ -16,19 +16,18 @@
                 <code>SELECT ?s ?o ?p WHERE {?s ?p ?o} </code>
             </div>
             <div class="panel-body">
-                {% for x in examples %}
-                <h3>{{ x.title }}</h3>
-                <code>
-                    {{ x.query }}
-                </code>
-                {% endfor %}
-                <br/>
                 {% crispy form %}
             </div>
             <div>
                 <h2>Result</h2>
                 <hr/>
                 <div id="yasr"></div>
+                <br/>
+                <hr/>
+                
+                <div class="alert alert-success">
+                    <strong>Thanks</strong> <a href="http://about.yasgui.org/">http://about.yasgui.org/</a>
+                </div>
                 <table class="table table-bordered table-hover table-condensed">
                     <tr>
                         {{ results.bindings|first}}
