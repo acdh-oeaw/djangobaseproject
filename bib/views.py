@@ -16,8 +16,14 @@ def sync_zotero(request):
 def sync_zotero_action(request):
     """ fetches the last n items form zoter and syncs it with the bib entries in defc-db"""
     root = "https://api.zotero.org/users/"
-    params = "{}/collections/{}/items/top?v=3&key={}".format(
-        settings.Z_USER_ID, settings.Z_COLLECTION, settings.Z_API_KEY)
+    try:
+        params = "{}/collections/{}/items/top?v=3&key={}".format(
+            settings.Z_USER_ID, settings.Z_COLLECTION, settings.Z_API_KEY
+        )
+    except AttributeError as err:
+        context = {}
+        context['error'] = "{}".format(err)
+        return render(request, 'bib/synczotero_action.html', context)
     url = root + params + "&sort=dateModified&limit=25"
     books_before = len(Book.objects.all())
     try:
