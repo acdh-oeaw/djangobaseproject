@@ -1,0 +1,42 @@
+{% extends "webpage/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load webpage_extras %}
+{% block title %} SPARQL {% endblock %}
+{% block content %}
+<div class="container">
+    <div class="panel panel-default procustom-panel-create">
+        <div class="panel-heading procustom-panel-heading">
+                <h1 style="text-align: center;">Example-Queries</h1>
+            </div>
+            <div class="panel-body">
+                {% for x in examples %}
+                <h3>{{ x.title }}</h3>
+                <code>
+                    {{ x.query }}
+                </code>
+                {% endfor %}
+                <br/>
+                {% crispy form %}
+            </div>
+            <div>
+                <h2>Result</h2>
+                <hr/>
+                <table class="table table-bordered table-hover table-condensed">
+                    <tr>
+                        {{ results.bindings|first}}
+                    </tr>
+                    {% for x in results.bindings %}
+                        <tr>
+                            {% for key, value in x.items %}
+                            <td>
+                                {{ value.value }}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+</div>
+{% endblock %}
