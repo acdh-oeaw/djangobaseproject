@@ -83,8 +83,22 @@
         });
 </script>
 {% else %}
+
   {% if user.is_authenticated %}
-    <h3>Places</h3><a href="{% url 'places:place_create' %}">crate a new Location/Place</a>
+  <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1>Places</h1>
+            <div>
+                <a class="btn btn-primary" href="{% url 'places:place_create' %}" role="button">
+                    crate a new location/place
+                </a>
+            </div>
+            <br />
+        </div>
+        <div class="panel-body">
+        </div>
+    </div>
+
   {% endif %}
 {% endif %}
 {% endblock %}

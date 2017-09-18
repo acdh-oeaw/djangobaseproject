@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'django_filters',
     'django_tables2',
     'rest_framework',
-    'django_extensions',
     'webpage',
     'vocabs',
     'places',

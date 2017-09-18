@@ -9,42 +9,47 @@
 <script src='//cdn.jsdelivr.net/yasr/2.4/yasr.bundled.min.js'></script>
 <script src='//cdn.jsdelivr.net/yasqe/2.11.10/yasqe.bundled.min.js'></script>
 <div class="container">
-    <div class="panel panel-default procustom-panel-create">
-        <div class="panel-heading procustom-panel-heading">
-                <h1 style="text-align: center;">Example-Queries</h1>
-                <h3>fetch all triples</h3>
-                <code>SELECT ?s ?p ?o WHERE {?s ?p ?o} </code>
-            </div>
-            <div class="panel-body">
-                {% crispy form %}
-            </div>
-            <div>
-                <h2>Result</h2>
-                <hr/>
-                <div id="yasr"></div>
-                <br/>
-                <hr/>
+   
+<!--new-->
+  <div>
+    <h2 style="text-align:center">SPARQL Endpoint</h2>
+  </div>
 
-                <div class="alert alert-success">
-                    <strong>Thanks</strong> <a href="http://about.yasgui.org/">http://about.yasgui.org/</a>
-                </div>
-                <table class="table table-bordered table-hover table-condensed">
-                    <tr>
-                        {{ results.bindings|first}}
-                    </tr>
-                    {% for x in results.bindings %}
-                        <tr>
-                            {% for key, value in x.items %}
-                            <td>
-                                {{ value.value }}
-                            </td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
+{% if examples %}
+ <div id="examples">
+    <h3>Example-Queries</h3>
+{% for x in examples %}
+<button  type="button" class="btn btn-default" data-toggle="collapse" data-target="#see-example-{{ x.id }}" id="see-example-btn-{{ x.id }}">{{ x.title }}</button>
+
+     <div id="see-example-{{ x.id }}" class="collapse">
+     <h5>{{ x.title }}: {{ x.description }}</abbr></h5>
+            <code>{{ x.query }}</code>
+     </div>
+     <br>
+ {% endfor %}
+ </div>
+ {% endif %}
+ 
+ <br>
+
+ <div id="query-editor">
+    {% crispy form %}
 </div>
+<br>
+<div id="sparql-results">
+    <h3>Results</h3>
+        <hr/>
+    <div id="yasr"></div>
+</div>
+<br>
+<div class="panel panel-info">
+      <div class="panel-heading"><span class="glyphicon glyphicon-info-sign"></span>  Credits</div>
+      <div class="panel-body">SPARQL endpoint interface is built with <a href="http://about.yasgui.org/">YASGUI</a> package.</div>
+</div>
+
+
+</div>
+
 <script>
 var yasqe = YASQE.fromTextArea(document.getElementById('id_query'),{
     sparql: {
@@ -62,4 +67,5 @@ var yasr = YASR(document.getElementById("yasr"), {
 yasqe.options.sparql.callbacks.complete = yasr.setResponse;
 
 </script>
+
 {% endblock %}

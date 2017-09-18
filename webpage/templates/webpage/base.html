@@ -55,16 +55,9 @@
     {% block scriptHeader %}
     {% endblock %}
 </head>
-<body>
-<header class="page-header procustom-header">
-    <div class="container" id="procustom-affix">
-        <div class="logo-container">
-            <a href="{% url 'webpage:start' %}" class="navlink">
-                <!-- <img src="{% static 'webpage/img/test.png' %}" id="pro-logo" alt=""/> -->
-            </a>
-        </div>
-    </div>
-    <nav class="navbar navbar-default navbar-static-top procustom-navbar" id="top-procustom-navbar">
+<body role="document">
+<header>
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -76,13 +69,13 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                  <ul class="nav navbar-nav">
+                 <li><a href="/">Home</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Home
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">About
                             <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu procustom-dropdown-menu">
-                            <li><a href="{% url 'webpage:start' %}">{% projects_metadata 'title' %}</a></li>
-                            <li><a href="{% url 'webpage:staticpage' template='about' %}">About</a></li>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'webpage:staticpage' template='about' %}">About project</a></li>
                             <li><a href="{% url 'datamodel:plate' %}">Application's data model</a></li>
                             <li><a href="{% url 'webpage:staticpage' template='imprint' %}">Impressum / Imprint</a></li>
                         </ul>
@@ -97,9 +90,8 @@
                             Browse the Data <span class="caret"></span>
                         </a>
                         {% endif %}
-                        <ul class="dropdown-menu procustom-dropdown-menu">
+                        <ul class="dropdown-menu">
                             <li><a href="{% url 'places:place_list' %}">Locations</a></li>
-                            <li role="separator" class="divider"></li>
                             {% if user.is_authenticated %}
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{% url 'bib:synczotero' %}">Import new Items from Zotero</a></li>
@@ -110,7 +102,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             Analyze the Data <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu procustom-dropdown-menu">
+                        <ul class="dropdown-menu">
                         <li><a href="{% url 'sparql:query' %}">SPARQL</a></li></ul>
                     </li>
                     {% if user.is_authenticated %}
@@ -118,7 +110,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             Vocabs Curation <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu procustom-dropdown-menu">
+                        <ul class="dropdown-menu">
                             <li><a href="{% url 'vocabs:skosconceptscheme_list' %}">Concept Schemes</a></li>
                             <li><a href="{% url 'vocabs:browse_vocabs' %}">Concepts</a></li>
                             <li><a href="{% url 'vocabs:skoslabel_list' %}">Labels</a></li>
@@ -137,14 +129,14 @@
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                                 {{ user.get_username }}
                             </a>
-                            <ul class="dropdown-menu procustom-dropdown-menu">
+                            <ul class="dropdown-menu">
                                 <li><a href="{% url 'webpage:user_logout' %}">Log-Out</a></li>
                             </ul>
                         {% else %}
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
                             </a>
-                            <ul class="dropdown-menu procustom-dropdown-menu">
+                            <ul class="dropdown-menu">
                                 <li><a href="{% url 'webpage:user_login' %}">Log-In</a></li>
                             </ul>
                         {% endif %}
@@ -155,7 +147,6 @@
     </nav>
 </header>
 <section class="main-content">
-    {% block procustom-index %}{% endblock %}
     <div id="content" class="container">{% block content %}{% endblock %}</div>
 </section>
 <div style="text-align:center">
@@ -166,12 +157,12 @@
         <div class="row text-center">
             <div class="col-sm-6">
                 <a href="https://www.oeaw.ac.at/acdh/" class="navlink" target="_blank">
-                    <img src="{% static 'webpage/img/acdh_logo_02.png' %}" id="acdh-logo" alt="ACDH" title="Austrian Centre for Digital Humanities"/>
+                    <img src="{% static 'webpage/img/acdh_logo_black_03.png' %}" id="acdh-logo" alt="ACDH" title="Austrian Centre for Digital Humanities"/>
                 </a>
             </div>
             <div class="col-sm-6">
                 <a href="{% projects_metadata 'github' %}" class="navlink" target="_blank">
-                    <img src="{% static 'webpage/img/GitHub-Mark-Light-64px.png' %}" id="github-logo" alt="{{ metadata.github }}" title="Github source code"/>
+                    <img src="{% static 'webpage/img/GitHub-Mark-64px.png' %}" id="github-logo" alt="{{ metadata.github }}" title="Github source code"/>
                 </a>
             </div>
         </div>

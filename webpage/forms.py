@@ -11,4 +11,4 @@ class form_user_login(forms.Form):
     def __init__(self, *args, **kwargs):
         super(form_user_login, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('submit', 'Login'))
+        self.helper.add_input(Submit('submit', 'login'))
