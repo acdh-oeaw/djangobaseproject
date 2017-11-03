@@ -7,9 +7,7 @@
 {% block scriptHeader %}
 {% endblock %}
 {% block content %}
-<script>
-    var new_url = old_url.substring(0, window.location.href.indexOf('?'));
-</script>
+
 
 <script type="text/javascript">
 
@@ -205,7 +203,7 @@ $("#goto option").each(function() {
                     <legend>Select additional columns</legend>
                     {% column_selector  %}
                 {% endif %}
-                
+
                 </br>
             <legend>Refine your search</legend>
             {% crispy filter.form filter.form.helper %}

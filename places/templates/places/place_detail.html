@@ -1,0 +1,91 @@
+{% extends "webpage/base.html" %}
+{% load staticfiles %}
+{% block Title %}Edit Places{% endblock %}
+
+{% block scriptHeader %}
+<!-- In case you are using any autocomplete-functions, don´t forget to
+    include 'autocomplete_light/static.html
+-->
+<!--leafletjs -->
+    <link rel="stylesheet" href="{% static 'webpage/libraries/leaflet/leaflet.css' %}" />
+    <script src="{% static 'webpage/libraries/leaflet/leaflet.js' %}"></script>
+        <style>
+            #map { height: 500px; }
+        </style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="panel panel-default procustom-panel-create">
+        <div class="panel-heading procustom-panel-heading">
+            <div class="row">
+                <div class="col-md-2">
+                {% if object.get_prev %}
+                    <h2>
+                        <a href="{% url 'places:place_detail' pk=object.get_prev %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true" title="previous"></span></a>
+                    </h2>
+                {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <h1 style="text-align: center;">
+                    <small>place:</small> {{ object }}
+                    </h1>
+                </div>
+                <div class="col-md-2">
+                    {% if object.get_next %}
+                        <h2>
+                            <a href="{% url 'places:place_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
+                        </h2>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <legend>Für Martin</legend>
+                    <table class="table table-bordered table-hover">
+                        <tr>
+                            <th>
+                                translation
+                            </th>
+                            <td>
+                                {% for x in object.has_translation.all %}
+                                    <li>
+                                        <a href="{{x.get_absolute_url }}"/>{{ x }}</a> ({{ x.language }})
+                                    </li>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <div id="map"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+        var placeName = "{{ object.name }}"
+        var lat = "{{ object.lat }}"
+        var lng = "{{ object.lng }}"
+        var map = L.map('map').setView([lat, lng], 10);
+
+       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.light',
+            accessToken: 'pk.eyJ1Ijoic2VubmllcmVyIiwiYSI6ImNpbHk1YWV0bDAwZnB2dW01d2l1Y3phdmkifQ.OljQLEhqeAygai2y6VoSwQ'
+            }).addTo(map);
+
+            L.marker([lat, lng]).addTo(map)
+            .bindPopup(placeName)
+            .openPopup();
+        });
+</script>
+{% endblock %}

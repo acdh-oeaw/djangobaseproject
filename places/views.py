@@ -4,11 +4,17 @@ import json
 from django.shortcuts import (render, render_to_response, get_object_or_404, redirect)
 from django.views import generic
 from django.views.generic.edit import DeleteView
+from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Place
 from .forms import PlaceForm, PlaceFormCreate
+
+
+class PlaceDetailView(DetailView):
+    model = Place
+    template_name = 'places/place_detail.html'
 
 
 class PlaceListView(generic.ListView):
@@ -21,16 +27,16 @@ class PlaceListView(generic.ListView):
 
 @login_required
 def create_place(request):
-	if request.method == "POST":
-		form = PlaceFormCreate(request.POST)
-		if form.is_valid():
-			form.save()
-			return redirect('places:place_list')
-		else:
-			return render(request, 'places/edit_places.html', {'form': form})
-	else:
-		form = PlaceFormCreate()
-		return render(request, 'places/edit_places.html', {'form': form})
+    if request.method == "POST":
+        form = PlaceFormCreate(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('places:place_list')
+        else:
+            return render(request, 'places/edit_places.html', {'form': form})
+    else:
+        form = PlaceFormCreate()
+        return render(request, 'places/edit_places.html', {'form': form})
 
 
 @login_required
@@ -47,21 +53,21 @@ def edit_place(request, pk):
             response = r.text
             responseJSON = json.loads(response)
             responseJSON = responseJSON['geonames']
-            form = PlaceForm(instance = instance)
+            form = PlaceForm(instance=instance)
             print(url)
             return render(
                 request, 'places/edit_places.html',
-                {'object':instance, 'form':form, 'responseJSON':responseJSON}
+                {'object': instance, 'form': form, 'responseJSON': responseJSON}
             )
         except requests.exceptions.RequestException as e:
             url = e
-        form = PlaceForm(instance = instance)
-        print(url)
+        form = PlaceForm(instance=instance)
+
         responseJSON = "hansi"
-		#form = OrtForm({'geonames_id':123})
-        return render(request, 'places/edit_places.html',
-			{'object': instance, 'form' :form, 'responseJSON': responseJSON}
-			)
+        return render(
+            request, 'places/edit_places.html',
+            {'object': instance, 'form': form, 'responseJSON': responseJSON}
+        )
     else:
         form = PlaceForm(request.POST, instance=instance)
         if form.is_valid():
