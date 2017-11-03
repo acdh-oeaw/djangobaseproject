@@ -1,12 +1,13 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
-from places.apis_views import PlaceViewSet
+from places.apis_views import PlaceViewSet, GeoJsonViewSet
 from bib.api_views import BookViewSet
 
 from vocabs import api_views
 
 router = routers.DefaultRouter()
+router.register(r'geojson', GeoJsonViewSet, base_name='places')
 router.register(r'skoslabels', api_views.SkosLabelViewSet)
 router.register(r'skosnamespaces', api_views.SkosNamespaceViewSet)
 router.register(r'skosconceptschemes', api_views.SkosConceptSchemeViewSet)

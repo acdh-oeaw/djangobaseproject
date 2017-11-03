@@ -1,5 +1,26 @@
+import json
 from rest_framework import serializers
 from .models import Place, AlternativeName
+
+
+class GeoJsonSerializer(serializers.BaseSerializer):
+
+    def to_representation(self, obj):
+        if obj.lng:
+            geojson = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [float(obj.lng), float(obj.lat)]
+                    },
+                "properties": {
+                    "name": obj.name,
+                    "placeType": obj.place_type
+                }
+            }
+            return geojson
+        else:
+            return None
 
 
 class AlternativeNameSerializer(serializers.HyperlinkedModelSerializer):
