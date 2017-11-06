@@ -4,14 +4,14 @@
 
 {% block scriptHeader %}
 <!-- In case you are using any autocomplete-functions, don´t forget to
-    include 'autocomplete_light/static.html
+include 'autocomplete_light/static.html
 -->
 <!--leafletjs -->
-    <link rel="stylesheet" href="{% static 'webpage/libraries/leaflet/leaflet.css' %}" />
-    <script src="{% static 'webpage/libraries/leaflet/leaflet.js' %}"></script>
-        <style>
-            #map { height: 500px; }
-        </style>
+<link rel="stylesheet" href="{% static 'webpage/libraries/leaflet/leaflet.css' %}" />
+<script src="{% static 'webpage/libraries/leaflet/leaflet.js' %}"></script>
+<style>
+#map { height: 500px; }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -21,71 +21,121 @@
         <div class="panel-heading procustom-panel-heading">
             <div class="row">
                 <div class="col-md-2">
-                {% if object.get_prev %}
+                    {% if object.get_prev %}
                     <h2>
                         <a href="{% url 'places:place_detail' pk=object.get_prev %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true" title="previous"></span></a>
                     </h2>
-                {% endif %}
+                    {% endif %}
                 </div>
                 <div class="col-md-8">
                     <h1 style="text-align: center;">
-                    <small>place:</small> {{ object }}
-                    </h1>
-                </div>
-                <div class="col-md-2">
-                    {% if object.get_next %}
-                        <h2>
-                            <a href="{% url 'places:place_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
-                        </h2>
+                        <small>place:</small> {{ object.name }}
+                        {% if user.is_authenticated %}
+                        <small><a href="{% url 'places:place_edit' pk=object.id %}">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></span>
+                        </a>
+                    </small>
                     {% endif %}
-                </div>
+                </h1>
             </div>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <legend>Für Martin</legend>
-                    <table class="table table-bordered table-hover">
-                        <tr>
-                            <th>
-                                translation
-                            </th>
-                            <td>
-                                {% for x in object.has_translation.all %}
-                                    <li>
-                                        <a href="{{x.get_absolute_url }}"/>{{ x }}</a> ({{ x.language }})
-                                    </li>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-6">
-                    <div id="map"/>
-                </div>
+            <div class="col-md-2">
+                <h2>
+                    {% if object.get_next %}
+                    <a href="{% url 'places:place_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
+                </h2>
+                {% endif %}
             </div>
         </div>
     </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <legend>About</legend>
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <td>
+                            {{ object.name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Coordinates
+                        </th>
+                        <td>
+                            <abbr title="lat">{{ object.lat|truncatechars:8  }}</abbr>
+                        </br>
+                        <abbr title="lng">{{ object.lng }}</abbr>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Alternative Names
+                    </th>
+                    <td>
+                        <ul>
+                            {% for x in object.alternative_name.all %}
+                            <li>{{ x }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Part of
+                    </th>
+                    <td>
+                        {% if object.part_of %}
+
+                        <a href="{% url 'places:place_detail' pk=object.part_of.id %}">{{ object.part_of }}</a>
+                        {% else %}
+                        No entry
+                        {% endif %}
+                    </td>
+
+                </tr>
+                <tr>
+                    <th>has child</th>
+                    <td>
+                        <ul>
+                            {% for x in object.has_child.all %}
+                            {% if x.id %}
+                            <li><a href="{% url 'places:place_detail' pk=x.id %}">{{ x }}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <div id="map"/>
+    </div>
+</div>
+</div>
+</div>
 </div>
 
 <script type="text/javascript">
-    $( document ).ready(function() {
-        var placeName = "{{ object.name }}"
-        var lat = "{{ object.lat }}"
-        var lng = "{{ object.lng }}"
-        var map = L.map('map').setView([lat, lng], 10);
+$( document ).ready(function() {
+    var placeName = "{{ object.name }}"
+    var lat = "{{ object.lat }}"
+    var lng = "{{ object.lng }}"
+    var map = L.map('map').setView([lat, lng], 10);
 
-       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox.light',
-            accessToken: 'pk.eyJ1Ijoic2VubmllcmVyIiwiYSI6ImNpbHk1YWV0bDAwZnB2dW01d2l1Y3phdmkifQ.OljQLEhqeAygai2y6VoSwQ'
-            }).addTo(map);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.light',
+        accessToken: 'pk.eyJ1Ijoic2VubmllcmVyIiwiYSI6ImNpbHk1YWV0bDAwZnB2dW01d2l1Y3phdmkifQ.OljQLEhqeAygai2y6VoSwQ'
+    }).addTo(map);
 
-            L.marker([lat, lng]).addTo(map)
-            .bindPopup(placeName)
-            .openPopup();
-        });
+    L.marker([lat, lng]).addTo(map)
+    .bindPopup(placeName)
+    .openPopup();
+});
 </script>
 {% endblock %}
