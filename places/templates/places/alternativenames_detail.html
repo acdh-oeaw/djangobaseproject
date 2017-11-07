@@ -31,7 +31,7 @@ include 'autocomplete_light/static.html
                     <h1 style="text-align: center;">
                         <small>alternative name:</small> {{ object.name }}
                         {% if user.is_authenticated %}
-                        <small><a href="{% url 'places:place_edit' pk=object.id %}">
+                        <small><a href="{% url 'places:alternativename_edit' pk=object.id %}">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></span>
                         </a>
                     </small>
