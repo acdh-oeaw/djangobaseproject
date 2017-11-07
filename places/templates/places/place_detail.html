@@ -77,7 +77,9 @@ include 'autocomplete_light/static.html
                     <td>
                         <ul>
                             {% for x in object.alternative_name.all %}
-                            <li>{{ x }}</li>
+                            {% if x.id %}
+                            <li><a href="{% url 'places:alternativename_detail' pk=x.id %}">{{ x }}</a></li>
+                            {% endif %}
                             {% endfor %}
                         </ul>
                     </td>

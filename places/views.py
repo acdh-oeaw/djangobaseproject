@@ -9,7 +9,21 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Place
+from .models import AlternativeName
 from .forms import PlaceForm, PlaceFormCreate
+
+
+class AlternativeNameListView(generic.ListView):
+    # template_name = "places/list_alternativenames.html"
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        return AlternativeName.objects.all()
+
+
+class AlternativeNameDetailView(DetailView):
+    model = AlternativeName
+    template_name = 'places/alternativenames_detail.html'
 
 
 class PlaceDetailView(DetailView):

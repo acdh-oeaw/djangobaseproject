@@ -22,7 +22,8 @@ class Place(models.Model):
     alternative_name = models.ManyToManyField(
         AlternativeName,
         max_length=250, blank=True,
-        help_text="Alternative names"
+        help_text="Alternative names",
+        related_name="related_places"
     )
     geonames_id = models.CharField(
         max_length=50, blank=True,
