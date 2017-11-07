@@ -8,6 +8,31 @@ class AlternativeName(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('places:alternativename_detail', kwargs={'pk': self.id})
+
+    @classmethod
+    def get_listview_url(self):
+        return reverse('places:alternativename_list')
+
+    def get_next(self):
+        next = AlternativeName.objects.filter(id__gt=self.id)
+        if next:
+            return next.first().id
+        return False
+
+    def get_prev(self):
+        prev = AlternativeName.objects.filter(id__lt=self.id).order_by('-id')
+        if prev:
+            return prev.first().id
+        return False
+
+    def get_absolute_url(self):
+        return reverse('places:alternativename_detail', kwargs={'pk': self.id})
+
+    def __str__(self):
+        return "{}".format(self.name)
+
 
 class Place(models.Model):
     PLACE_TYPES = (
@@ -60,7 +85,7 @@ class Place(models.Model):
         return False
 
     def get_absolute_url(self):
-        return reverse('place:place_detail', kwargs={'pk': self.id})
+        return reverse('places:place_detail', kwargs={'pk': self.id})
 
     def __str__(self):
         return "{}".format(self.name)

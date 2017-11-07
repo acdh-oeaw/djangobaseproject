@@ -23,7 +23,7 @@ include 'autocomplete_light/static.html
                 <div class="col-md-2">
                     {% if object.get_prev %}
                     <h2>
-                        <a href="{% url 'places:place_detail' pk=object.get_prev %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true" title="previous"></span></a>
+                        <a href="{% url 'places:alternativename_detail' pk=object.get_prev %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true" title="previous"></span></a>
                     </h2>
                     {% endif %}
                 </div>
@@ -41,7 +41,7 @@ include 'autocomplete_light/static.html
             <div class="col-md-2">
                 <h2>
                     {% if object.get_next %}
-                    <a href="{% url 'places:place_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
+                    <a href="{% url 'places:alternativename_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
                 </h2>
                 {% endif %}
             </div>
