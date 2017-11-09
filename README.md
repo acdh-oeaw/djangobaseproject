@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/95352230.svg)](https://zenodo.org/badge/latestdoi/95352230)
+
 # Django Base Project
 
 ## About
