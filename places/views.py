@@ -47,6 +47,16 @@ class AlternativeNameDetailView(DetailView):
     template_name = 'places/alternativenames_detail.html'
 
 
+class AlternativeNameDelete(DeleteView):
+    model = AlternativeName
+    template_name = 'webpage/confirm_delete.html'
+    success_url = reverse_lazy('places:alternativename_list')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AlternativeNameDelete, self).dispatch(*args, **kwargs)
+
+
 class PlaceDetailView(DetailView):
     model = Place
     template_name = 'places/place_detail.html'

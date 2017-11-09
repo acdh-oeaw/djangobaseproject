@@ -9,6 +9,8 @@ urlpatterns = [
         name='alternativename_create'),
     url(r'^altnames/edit/(?P<pk>[0-9]+)$', views.AlternativeNameUpdate.as_view(),
         name='alternativename_edit'),
+    url(r'^altnames/delete/(?P<pk>[0-9]+)$', views.AlternativeNameDelete.as_view(),
+        name='alternativename_delete'),
     url(r'^$', views.PlaceListView.as_view(), name='place_list'),
     url(r'^create/$', views.create_place, name='place_create'),
     url(r'^detail/(?P<pk>[0-9]+)$', views.PlaceDetailView.as_view(), name='place_detail'),

@@ -9,12 +9,14 @@
   <div class="panel-body">
       <ul>
           {% for x in object_list %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'places:alternativename_detail' pk=x.id %}">{{ x }}</a></li>
+          {% else %}
           <li>{{ x }}</li>
+          {% endif %}
           {% endfor %}
       </ul>
   </div>
 </div>
-
-
 
 {% endblock %}
