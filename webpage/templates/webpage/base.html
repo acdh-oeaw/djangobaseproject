@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 {% load webpage_extras %}
+{% load browsing_extras %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -91,7 +92,12 @@
                             </a>
                         {% endif %}
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'browsing:browse_places' %}">Places</a></li>
+                            {% nav_menu app='places' as links %}
+                            {% for x in links %}
+                                <li>
+                                    <a href="{{ x.link}}">{{ x.name }}</a>
+                                </li>
+                            {% endfor %}
                             {% if user.is_authenticated %}
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{% url 'places:place_list' %}">Edit Places</a></li>
