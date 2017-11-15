@@ -31,7 +31,7 @@ include 'autocomplete_light/static.html
                     <h1 style="text-align: center;">
                         <small>person:</small> {{ object }}
                         {% if user.is_authenticated %}
-                        <small><a href="#">
+                        <small><a href="{% url 'places:person_edit' pk=object.id %}">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></span>
                         </a>
                     </small>
@@ -97,14 +97,9 @@ include 'autocomplete_light/static.html
                         </tr>
                     {% endif %}
                 </table>
-                <legend>Related Documents</legend>
-                <ul>
-                    {% for x in object.author.all %}
-                    <li>
-                        <a href="{{ x.get_absolute_url }}">{{ x }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-danger" href="{% url 'places:person_delete' pk=object.id %}">delete</a>
+                {% endif %}
             </div>
             <div class="col-md-6">
                 <div id="map"/>

@@ -9,12 +9,44 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Place, AlternativeName, Institution, Person
-from .forms import PlaceForm, PlaceFormCreate, AlternativeNameForm, InstitutionForm
+from .forms import PlaceForm, PlaceFormCreate, AlternativeNameForm, InstitutionForm, PersonForm
 
 
 class PersonDetailView(DetailView):
     model = Person
     template_name = 'places/person_detail.html'
+
+
+class PersonCreate(CreateView):
+
+    model = Person
+    form_class = PersonForm
+    template_name = 'places/person_create.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PersonCreate, self).dispatch(*args, **kwargs)
+
+
+class PersonUpdate(UpdateView):
+
+    model = Person
+    form_class = PersonForm
+    template_name = 'places/person_create.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PersonUpdate, self).dispatch(*args, **kwargs)
+
+
+class PersonDelete(DeleteView):
+    model = Person
+    template_name = 'webpage/confirm_delete.html'
+    success_url = reverse_lazy('browsing:browse_persons')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PersonDelete, self).dispatch(*args, **kwargs)
 
 
 class InstitutionCreate(CreateView):
@@ -42,6 +74,16 @@ class InstitutionUpdate(UpdateView):
 class InstitutionDetailView(DetailView):
     model = Institution
     template_name = 'places/institution_detail.html'
+
+
+class InstitutionDelete(DeleteView):
+    model = Institution
+    template_name = 'webpage/confirm_delete.html'
+    success_url = reverse_lazy('browsing:browse_institutions')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(InstitutionDelete, self).dispatch(*args, **kwargs)
 
 
 class AlternativeNameListView(generic.ListView):
@@ -97,7 +139,7 @@ def create_place(request):
         form = PlaceFormCreate(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('places:place_list')
+            return redirect('browsing:browse_places')
         else:
             return render(request, 'places/edit_places.html', {'form': form})
     else:
@@ -138,13 +180,13 @@ def edit_place(request, pk):
         form = PlaceForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-        return redirect('places:place_list')
+        return redirect('browsing:browse_places')
 
 
 class PlaceDelete(DeleteView):
     model = Place
     template_name = 'webpage/confirm_delete.html'
-    success_url = reverse_lazy('places:place_list')
+    success_url = reverse_lazy('browsing:browse_places')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

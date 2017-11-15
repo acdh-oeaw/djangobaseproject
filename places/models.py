@@ -170,6 +170,10 @@ class Person(IdProvider):
     comment = models.TextField(blank=True)
 
     @classmethod
+    def get_createview_url(self):
+        return reverse('places:person_create')
+
+    @classmethod
     def get_listview_url(self):
         return reverse('browsing:browse_persons')
 
