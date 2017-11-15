@@ -8,12 +8,43 @@ from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .models import Place, AlternativeName
-from .forms import PlaceForm, PlaceFormCreate, AlternativeNameForm
+from .models import Place, AlternativeName, Institution, Person
+from .forms import PlaceForm, PlaceFormCreate, AlternativeNameForm, InstitutionForm
+
+
+class PersonDetailView(DetailView):
+    model = Person
+    template_name = 'places/person_detail.html'
+
+
+class InstitutionCreate(CreateView):
+
+    model = Institution
+    form_class = InstitutionForm
+    template_name = 'places/institution_create.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(InstitutionCreate, self).dispatch(*args, **kwargs)
+
+
+class InstitutionUpdate(UpdateView):
+
+    model = Institution
+    form_class = InstitutionForm
+    template_name = 'places/institution_create.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(InstitutionUpdate, self).dispatch(*args, **kwargs)
+
+
+class InstitutionDetailView(DetailView):
+    model = Institution
+    template_name = 'places/institution_detail.html'
 
 
 class AlternativeNameListView(generic.ListView):
-    # template_name = "places/list_alternativenames.html"
     context_object_name = 'object_list'
 
     def get_queryset(self):
@@ -45,16 +76,6 @@ class AlternativeNameUpdate(UpdateView):
 class AlternativeNameDetailView(DetailView):
     model = AlternativeName
     template_name = 'places/alternativenames_detail.html'
-
-
-class AlternativeNameDelete(DeleteView):
-    model = AlternativeName
-    template_name = 'webpage/confirm_delete.html'
-    success_url = reverse_lazy('places:alternativename_list')
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(AlternativeNameDelete, self).dispatch(*args, **kwargs)
 
 
 class PlaceDetailView(DetailView):

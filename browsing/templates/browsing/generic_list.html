@@ -27,10 +27,13 @@ $("#goto option").each(function() {
     <div class="panel-heading procustom-panel-heading">
 
         <h3><span class="fa fa-search" style="padding-left:10px; padding-right: 10px;"></span>Browse {% class_definition %} {% block list_title %}{% endblock %}</h3>
-        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myFilter">
+        <button type="button" class="btn btn-info btn-default" data-toggle="modal" data-target="#myFilter">
           <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
         </button>
         <a class ="btn btn-default"  href=".">Reset search</a>
+        {% if get_arche_dump %}
+            <a class ="btn btn-default"  href="{{ get_arche_dump}}{% querystring %}">Dump as RDF</a>
+        {% endif %}
     {%block customView %}{% endblock %}
     {% block create_button %}{% endblock %}
     </div>
