@@ -34,6 +34,11 @@ $("#goto option").each(function() {
         {% if get_arche_dump %}
             <a class ="btn btn-default"  href="{{ get_arche_dump}}{% querystring %}">Dump as RDF</a>
         {% endif %}
+        {% if user.is_authenticated %}
+            {% if create_view_link  %}
+                <a class ="btn btn-default"  href="{{ create_view_link }}">Create new {{class_name}}</a>
+            {% endif %}
+        {% endif %}
     {%block customView %}{% endblock %}
     {% block create_button %}{% endblock %}
     </div>

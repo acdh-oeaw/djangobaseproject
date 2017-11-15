@@ -100,7 +100,6 @@
                             {% endfor %}
                             {% if user.is_authenticated %}
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'places:place_list' %}">Edit Places</a></li>
                                 <li><a href="{% url 'bib:synczotero' %}">Import new Items from Zotero</a></li>
                             {% endif %}
                         </ul>

@@ -14,6 +14,10 @@ class AlternativeName(IdProvider):
     def get_listview_url(self):
         return reverse('places:alternativename_list')
 
+    @classmethod
+    def get_createview_url(self):
+        return reverse('places:alternativename_create')
+
     def get_next(self):
         next = AlternativeName.objects.filter(id__gt=self.id)
         if next:
@@ -84,6 +88,10 @@ class Place(IdProvider):
         return reverse('browsing:browse_places')
 
     @classmethod
+    def get_createview_url(self):
+        return reverse('places:place_create')
+
+    @classmethod
     def get_arche_dump(self):
         return reverse('browsing:rdf_places')
 
@@ -124,6 +132,10 @@ class Institution(IdProvider):
     @classmethod
     def get_listview_url(self):
         return reverse('browsing:browse_institutions')
+
+    @classmethod
+    def get_createview_url(self):
+        return reverse('places:institution_create')
 
     def get_absolute_url(self):
         return reverse('places:institution_detail', kwargs={'pk': self.id})
