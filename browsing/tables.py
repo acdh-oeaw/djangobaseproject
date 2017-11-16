@@ -44,3 +44,15 @@ class PlaceTable(tables.Table):
         model = Place
         sequence = ('id', 'name',)
         attrs = {"class": "table table-responsive table-hover"}
+
+
+class AlternativeNameTable(tables.Table):
+    name = tables.LinkColumn(
+        'places:alternativename_detail',
+        args=[A('pk')], verbose_name='Name'
+    )
+
+    class Meta:
+        model = AlternativeName
+        sequence = ('name',)
+        attrs = {"class": "table table-responsive table-hover"}

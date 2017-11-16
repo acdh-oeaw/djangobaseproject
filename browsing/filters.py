@@ -92,3 +92,17 @@ class PlaceListFilter(django_filters.FilterSet):
         fields = [
             'id'
         ]
+
+
+class AlternativeNameListFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(
+        lookup_expr='icontains',
+        help_text=AlternativeName._meta.get_field('name').help_text,
+        label=AlternativeName._meta.get_field('name').verbose_name
+        )
+
+    class Meta:
+        model = AlternativeName
+        fields = [
+            'id'
+        ]

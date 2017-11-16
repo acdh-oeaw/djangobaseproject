@@ -43,6 +43,25 @@ class PersonFilterFormHelper(FormHelper):
             )
 
 
+class AlternativeNameFilterFormHelper(FormHelper):
+    def __init__(self, *args, **kwargs):
+        super(AlternativeNameFilterFormHelper, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.form_class = 'genericFilterForm'
+        self.form_method = 'GET'
+        self.helper.form_tag = False
+        self.add_input(Submit('Filter', 'Search'))
+        self.layout = Layout(
+            Accordion(
+                AccordionGroup(
+                    'Basic search options',
+                    'name',
+                    css_id="basic_search_fields"
+                    ),
+                )
+            )
+
+
 class InstitutionFilterFormHelper(FormHelper):
     def __init__(self, *args, **kwargs):
         super(InstitutionFilterFormHelper, self).__init__(*args, **kwargs)

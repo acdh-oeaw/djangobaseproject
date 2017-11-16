@@ -50,6 +50,17 @@ class AlternativeNameForm(forms.ModelForm):
         self.helper.add_input(Submit('submit', 'save'),)
 
 
+class AlternativeNameFormCreate(forms.ModelForm):
+    class Meta:
+        model = AlternativeName
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(AlternativeNameFormCreate, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+
 class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
