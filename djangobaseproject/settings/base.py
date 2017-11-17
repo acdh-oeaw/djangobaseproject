@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'idprovider',
     'webpage',
     'vocabs',
-    'places',
+    'entities',
     'bib',
     'sparql',
     'stats',
@@ -49,7 +49,7 @@ REST_FRAMEWORK = {
 }
 
 SPAGHETTI_SAUCE = {
-    'apps': ['vocabs', 'places', 'bib'],
+    'apps': ['vocabs', 'entities', 'bib'],
     'show_fields': False,
     'exclude': {'auth': ['user']}
 }

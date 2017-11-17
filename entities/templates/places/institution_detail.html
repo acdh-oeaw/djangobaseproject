@@ -1,6 +1,6 @@
 {% extends "webpage/base.html" %}
 {% load staticfiles %}
-{% block Title %}Person{% endblock %}
+{% block Title %}Edit Places{% endblock %}
 
 {% block scriptHeader %}
 <!-- In case you are using any autocomplete-functions, don´t forget to
@@ -23,15 +23,15 @@ include 'autocomplete_light/static.html
                 <div class="col-md-2">
                     {% if object.get_prev %}
                     <h2>
-                        <a href="{% url 'places:person_detail' pk=object.get_prev %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true" title="previous"></span></a>
+                        <a href="{% url 'entities:institution_detail' pk=object.get_prev %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true" title="previous"></span></a>
                     </h2>
                     {% endif %}
                 </div>
                 <div class="col-md-8">
                     <h1 style="text-align: center;">
-                        <small>person:</small> {{ object }}
+                        <small>institution:</small> {{ object }}
                         {% if user.is_authenticated %}
-                        <small><a href="{% url 'places:person_edit' pk=object.id %}">
+                        <small><a href="{% url 'entities:institution_edit' pk=object.id %}">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></span>
                         </a>
                     </small>
@@ -41,7 +41,7 @@ include 'autocomplete_light/static.html
             <div class="col-md-2">
                 <h2>
                     {% if object.get_next %}
-                    <a href="{% url 'places:person_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
+                    <a href="{% url 'entities:institution_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
                 </h2>
                 {% endif %}
             </div>
@@ -54,7 +54,7 @@ include 'autocomplete_light/static.html
                 <table class="table table-bordered table-hover">
                     <tr>
                         <th>
-                            written_name
+                            Name
                         </th>
                         <td>
                             {{ object.written_name }}
@@ -62,43 +62,69 @@ include 'autocomplete_light/static.html
                     </tr>
                     <tr>
                         <th>
-                            forename
+                            authority_url
                         </th>
                         <td>
-                            {{ object.forename }}
+                            <a href="{{ object.authority_url }}">{{ object.authority_url }}</a>
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            name
+                            alt_names
                         </th>
                         <td>
-                            {{ object.name }}
+                            {{ object.alt_names }}
                         </td>
                     </tr>
-                    {% if object.authority_url %}
+                    {% if object.parent_institution %}
                         <tr>
                             <th>
-                                authority_url
+                                parent_institution
                             </th>
                             <td>
-                                <a href="{{ object.authority_url }}">{{ object.authority_url }}</a>
+                                <a href="{{ object.parent_institution.get_absolute_url }}">{{ object.parent_institution }}</a>
                             </td>
                         </tr>
                     {% endif %}
-                    {% if object.belongs_to_institution %}
+                    {% if object.children_institutions.all %}
                         <tr>
                             <th>
-                                belongs_to_institution
+                                children_institutions
                             </th>
                             <td>
-                                <a href="{{ object.belongs_to_institution.get_absolute_url }}">{{ object.belongs_to_institution }}</a>
+                                <ul>
+                                    {% for x in object.children_institutions.all %}
+                                        <li>
+                                            <a href="{{ x.get_absolute_url }}">{{ x }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if object.location %}
+                        <tr>
+                            <th>
+                                location
+                            </th>
+                            <td>
+                                <a href="{{ object.location.get_absolute_url }}">{{ object.location }}</a>
                             </td>
                         </tr>
                     {% endif %}
                 </table>
+                <legend>Related Persons</legend>
+                <ul>
+                    {% for x in object.has_member.all %}
+                    <li>
+                        <a href="{{ x.get_absolute_url }}">{{ x }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+
                 {% if user.is_authenticated %}
-                    <a class="btn btn-danger" href="{% url 'places:person_delete' pk=object.id %}">delete</a>
+                    <a class="btn btn-danger" href="{% url 'entities:institution_delete' pk=object.id %}">delete</a>
                 {% endif %}
             </div>
             <div class="col-md-6">
@@ -111,9 +137,9 @@ include 'autocomplete_light/static.html
 
 <script type="text/javascript">
 $( document ).ready(function() {
-    var placeName = "{{ object.belongs_to_institution.written_name }}"
-    var lat = "{{ object.belongs_to_institution.location.lat }}"
-    var lng = "{{ object.belongs_to_institution.location.lng }}"
+    var placeName = "{{ object.location.name }}"
+    var lat = "{{ object.location.lat }}"
+    var lng = "{{ object.location.lng }}"
     var map = L.map('map').setView([lat, lng], 10);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {

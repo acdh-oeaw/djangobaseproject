@@ -1,6 +1,6 @@
 import django_filters
 from dal import autocomplete
-from places.models import Place, AlternativeName, Institution, Person
+from entities.models import Place, AlternativeName, Institution, Person
 
 django_filters.filters.LOOKUP_TYPES = [
     ('', '---------'),

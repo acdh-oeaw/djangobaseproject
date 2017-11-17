@@ -27,7 +27,7 @@
         <p>{% projects_metadata 'description' %}</p>
         <div>
             <h3>Data-Count</h3>
-            {% create_object_count app='places' as models %}
+            {% create_object_count app='entities' as models %}
             {% for x in models %}
             <div class="col-lg-4 col-md-4 col-sm-6 grid-item type-one">
                 <div class="div-tile">

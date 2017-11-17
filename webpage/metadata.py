@@ -5,7 +5,7 @@ PROJECT_METADATA = {
     'title': 'Django Base Project',
     'author': 'Peter Andorfer',
     'subtitle': 'A django project to bootstrap further web-app developments',
-    'description': 'This django projects includes some generic applications (webpage, vocabs, places, bib)',
+    'description': 'This django projects includes some generic applications (webpage, vocabs, entities, bib)',
     'github': 'https://github.com/acdh-oeaw/djangobaseproject',
     'purpose_de': 'Ziel von Django Base Project ist die Schaffung einer einheitlichen und generischen Grundlage für Web Applikationen.',
     'purpose_en': 'The purpose of Django Base Project is to bootstrap web developments.',

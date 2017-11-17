@@ -8,7 +8,7 @@ class AlternativeName(IdProvider):
     name = models.CharField(max_length=250, blank=True, help_text="Alternative Name")
 
     def get_absolute_url(self):
-        return reverse('places:alternativename_detail', kwargs={'pk': self.id})
+        return reverse('entities:alternativename_detail', kwargs={'pk': self.id})
 
     @classmethod
     def get_listview_url(self):
@@ -16,7 +16,7 @@ class AlternativeName(IdProvider):
 
     @classmethod
     def get_createview_url(self):
-        return reverse('places:alternativename_create')
+        return reverse('entities:alternativename_create')
 
     def get_next(self):
         next = AlternativeName.objects.filter(id__gt=self.id)
@@ -31,7 +31,7 @@ class AlternativeName(IdProvider):
         return False
 
     def get_absolute_url(self):
-        return reverse('places:alternativename_detail', kwargs={'pk': self.id})
+        return reverse('entities:alternativename_detail', kwargs={'pk': self.id})
 
     def __str__(self):
         return "{}".format(self.name)
@@ -43,7 +43,7 @@ class Place(IdProvider):
         ("country", "country")
     )
 
-    """Holds information about places."""
+    """Holds information about entities."""
     name = models.CharField(
         max_length=250, blank=True, help_text="Normalized name"
     )
@@ -89,7 +89,7 @@ class Place(IdProvider):
 
     @classmethod
     def get_createview_url(self):
-        return reverse('places:place_create')
+        return reverse('entities:place_create')
 
     @classmethod
     def get_arche_dump(self):
@@ -108,7 +108,7 @@ class Place(IdProvider):
         return False
 
     def get_absolute_url(self):
-        return reverse('places:place_detail', kwargs={'pk': self.id})
+        return reverse('entities:place_detail', kwargs={'pk': self.id})
 
     def __str__(self):
         return "{}".format(self.name)
@@ -135,10 +135,10 @@ class Institution(IdProvider):
 
     @classmethod
     def get_createview_url(self):
-        return reverse('places:institution_create')
+        return reverse('entities:institution_create')
 
     def get_absolute_url(self):
-        return reverse('places:institution_detail', kwargs={'pk': self.id})
+        return reverse('entities:institution_detail', kwargs={'pk': self.id})
 
     def get_next(self):
         next = Institution.objects.filter(id__gt=self.id)
@@ -171,7 +171,7 @@ class Person(IdProvider):
 
     @classmethod
     def get_createview_url(self):
-        return reverse('places:person_create')
+        return reverse('entities:person_create')
 
     @classmethod
     def get_listview_url(self):
@@ -182,7 +182,7 @@ class Person(IdProvider):
         return reverse('browsing:rdf_persons')
 
     def get_absolute_url(self):
-        return reverse('places:person_detail', kwargs={'pk': self.id})
+        return reverse('entities:person_detail', kwargs={'pk': self.id})
 
     def get_next(self):
         next = Person.objects.filter(id__gt=self.id)

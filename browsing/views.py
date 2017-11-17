@@ -9,8 +9,8 @@ from django_tables2 import SingleTableView, RequestConfig
 from .filters import *
 from .forms import *
 from .tables import *
-from places.models import Place, Institution
-from places.serializer_arche import *
+from entities.models import Place, Institution
+from entities.serializer_arche import *
 
 
 class GenericListView(SingleTableView):
