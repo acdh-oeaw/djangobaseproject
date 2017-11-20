@@ -98,7 +98,9 @@
                                     <a href="{{ x.link}}">{{ x.name }}</a>
                                 </li>
                             {% endfor %}
+
                             {% if user.is_authenticated %}
+                            <li role="separator" class="divider"></li>
                             {% nav_menu app='arche' as links %}
                             {% for x in links %}
                                 <li>
