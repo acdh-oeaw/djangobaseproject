@@ -43,7 +43,11 @@ class SkosConceptForm(forms.ModelForm):
                 url='vocabs-ac:skosconcept-autocomplete'),
             'skos_exactmatch': autocomplete.ModelSelect2Multiple(
                 url='vocabs-ac:skosconcept-autocomplete'),
-            'scheme': autocomplete.ModelSelect2Multiple(url='vocabs-ac:skosconceptscheme-autocomplete')
+            'skos_closematch': autocomplete.ModelSelect2Multiple(
+                url='vocabs-ac:skosconcept-autocomplete'),
+            'scheme': autocomplete.ModelSelect2Multiple(
+                url='vocabs-ac:skosconceptscheme-autocomplete'
+            )
         }
 
     def __init__(self, *args, **kwargs):

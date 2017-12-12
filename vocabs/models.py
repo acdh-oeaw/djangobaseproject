@@ -3,7 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
-
+from django.utils.functional import cached_property
 
 DEFAULT_PEFIX = os.path.basename(settings.BASE_DIR)
 
@@ -13,15 +13,6 @@ LABEL_TYPES = (
     ('prefLabel', 'prefLabel'),
     ('altLabel', 'altLabel'),
     ('hiddenLabel', 'hiddenLabel'),
-)
-
-RELATION_TYPES = (
-    ('narrower', 'narrower'),
-    ('broader', 'broader'),
-    ('related', 'related'),
-    ('broadMatch', 'broadMatch'),
-    ('relatedMatch', 'relatedMatch'),
-    ('exactMatch', 'exactMatch'),
 )
 
 
@@ -112,11 +103,18 @@ class SkosConcept(models.Model):
             self.namespace = temp_namespace
         else:
             pass
-
         super(SkosConcept, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "{}".format(self.pref_label)
+        parents = self.skos_broader.all()
+        if parents:
+            parent = "|".join([x.__str__() for x in parents])
+        else:
+            parent = None
+        if parent:
+            return "{} >> {}".format(parent, self.pref_label)
+        else:
+            return self.pref_label
 
     def get_absolute_url(self):
         return reverse('vocabs:skosconcept_detail', kwargs={'pk': self.id})
