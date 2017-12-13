@@ -81,6 +81,18 @@ class SkosConcept(models.Model):
     skos_closematch = models.ManyToManyField('SkosConcept', blank=True, related_name="closematch")
     legacy_id = models.CharField(max_length=200, blank=True)
 
+    def get_broader(self):
+        broader = self.skos_broader.all()
+        broader_reverse = SkosConcept.objects.filter(skos_narrower=self)
+        all_broader = set(list(broader)+list(broader_reverse))
+        return all_broader
+
+    def get_narrower(self):
+        narrower = self.skos_narrower.all()
+        narrower_reverse = SkosConcept.objects.filter(skos_broader=self)
+        all_narrower = set(list(narrower)+list(narrower_reverse))
+        return all_narrower
+
     @property
     def all_schemes(self):
         return ', '.join([x.dc_title for x in self.scheme.all()])

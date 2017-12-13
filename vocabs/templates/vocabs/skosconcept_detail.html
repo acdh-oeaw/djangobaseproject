@@ -20,11 +20,8 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">skos:broader</div>
                         <div class="panel-body">
-                            {% for x in object.skos_broader.all %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
-                            {% endfor %}
-                            {% for x in object.broader.all %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
+                            {% for x in object.get_broader %}
+                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a>
                             {% endfor %}
                         </div>
                     </div>
@@ -109,10 +106,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">skos:narrower</div>
                         <div class="panel-body">
-                            {% for x in object.skos_narrower.all %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
-                            {% endfor %}
-                            {% for x in object.narrower.all %}
+                            {% for x in object.get_narrower %}
                                 <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
                             {% endfor %}
                         </div>
