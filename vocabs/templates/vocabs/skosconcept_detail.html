@@ -65,40 +65,58 @@
                     <div class="panel panel-default">
 
                         <div class="panel-body">
+                            <legend>about</legend>
                             <table class="table table-bordered table-striped table-hover">
                                 <tr>
                                     <td>skos:prefLabel| @{{ object.pref_label_lang }}</td>
                                     <td>{{ object.pref_label }} </td>
                                 </tr>
-                                <tr>
-                                    <td>skos:definition | @{{ object.definition_lang }}</td>
-                                    <td>{{ object.definition }}</td>
-                                </tr>
-                                <tr>
-                                    <td>skos:inScheme</td>
-                                    <td>
-                                        {% for x in object.scheme.all %} {{ x }}
-                                            {% if user.is_authenticated %}
-                                                <a href="{% url 'vocabs:skosconceptscheme_update' pk=x.id %}"> <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></a>
-                                            {% endif %}<br/>
-                                        {% endfor %}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Labels</td>
-                                    <td>
-                                        {% for x in object.label.all %} {{ x }}
-                                            {% if user.is_authenticated %}
-                                                <a href="{% url 'vocabs:skoslabel_update' pk=x.id %}"> <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></a>
-                                            {% endif %}<br />
-                                        {% endfor %}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>legacy id</td>
-                                    <td>{{ object.legacy_id }}</td>
-                                </tr>
+                                {% if object.definition %}
+                                    <tr>
+                                        <td>skos:definition | @{{ object.definition_lang }}</td>
+                                        <td>{{ object.definition }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if object.scheme.all %}
+                                    <tr>
+                                        <td>skos:inScheme</td>
+                                        <td>
+                                            {% for x in object.scheme.all %} {{ x }}
+                                                {% if user.is_authenticated %}
+                                                    <a href="{% url 'vocabs:skosconceptscheme_update' pk=x.id %}"> <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></a>
+                                                {% endif %}<br/>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if object.name_reverse %}
+                                    <tr>
+                                        <tr>
+                                            <td>Reverse Name</td>
+                                            <td>
+                                                {{ object.name_reverse }}
+                                            </td>
+                                        </tr>
+                                        <td>Labels</td>
+                                        <td>
+                                            {% for x in object.label.all %} {{ x }}
+                                                {% if user.is_authenticated %}
+                                                    <a href="{% url 'vocabs:skoslabel_update' pk=x.id %}"> <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></a>
+                                                {% endif %}<br />
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if object.legacy_id %}
+                                    <tr>
+                                        <td>legacy id</td>
+                                        <td>{{ object.legacy_id }}</td>
+                                    </tr>
+                                {% endif %}
                             </table>
+                            <legend>
+                                related concepts
+                            </legend>
                         </div>
                     </div>
                 </div>

@@ -80,6 +80,11 @@ class SkosConcept(models.Model):
     skos_exactmatch = models.ManyToManyField('SkosConcept', blank=True, related_name="exactmatch")
     skos_closematch = models.ManyToManyField('SkosConcept', blank=True, related_name="closematch")
     legacy_id = models.CharField(max_length=200, blank=True)
+    name_reverse = models.CharField(
+        max_length=255,
+        verbose_name='Name reverse',
+        help_text='Inverse relation like: "is sub-class of" vs. "is super-class of".',
+        blank=True)
 
     def get_broader(self):
         broader = self.skos_broader.all()
