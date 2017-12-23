@@ -1,0 +1,43 @@
+{% extends "webpage/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load webpage_extras %}
+{% block title %} About {% endblock %}
+{% block content %}
+<div class="container">
+    <h1>{{ token }}</h1>
+    <p>
+        {% crispy form %}
+    </p>
+    <table>
+        <tr>
+            <th>
+                Token
+            </th>
+            <td>
+                {{ token }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Lemma
+            </th>
+            <td>
+                {{ lemma }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Synsets
+            </th>
+            <td>
+                {% for x in synset_list %}
+                    <li>
+                        {{ x }}
+                    </li>
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

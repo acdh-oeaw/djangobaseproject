@@ -3,7 +3,7 @@ from django.views.generic.base import RedirectView
 from . import views
 
 favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
-
+app_name = 'webpage'
 urlpatterns = [
     url(r'^favicon\.ico$', favicon_view),
     url(r'^$', views.GenericWebpageView.as_view(), name="start"),

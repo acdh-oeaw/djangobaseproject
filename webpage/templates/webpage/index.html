@@ -1,6 +1,5 @@
 {% extends "webpage/base.html" %}
 {% load staticfiles %}
-{% load stats_extras %}
 {% load webpage_extras %}
 {% block content %}
     <div class="container text-center">
@@ -25,22 +24,5 @@
         <h1 style="text-align:center">{% projects_metadata 'title' %}</h1>
         <h3>{% projects_metadata 'subtitle' %}</h3>
         <p>{% projects_metadata 'description' %}</p>
-        <div>
-            <h3>Data-Count</h3>
-            {% create_object_count app='entities' as models %}
-            {% for x in models %}
-            <div class="col-lg-4 col-md-4 col-sm-6 grid-item type-one">
-                <div class="div-tile">
-                    {% if x.link %}
-                        <a href="{{ x.link }}"><h5>{{x.name}}</h5></a>
-                        {% else %}
-                        <h5>{{x.name}}</h5>
-                    {% endif %}
-                    <hr class="hrtile">
-                    <h5 class="count">{{x.count}}</h5>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
     </div>
 {% endblock %}
