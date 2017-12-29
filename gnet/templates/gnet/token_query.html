@@ -9,35 +9,30 @@
     <p>
         {% crispy form %}
     </p>
-    <table>
-        <tr>
-            <th>
-                Token
-            </th>
-            <td>
-                {{ token }}
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Lemma
-            </th>
-            <td>
-                {{ lemma }}
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Synsets
-            </th>
-            <td>
-                {% for x in synset_list %}
-                    <li>
-                        {{ x }}
-                    </li>
-                {% endfor %}
-            </td>
-        </tr>
-    </table>
+    <legend>Lemmas for: {{ token }}</legend>
+    <ul>
+        {% for x in synset_list %}
+            {% for y in x.orthForm %}
+                <li>
+                    {{ y }}
+                </li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+    <legend>Hypernym pahts for: {{ token }}</legend>
+    <ul>
+        {% for x in synset_list %}
+            {% for y in x.path %}
+                <h3>Path</h3>
+                    {% for p in y %}
+                        <li>
+                            {{ p }}
+                        </li>
+                    {% endfor %}
+                <hr/>
+            {% endfor %}
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}
