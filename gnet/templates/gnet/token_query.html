@@ -5,7 +5,9 @@
 {% block title %} About {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>{{ token }}</h1>
+    {% if token %}
+        <h1>{{ token }}</h1> <a href="../synset?token={{ token }}&format=json">See result as JSON</a>
+    {% endif %}
     <p>
         {% crispy form %}
     </p>

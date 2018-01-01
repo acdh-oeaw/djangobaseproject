@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 {% load webpage_extras %}
-{% load browsing_extras %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -81,11 +80,14 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Germanet
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">NLP
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'gnet:token' %}">Token2Syns</a></li>
+                            <li><a href="{% url 'gnet:synset' %}">Token2Syns API</a></li>
+                            <li><a href="{% url 'gnet:lemmatize' %}">Token2POS</a></li>
+                            <li><a href="{% url 'gnet:lemma' %}">Token2POS API</a></li>
                         </ul>
                     </li>
                 </ul>
