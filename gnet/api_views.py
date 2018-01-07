@@ -9,6 +9,11 @@ nlp = spacy.load('de_core_news_sm')
 
 @api_view()
 def lemma(request):
+    """
+    get:
+    Expects a `token` parameter (e.g. ?token=flog) which will be POS-tagged.
+
+    """
     token = request.GET.get('token')
     enriched = {}
     if token:
@@ -24,6 +29,11 @@ def lemma(request):
 
 @api_view()
 def synset(request):
+    """
+    get:
+    Expects a `token` parameter (e.g. ?token=flog) which will be checked against germanet.
+
+    """
     token = request.GET.get('token')
     enriched = {}
     if token:
