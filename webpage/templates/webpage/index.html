@@ -1,0 +1,46 @@
+{% extends "webpage/base.html" %}
+{% load staticfiles %}
+{% load stats_extras %}
+{% load webpage_extras %}
+{% block content %}
+    <div class="container text-center">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+            </ol>
+            <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                    <img src="{% static 'webpage/img/acdh_django_base_project_orange.png' %}" alt="First" width="1200" height="600" title="by Sandra Lehecka" />
+                    <div class="carousel-caption"></div>
+                </div>
+                <div class="item">
+                    <img src="{% static 'webpage/img/ACDH_Panorama_Postkarte_motiv02.jpg' %}" alt="a nice feature picture" width="1200" height="600" title="by Sandra Lehecka" />
+                    <div class="carousel-caption"></div>
+                </div>
+            </div>
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"></a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"></a>
+        </div>
+        <h1 style="text-align:center">{% projects_metadata 'title' %}</h1>
+        <h3>{% projects_metadata 'subtitle' %}</h3>
+        <p>{% projects_metadata 'description' %}</p>
+        <div>
+            <h3>Data-Count</h3>
+            {% create_object_count app='entities' as models %}
+            {% for x in models %}
+            <div class="col-lg-4 col-md-4 col-sm-6 grid-item type-one">
+                <div class="div-tile">
+                    {% if x.link %}
+                        <a href="{{ x.link }}"><h5>{{x.name}}</h5></a>
+                        {% else %}
+                        <h5>{{x.name}}</h5>
+                    {% endif %}
+                    <hr class="hrtile">
+                    <h5 class="count">{{x.count}}</h5>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

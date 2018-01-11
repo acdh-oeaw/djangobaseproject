@@ -1,0 +1,11 @@
+{% extends "webpage/base.html" %}
+{% block content %}
+<div class="container" style="text-align:center;">
+
+	<h1>Sync with Zotero</h1>
+	<p>To syncronize the application's bibliographic-database with the <a href="{{ base_url }}">{{ collection_title }}</a>, please hit the subtle button below. Be aware that due to reduction of traffic, only the last <strong>25</strong> in Zotero modified items will be synced.</p>
+
+		<a class ="btn btn-primary btn-lg"  href="{% url 'bib:synczotero_action' %}">Synchronize</a>
+</div>
+
+{% endblock %}

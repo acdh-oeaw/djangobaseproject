@@ -1,0 +1,15 @@
+{% extends "webpage/base.html" %}
+{% block Title %} Create/Modify Institution {% endblock %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h1>Create/Edit Institution</h1>
+    </div>
+    <div class="panel-body">
+         {% crispy form %}
+    </div>
+</div>
+</div>
+{% endblock content %}
