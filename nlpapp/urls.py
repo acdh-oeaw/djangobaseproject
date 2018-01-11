@@ -9,6 +9,6 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^docs/', include_docs_urls(title='NLP-API')),
     url(r'^admin/', admin.site.urls),
-    url(r'^query/', include('gnet.urls', namespace='gnet')),
+    url(r'^query/', include('enrich.urls', namespace='enrich')),
     url(r'^', include('webpage.urls', namespace='webpage')),
 ]

@@ -10,7 +10,7 @@ nlp = spacy.load('de_core_news_sm')
 
 
 class TextParser(FormView):
-    template_name = 'gnet/textparser.html'
+    template_name = 'enrich/textparser.html'
     form_class = LongTextForm
     success_url = '.'
 
@@ -44,7 +44,7 @@ class TextParser(FormView):
 
 
 class Lemmatize(FormView):
-    template_name = 'gnet/lemmatize.html'
+    template_name = 'enrich/lemmatize.html'
     form_class = TokenForm
     success_url = '.'
 
@@ -63,7 +63,7 @@ class Lemmatize(FormView):
 
 
 class TokenQuery(FormView):
-    template_name = 'gnet/token_query.html'
+    template_name = 'enrich/token_query.html'
     form_class = TokenForm
     success_url = '.'
 

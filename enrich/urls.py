@@ -1,7 +1,7 @@
 from django.urls import include, path
 from . import views, api_views
 
-app_name = 'gnet'
+app_name = 'enrich'
 
 urlpatterns = [
     path('token/', views.TokenQuery.as_view(), name='token'),
