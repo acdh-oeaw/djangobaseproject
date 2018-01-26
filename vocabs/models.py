@@ -1,7 +1,7 @@
 import os
 from django.conf import settings
 from django.db import models
-from django.core.urlresolvers import reverse
+
 from django.utils.text import slugify
 from django.utils.functional import cached_property
 
@@ -26,7 +26,9 @@ class SkosNamespace(models.Model):
 
 class SkosConceptScheme(models.Model):
     dc_title = models.CharField(max_length=300, blank=True)
-    namespace = models.ForeignKey(SkosNamespace, blank=True, null=True)
+    namespace = models.ForeignKey(
+        SkosNamespace, blank=True, null=True, on_delete=models.PROTECT
+    )
     dct_creator = models.URLField(blank=True)
     legacy_id = models.CharField(max_length=200, blank=True)
 
@@ -72,18 +74,33 @@ class SkosConcept(models.Model):
     definition_lang = models.CharField(max_length=3, blank=True, default="eng")
     label = models.ManyToManyField(SkosLabel, blank=True)
     notation = models.CharField(max_length=300, blank=True)
-    namespace = models.ForeignKey(SkosNamespace, blank=True, null=True)
-    skos_broader = models.ManyToManyField('SkosConcept', blank=True, related_name="narrower")
-    skos_narrower = models.ManyToManyField('SkosConcept', blank=True, related_name="broader")
-    skos_related = models.ManyToManyField('SkosConcept', blank=True, related_name="related")
-    skos_broadmatch = models.ManyToManyField('SkosConcept', blank=True, related_name="broadmatch")
-    skos_exactmatch = models.ManyToManyField('SkosConcept', blank=True, related_name="exactmatch")
-    skos_closematch = models.ManyToManyField('SkosConcept', blank=True, related_name="closematch")
+    namespace = models.ForeignKey(
+        SkosNamespace, blank=True, null=True, on_delete=models.PROTECT
+    )
+    skos_broader = models.ManyToManyField(
+        'SkosConcept', blank=True, related_name="narrower"
+    )
+    skos_narrower = models.ManyToManyField(
+        'SkosConcept', blank=True, related_name="broader"
+    )
+    skos_related = models.ManyToManyField(
+        'SkosConcept', blank=True, related_name="related"
+    )
+    skos_broadmatch = models.ManyToManyField(
+        'SkosConcept', blank=True, related_name="broadmatch"
+    )
+    skos_exactmatch = models.ManyToManyField(
+        'SkosConcept', blank=True, related_name="exactmatch"
+    )
+    skos_closematch = models.ManyToManyField(
+        'SkosConcept', blank=True, related_name="closematch"
+    )
     legacy_id = models.CharField(max_length=200, blank=True)
     name_reverse = models.CharField(
         max_length=255,
         verbose_name='Name reverse',
-        help_text='Inverse relation like: "is sub-class of" vs. "is super-class of".',
+        help_text='Inverse relation like: \
+        "is sub-class of" vs. "is super-class of".',
         blank=True)
 
     def get_broader(self):

@@ -1,14 +1,18 @@
 import re
 from django.db import models
-from django.core.urlresolvers import reverse
+
 from idprovider.models import IdProvider
 
 
 class AlternativeName(IdProvider):
-    name = models.CharField(max_length=250, blank=True, help_text="Alternative Name")
+    name = models.CharField(
+        max_length=250, blank=True, help_text="Alternative Name"
+    )
 
     def get_absolute_url(self):
-        return reverse('entities:alternativename_detail', kwargs={'pk': self.id})
+        return reverse(
+            'entities:alternativename_detail', kwargs={'pk': self.id}
+        )
 
     @classmethod
     def get_listview_url(self):
@@ -31,7 +35,9 @@ class AlternativeName(IdProvider):
         return False
 
     def get_absolute_url(self):
-        return reverse('entities:alternativename_detail', kwargs={'pk': self.id})
+        return reverse(
+            'entities:alternativename_detail', kwargs={'pk': self.id}
+        )
 
     def __str__(self):
         return "{}".format(self.name)
@@ -66,9 +72,12 @@ class Place(IdProvider):
     part_of = models.ForeignKey(
         "Place", null=True, blank=True,
         help_text="A place (country) this place is part of.",
-        related_name="has_child"
+        related_name="has_child",
+        on_delete=models.PROTECT
     )
-    place_type = models.CharField(choices=PLACE_TYPES, null=True, blank=True, max_length=50)
+    place_type = models.CharField(
+        choices=PLACE_TYPES, null=True, blank=True, max_length=50
+    )
 
     def get_geonames_url(self):
         if self.geonames_id.startswith('ht') and self.geonames_id.endswith('.html'):
@@ -120,9 +129,13 @@ class Institution(IdProvider):
     authority_url = models.CharField(max_length=300, blank=True)
     alt_names = models.CharField(max_length=300, blank=True)
     abbreviation = models.CharField(max_length=300, blank=True)
-    location = models.ForeignKey(Place, blank=True, null=True)
+    location = models.ForeignKey(
+        Place, blank=True, null=True, on_delete=models.PROTECT
+    )
     parent_institution = models.ForeignKey(
-        'Institution', blank=True, null=True, related_name='children_institutions')
+        'Institution', blank=True, null=True, related_name='children_institutions',
+        on_delete=models.PROTECT
+    )
     comment = models.TextField(blank=True)
 
     @classmethod
@@ -164,7 +177,8 @@ class Person(IdProvider):
     acad_title = models.CharField(max_length=300, blank=True)
     alt_names = models.CharField(max_length=300, blank=True)
     belongs_to_institution = models.ForeignKey(
-        Institution, blank=True, null=True, related_name="has_member"
+        Institution, blank=True, null=True, related_name="has_member",
+        on_delete=models.PROTECT
     )
     authority_url = models.CharField(max_length=300, blank=True)
     comment = models.TextField(blank=True)

@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from . import views
 
+app_name = 'browsing'
+
 urlpatterns = [
     url(r'places/$', views.PlaceListView.as_view(), name='browse_places'),
     url(r'places/(?P<pk>[0-9]+)$', views.PlaceListView.as_view(), name='place_detail'),

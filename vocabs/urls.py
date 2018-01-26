@@ -4,6 +4,8 @@ from . import import_views
 from . import dal_views
 from .models import SkosLabel, SkosConcept, SkosConceptScheme
 
+app_name = 'vocabs'
+
 
 urlpatterns = [
     url(r'^$', views.SkosConceptListView.as_view(), name='skosconcept_list'),

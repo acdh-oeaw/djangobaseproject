@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from . import views
 
+app_name = 'arche'
+
 urlpatterns = [
     url(r'^projects/$', views.ProjectListView.as_view(), name='browse_projects'),
     url(r'^project/detail/(?P<pk>[0-9]+)$', views.ProjectDetailView.as_view(),

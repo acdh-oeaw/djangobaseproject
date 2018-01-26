@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'django_spaghetti',
     'django_filters',
     'django_tables2',
     'rest_framework',
@@ -46,13 +45,6 @@ CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
-    'PAGE_SIZE': 10
-}
-
-SPAGHETTI_SAUCE = {
-    'apps': ['vocabs', 'entities', 'bib'],
-    'show_fields': False,
-    'exclude': {'auth': ['user']}
 }
 
 MIDDLEWARE = [
