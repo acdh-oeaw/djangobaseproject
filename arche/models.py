@@ -14,6 +14,15 @@ class RepoObject(models.Model):
         help_text="A verbose description of certain aspects of an entity. \
         This is the most generic property, use more specific sub-properties where applicable."
     )
+    acdh_id = models.CharField(
+        max_length=250, blank=True, verbose_name="acdh:hasIdentifier",
+        help_text="Unique identifier given by ACDH and used in ACDH systems,\
+        as well as identifiers with a stable URL or URI assigned by other parties"
+    )
+    checked = models.BooleanField(
+        blank=True, default=False, verbose_name="Checked",
+        help_text="Set to True if the Object passed your internal quality control"
+    )
 
     class Meta:
         abstract = True
@@ -59,6 +68,66 @@ class Collection(RepoObject):
 
     def get_prev(self):
         prev = Collection.objects.filter(id__lt=self.id).order_by('-id')
+        if prev:
+            return prev.first().id
+        return False
+
+
+class Resource(RepoObject):
+    """
+    Mimiks acdh:Resource class:
+    Basic entity in the schema containing actual data / content payload; \
+    comparable (and mostly equivalent) to files in a file system.
+    """
+
+    has_creator = models.ManyToManyField(
+        Person, blank=True, verbose_name="acdh:hasContributor",
+        help_text="Agent (person, group, organisation) (B) who was actively involved in \
+        creating/curating/editing a Resource, a Collection or in a Project (A).",
+        related_name="created_resource"
+    )
+    has_filetype = models.CharField(
+        max_length=250, blank=True, verbose_name="acdh:hasFormat",
+        help_text="Format of a resource (A). Indicated as MIME type."
+    )
+
+    file_size = models.IntegerField(
+        blank=True, null=True, verbose_name="acdh:hasBinarySize",
+        help_text="Indicates size in bytes of a Resource or Collection"
+    )
+    part_of = models.ForeignKey(
+        'Collection', blank=True, null=True, verbose_name="acdh:isPartOf",
+        help_text="Indicates A is a part of aggregate B, \
+        e. g. elements of a series, items of a collection.", related_name="has_part_resource",
+        on_delete=models.PROTECT
+    )
+
+    def __str__(self):
+        return "{}".format(self.has_title)
+
+    def get_absolute_url(self):
+        return reverse('arche:collection_detail', kwargs={'pk': self.id})
+
+    @classmethod
+    def get_createview_url(self):
+        return reverse('arche:resource_create')
+
+    @classmethod
+    def get_listview_url(self):
+        return reverse('arche:browse_resources')
+
+    # @classmethod
+    # def get_arche_dump(self):
+    #     return reverse('arche:rdf_resources')
+
+    def get_next(self):
+        next = Resource.objects.filter(id__gt=self.id)
+        if next:
+            return next.first().id
+        return False
+
+    def get_prev(self):
+        prev = Resource.objects.filter(id__lt=self.id).order_by('-id')
         if prev:
             return prev.first().id
         return False

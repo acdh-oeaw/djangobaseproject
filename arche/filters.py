@@ -1,6 +1,6 @@
 import django_filters
 from dal import autocomplete
-from .models import Project, Collection
+from .models import *
 
 django_filters.filters.LOOKUP_TYPES = [
     ('', '---------'),
@@ -17,6 +17,23 @@ django_filters.filters.LOOKUP_TYPES = [
     ('icontains', 'Contains (case insensitive)'),
     ('not_contains', 'Does not contain'),
 ]
+
+
+class ResourceListFilter(django_filters.FilterSet):
+    has_title = django_filters.CharFilter(
+        lookup_expr='icontains',
+        help_text=Resource._meta.get_field('has_title').help_text,
+        label=Resource._meta.get_field('has_title').verbose_name
+        )
+    description = django_filters.CharFilter(
+        lookup_expr='icontains',
+        help_text=Resource._meta.get_field('description').help_text,
+        label=Resource._meta.get_field('description').verbose_name
+        )
+
+    class Meta:
+        model = Resource
+        fields = "__all__"
 
 
 class ProjectListFilter(django_filters.FilterSet):

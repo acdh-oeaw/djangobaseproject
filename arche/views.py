@@ -9,10 +9,10 @@ from django.urls import reverse, reverse_lazy
 from django_tables2 import SingleTableView, RequestConfig
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.detail import DetailView
-from .models import Project, Collection
-from .forms import ProjectForm, ProjectFilterFormHelper, CollectionForm, CollectionFilterFormHelper
-from .filters import ProjectListFilter, CollectionListFilter
-from .tables import ProjectTable, CollectionTable
+from .models import Project, Collection, Resource
+from .forms import *
+from .filters import *
+from .tables import *
 from .serializer_arche import collection_to_arche, project_to_arche
 from browsing.views import GenericListView
 from browsing.forms import GenericFilterFormHelper
@@ -186,3 +186,70 @@ class CollectionDelete(DeleteView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CollectionDelete, self).dispatch(*args, **kwargs)
+
+
+class ResourceListView(GenericListView):
+    model = Resource
+    table_class = ResourceTable
+    filter_class = ResourceListFilter
+    formhelper_class = ResourceFilterFormHelper
+    init_columns = ['id', 'has_title']
+
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
+
+    def get_context_data(self, **kwargs):
+        context = super(ResourceListView, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        return context
+
+    def get_table(self, **kwargs):
+        table = super(GenericListView, self).get_table()
+        RequestConfig(self.request, paginate={
+            'page': 1, 'per_page': self.paginate_by}).configure(table)
+        default_cols = self.init_columns
+        all_cols = self.get_all_cols()
+        selected_cols = self.request.GET.getlist("columns") + default_cols
+        exclude_vals = [x for x in all_cols if x not in selected_cols]
+        table.exclude = exclude_vals
+        return table
+
+
+class ResourceDetailView(DetailView):
+    model = Resource
+    template_name = 'arche/resource_detail.html'
+
+
+class ResourceCreate(CreateView):
+
+    model = Resource
+    form_class = ResourceForm
+    template_name = 'arche/resource_create.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ResourceCreate, self).dispatch(*args, **kwargs)
+
+
+class ResourceUpdate(UpdateView):
+
+    model = Resource
+    form_class = ResourceForm
+    template_name = 'arche/resource_create.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ResourceUpdate, self).dispatch(*args, **kwargs)
+
+
+class ResourceDelete(DeleteView):
+    model = Resource
+    template_name = 'webpage/confirm_delete.html'
+    success_url = reverse_lazy('arche:browse_projects')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ResourceDelete, self).dispatch(*args, **kwargs)

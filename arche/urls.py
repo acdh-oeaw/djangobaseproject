@@ -24,4 +24,13 @@ urlpatterns = [
     url(r'^collection/delete/(?P<pk>[0-9]+)$', views.CollectionDelete.as_view(),
         name='collection_delete'),
     url(r'collections-rdf/$', views.CollectionRDFView.as_view(), name='rdf_collections'),
+    url(r'^resources/$', views.ResourceListView.as_view(), name='browse_resources'),
+    url(r'^resource/detail/(?P<pk>[0-9]+)$', views.ResourceDetailView.as_view(),
+        name='resource_detail'),
+    url(r'^resource/create/$', views.ResourceCreate.as_view(),
+        name='resource_create'),
+    url(r'^resource/edit/(?P<pk>[0-9]+)$', views.ResourceUpdate.as_view(),
+        name='resource_edit'),
+    url(r'^resource/delete/(?P<pk>[0-9]+)$', views.ResourceDelete.as_view(),
+        name='resource_delete')
 ]
