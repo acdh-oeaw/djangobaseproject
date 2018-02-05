@@ -33,7 +33,7 @@ class Collection(RepoObject):
         'Collection', blank=True, null=True, verbose_name="acdh:isPartOf",
         help_text="Indicates A is a part of aggregate B, \
         e. g. elements of a series, items of a collection.", related_name="has_part",
-        on_delete=models.PROTECT
+        on_delete=models.CASCADE
     )
     has_contributor = models.ManyToManyField(
         Person, blank=True, verbose_name="acdh:hasContributor",
@@ -99,14 +99,14 @@ class Resource(RepoObject):
         'Collection', blank=True, null=True, verbose_name="acdh:isPartOf",
         help_text="Indicates A is a part of aggregate B, \
         e. g. elements of a series, items of a collection.", related_name="has_part_resource",
-        on_delete=models.PROTECT
+        on_delete=models.CASCADE
     )
 
     def __str__(self):
         return "{}".format(self.has_title)
 
     def get_absolute_url(self):
-        return reverse('arche:collection_detail', kwargs={'pk': self.id})
+        return reverse('arche:resource_detail', kwargs={'pk': self.id})
 
     @classmethod
     def get_createview_url(self):

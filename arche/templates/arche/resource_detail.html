@@ -1,10 +1,9 @@
-{% extends "webpage/base.html" %}
+{% extends "arche/repo_object_base.html" %}
 {% load staticfiles %}
 {% block title %}Resource{% endblock %}
-{% block content %}
+{% block repo_header %}
 
-<div class="container">
-    <div class="panel panel-default procustom-panel-create">
+
         <div class="panel-heading procustom-panel-heading">
             <div class="row">
                 <div class="col-md-2">
@@ -41,70 +40,31 @@
             </div>
         </div>
     </div>
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-md-6">
-                <legend>About</legend>
-                <table class="table table-bordered table-hover">
-                    <tr>
-                        <th>
-                            acdh:hasTitle
-                        </th>
-                        <td>
-                            {{ object.has_title }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            description
-                        </th>
-                        <td>
-                            {{ object.description }}
-                        </td>
-                    </tr>
-                </table>
-                <legend>Related Person</legend>
-                <table class="table table-bordered table-hover">
-                    <tr>
-                        <th>
-                            acdh:has_principal
-                        </th>
-                        <td>
-                            {% for x in object.has_principal.all %}
-                                <li>
-                                    <a href="{{x.get_absolute_url}}">{{ x }}</a>
-                                </li>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            acdh:hasContributor(s)
-                        </th>
-                        <td>
-                            {% for x in object.has_contributor.all %}
-                                <li>
-                                    <a href="{{x.get_absolute_url}}">{{ x }}</a>
-                                </li>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-md-6">
-                <legend>Related Collection</legend>
-                <table class="table table-bordered table-hover">
-                    <tr>
-                        <td>
-                            {% for x in object.related_collection.all %}
-                                <a href="{{x.get_absolute_url}}">{{ x }}</a>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
+{% endblock %}
+
+{% block more_info %}
+    <legend>more Info</legend>
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>
+                acdh:has_filetype
+            </th>
+            <td>
+                {{ object.has_filetype }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                acdh:file_size
+            </th>
+            <td>
+                {{ object.file_dsize }}
+            </td>
+        </tr>
+    </table>
+{% endblock %}
+
+{% block related_objects %}
+    <legend>Part Of</legend>
+    <a href="{{ object.part_of.get_absolute_url }}">{{ object.part_of }}</a>
 {% endblock %}

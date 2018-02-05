@@ -1,22 +1,20 @@
-{% extends "webpage/base.html" %}
+{% extends "arche/repo_object_base.html" %}
 {% load staticfiles %}
 {% block title %}Collection{% endblock %}
-{% block content %}
+{% block repo_header %}
 
-<div class="container">
-    <div class="panel panel-default procustom-panel-create">
-        <div class="panel-heading procustom-panel-heading">
-            <div class="row">
-                <div class="col-md-2">
-                    {% if object.get_prev %}
+    <div class="panel-heading procustom-panel-heading">
+        <div class="row">
+            <div class="col-md-2">
+                {% if object.get_prev %}
                     <h2>
                         <a href="{% url 'arche:collection_detail' pk=object.get_prev %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true" title="previous"></span></a>
                     </h2>
-                    {% endif %}
-                </div>
-                <div class="col-md-8">
-                    <h1 style="text-align: center;">
-                        <small>collection:</small> {{ object }}
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <h1 style="text-align: center;">
+                    <small>collection:</small> {{ object }}
                         {% if user.is_authenticated %}
                             <small>
                                 <a href="{% url 'arche:collection_edit' pk=object.id %}">
@@ -29,95 +27,36 @@
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true" title="edit"></span>
                                 </a>
                             </small>
-                        {% endif %}
-                    </h1>
-                </div>
-                <div class="col-md-2">
-                    <h2>
-                        {% if object.get_next %}
-                        <a href="{% url 'arche:collection_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
-                    </h2>
                     {% endif %}
-                </div>
+                </h1>
             </div>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <legend>About</legend>
-                    <table class="table table-bordered table-hover">
-                        <tr>
-                            <th>
-                                acdh:hasTitle
-                            </th>
-                            <td>
-                                {{ object.has_title }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                description
-                            </th>
-                            <td>
-                                {{ object.description }}
-                            </td>
-                        </tr>
-                    </table>
-
-                    <legend>Related Person</legend>
-                    <table class="table table-bordered table-hover">
-                        {% if object.has_contributor.all %}
-                            <tr>
-                                <th>
-                                    acdh:hasContributor
-                                </th>
-                                <td>
-                                    {% for x in object.has_contributor.all %}
-                                        <a href="{{ x.get_absolute_url }}">{{ x }}</a><br/>
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        {% endif %}
-                    </table>
-                </div>
-                <div class="col-md-6">
-                    {% if object.has_related_project.all %}
-                        <legend>Related Project</legend>
-                        <table class="table table-bordered table-hover">
-                            <tr>
-                                <td>
-                                    {% for x in object.has_related_project.all %}
-                                        <a href="{{x.get_absolute_url}}">{{ x }}</a>
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        </table>
+            <div class="col-md-2">
+                <h2>
+                    {% if object.get_next %}
+                        <a href="{% url 'arche:collection_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
                     {% endif %}
-                    {% if object.has_part.all %}
-                        <legend>Child Collection(s)</legend>
-                        <table class="table table-bordered table-hover">
-                            <tr>
-                                <td>
-                                    {% for x in object.has_part.all %}
-                                        <a href="{{x.get_absolute_url}}">{{ x }}</a>
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        </table>
-                    {% endif %}
-                    {% if object.part_of %}
-                        <legend>Parent Collection</legend>
-                        <table class="table table-bordered table-hover">
-                            <tr>
-                                <td>
-                                    <a href="{{ object.part_of.get_absolute_url }}">{{ object.part_of }}</a>
-                                </td>
-                            </tr>
-                        </table>
-                    {% endif %}
-                </div>
+                </h2>
             </div>
         </div>
     </div>
-</div>
+{% endblock %}
+
+{% block related_objects %}
+    <legend>Part Of</legend>
+    <a href="{{ object.part_of.get_absolute_url }}">{{ object.part_of }}</a>
+
+    <legend>Children</legend>
+    <h4>Collection(s)</h4>
+    {% for x in object.has_part.all %}
+        <li>
+            <a href="{{ x.get_absolute_url }}">{{ x }}</a>
+        </li>
+    {% endfor %}
+    <h4>Resources(s)</h4>
+    {% for x in object.has_part_resource.all %}
+        <li>
+            <a href="{{ x.get_absolute_url }}">{{ x }}</a>
+        </li>
+    {% endfor %}
+
 {% endblock %}
