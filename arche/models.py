@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import cached_property
 
 from entities.models import Person, Institution
 
@@ -41,6 +42,16 @@ class Collection(RepoObject):
         creating/curating/editing a Resource, a Collection or in a Project (A).",
         related_name="contributes_to_collection"
     )
+
+    @cached_property
+    def label(self):
+        d = self
+        res = self.has_title
+        while d.part_of:
+            res = d.part_of.has_title + '/' + d.has_title
+            d = d.part_of
+        res = res.replace('\\', '/')
+        return "/".join([res, self.has_title])
 
     def __str__(self):
         return "{}".format(self.has_title)
@@ -131,6 +142,16 @@ class Resource(RepoObject):
         if prev:
             return prev.first().id
         return False
+
+    @cached_property
+    def label(self):
+        d = self
+        res = self.has_title
+        while d.part_of:
+            res = d.part_of.has_title + '/' + d.has_title
+            d = d.part_of
+        res = res.replace('\\', '/')
+        return "/".join([res, self.has_title])
 
 
 class Project(RepoObject):
