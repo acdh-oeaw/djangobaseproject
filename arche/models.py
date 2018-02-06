@@ -43,17 +43,6 @@ class Collection(RepoObject):
         related_name="contributes_to_collection"
     )
 
-    def label(self):
-        if self.acdh_id:
-            return self.acdh_id
-        else:
-            d = self
-            res = self.has_title
-            while d.part_of:
-                res = d.part_of.has_title + '/' + res
-                d = d.part_of
-            return res
-
     def __str__(self):
         return "{}".format(self.has_title)
 
@@ -148,12 +137,7 @@ class Resource(RepoObject):
         if self.acdh_id:
             return self.acdh_id
         else:
-            d = self
-            res = self.has_title
-            while d.part_of:
-                res = d.part_of.has_title + '/' + res
-                d = d.part_of
-            return res
+            return "{}/{}".format(self.part_of.has_title, self.has_title)
 
 
 class Project(RepoObject):

@@ -7,11 +7,16 @@ def path2cols(path, separator="_"):
     current = 0
     cols = []
     final_cols = []
-    for x in reversed(path.split(separator)):
+    path_parts = path.split(separator)
+    path_length = len(path_parts)
+    prefix = path_length
+    for x in reversed(path_parts):
+        col_title = '/'.join(path_parts[0:prefix])
         col, _ = Collection.objects.get_or_create(
-            has_title=x
+            has_title=col_title
         )
         cols.append(col)
+        prefix = prefix - 1
     while counter != len(cols):
         current_col = cols[current]
         parent_col = cols[counter]

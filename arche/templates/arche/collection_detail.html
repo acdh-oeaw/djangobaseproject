@@ -1,5 +1,6 @@
 {% extends "arche/repo_object_base.html" %}
 {% load staticfiles %}
+{% load arche_filters %}
 {% block title %}Collection{% endblock %}
 {% block repo_header %}
 
@@ -15,7 +16,7 @@
             </div>
             <div class="col-md-8">
                 <h1 style="text-align: center;">
-                    <small>collection:</small> {{ object }}
+                    <small>collection:</small> {{ object.has_title|truncate_inverse }}
                         {% if user.is_authenticated %}
                             <small>
                                 <a href="{% url 'arche:collection_edit' pk=object.id %}">

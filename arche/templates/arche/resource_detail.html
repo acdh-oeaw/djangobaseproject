@@ -14,8 +14,8 @@
                     {% endif %}
                 </div>
                 <div class="col-md-8">
-                    <h1 style="text-align: center;">
-                        <small>resource:</small> {{ object }}
+                    <h1 >
+                        <small>resource:</small> {{ object|truncatechars:25 }}
                         {% if user.is_authenticated %}
                             <small>
                                 <a href="{% url 'arche:resource_edit' pk=object.id %}">
