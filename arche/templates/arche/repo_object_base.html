@@ -41,30 +41,48 @@
         {% endblock %}
         <legend>Related Person</legend>
         <table class="table table-bordered table-hover">
-            <tr>
-                <th>
-                    acdh:has_principal
-                </th>
-                <td>
-                    {% for x in object.has_principal.all %}
-                        <li>
-                            <a href="{{x.get_absolute_url}}">{{ x }}</a>
-                        </li>
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    acdh:hasContributor(s)
-                </th>
-                <td>
-                    {% for x in object.has_contributor.all %}
-                        <li>
-                            <a href="{{x.get_absolute_url}}">{{ x }}</a>
-                        </li>
-                    {% endfor %}
-                </td>
-            </tr>
+            {% if object.has_principal.all %}
+                <tr>
+                    <th>
+                        acdh:has_principal
+                    </th>
+                    <td>
+                        {% for x in object.has_principal.all %}
+                            <li>
+                                <a href="{{x.get_absolute_url}}">{{ x }}</a>
+                            </li>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if object.has_creator.all %}
+                <tr>
+                    <th>
+                        acdh:has_creator
+                    </th>
+                    <td>
+                        {% for x in object.has_creator.all %}
+                            <li>
+                                <a href="{{x.get_absolute_url}}">{{ x }}</a>
+                            </li>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if object.has_contributor.all %}
+                <tr>
+                    <th>
+                        acdh:hasContributor(s)
+                    </th>
+                    <td>
+                        {% for x in object.has_contributor.all %}
+                            <li>
+                                <a href="{{x.get_absolute_url}}">{{ x }}</a>
+                            </li>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
         </table>
     </div>
     <div class="panel-footer">

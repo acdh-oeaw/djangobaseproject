@@ -42,6 +42,12 @@ class Collection(RepoObject):
         creating/curating/editing a Resource, a Collection or in a Project (A).",
         related_name="contributes_to_collection"
     )
+    has_creator = models.ManyToManyField(
+        Person, blank=True, verbose_name="acdh:hasContributor",
+        help_text="Agent (person, group, organisation) (B) who was actively involved in \
+        creating/curating/editing a Resource, a Collection or in a Project (A).",
+        related_name="created_collection"
+    )
 
     def __str__(self):
         return "{}".format(self.has_title)
