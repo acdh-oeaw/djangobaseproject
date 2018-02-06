@@ -43,15 +43,16 @@ class Collection(RepoObject):
         related_name="contributes_to_collection"
     )
 
-    @cached_property
     def label(self):
-        d = self
-        res = self.has_title
-        while d.part_of:
-            res = d.part_of.has_title + '/' + d.has_title
-            d = d.part_of
-        res = res.replace('\\', '/')
-        return "/".join([res, self.has_title])
+        if self.acdh_id:
+            return self.acdh_id
+        else:
+            d = self
+            res = self.has_title
+            while d.part_of:
+                res = d.part_of.has_title + '/' + res
+                d = d.part_of
+            return res
 
     def __str__(self):
         return "{}".format(self.has_title)
@@ -143,15 +144,16 @@ class Resource(RepoObject):
             return prev.first().id
         return False
 
-    @cached_property
     def label(self):
-        d = self
-        res = self.has_title
-        while d.part_of:
-            res = d.part_of.has_title + '/' + d.has_title
-            d = d.part_of
-        res = res.replace('\\', '/')
-        return "/".join([res, self.has_title])
+        if self.acdh_id:
+            return self.acdh_id
+        else:
+            d = self
+            res = self.has_title
+            while d.part_of:
+                res = d.part_of.has_title + '/' + res
+                d = d.part_of
+            return res
 
 
 class Project(RepoObject):
