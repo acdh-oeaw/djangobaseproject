@@ -6,8 +6,7 @@ def path2cols(path, separator="_"):
     counter = 1
     current = 0
     cols = []
-    final_cols = []
-    path_parts = path.split(separator)
+    path_parts = path.split(separator)[:-1]
     path_length = len(path_parts)
     prefix = path_length
     for x in reversed(path_parts):
@@ -24,7 +23,6 @@ def path2cols(path, separator="_"):
         current_col.save()
         counter += 1
         current += 1
-        final_cols.append(current_col)
     return cols
 
 

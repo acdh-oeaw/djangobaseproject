@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         path_to_file = os.path.join(settings.BASE_DIR, 'arche', 'data', options['file'])
         self.stdout.write("filepath: {}".format(path_to_file))
-        data = json.load(open(path_to_file))
+        data = json.load(open(path_to_file, "r", encoding="utf-8"))
         for x in data:
             filename = x['filename']
             directory = x['directory']
@@ -29,7 +29,7 @@ class Command(BaseCommand):
                 has_title=filename, has_filetype=file_type, file_size=size
             )
             try:
-                res.part_of = new_cols[1]
+                res.part_of = new_cols[0]
             except:
                 pass
             res.save()

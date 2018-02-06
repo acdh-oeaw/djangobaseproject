@@ -1,7 +1,6 @@
 import re
 from django.db import models
 from django.urls import reverse
-
 from idprovider.models import IdProvider
 
 
@@ -212,4 +211,9 @@ class Person(IdProvider):
         return False
 
     def __str__(self):
-        return "{}".format(self.written_name)
+        if self.written_name:
+            return "{}".format(self.written_name)
+        elif self.name and self.forename:
+            return "{}, {}".format(self.name, self.forename)
+        else:
+            return "No name provided"
