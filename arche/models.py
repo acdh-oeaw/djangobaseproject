@@ -24,6 +24,10 @@ class RepoObject(models.Model):
         blank=True, default=False, verbose_name="Checked",
         help_text="Set to True if the Object passed your internal quality control"
     )
+    has_license = models.CharField(
+        max_length=250, blank=True, verbose_name="acdh:hasLicense",
+        help_text="Denotes the license attached to an object."
+    )
 
     class Meta:
         abstract = True
@@ -43,9 +47,9 @@ class Collection(RepoObject):
         related_name="contributes_to_collection"
     )
     has_creator = models.ManyToManyField(
-        Person, blank=True, verbose_name="acdh:hasContributor",
-        help_text="Agent (person, group, organisation) (B) who was actively involved in \
-        creating/curating/editing a Resource, a Collection or in a Project (A).",
+        Person, blank=True, verbose_name="acdh:hasCreator",
+        help_text="Person (B) responsible for creation of resource (A).\
+        Will be included in the citation.",
         related_name="created_collection"
     )
 
@@ -93,6 +97,12 @@ class Resource(RepoObject):
         creating/curating/editing a Resource, a Collection or in a Project (A).",
         related_name="created_resource"
     )
+    has_contributor = models.ManyToManyField(
+        Person, blank=True, verbose_name="acdh:hasContributor",
+        help_text="Agent (person, group, organisation) (B) who was actively involved in \
+        creating/curating/editing a Resource, a Collection or in a Project (A).",
+        related_name="contributes_to_resource"
+    )
     has_filetype = models.CharField(
         max_length=250, blank=True, verbose_name="acdh:hasFormat",
         help_text="Format of a resource (A). Indicated as MIME type."
@@ -123,6 +133,23 @@ class Resource(RepoObject):
     def get_listview_url(self):
         return reverse('arche:browse_resources')
 
+    def inherit_properties(self):
+        """ fetches (some) properties of the part_of collection\
+        and saves it to the current object"""
+
+        license = self.part_of.has_license
+        if license:
+            self.has_license = license
+            self.save()
+        else:
+            license = None
+        creators = self.part_of.has_creator.all()
+        for x in creators:
+            self.has_creator.add(x)
+        contributors = self.part_of.has_contributor.all()
+        for x in contributors:
+            self.has_contributor.add(x)
+        return [creators, contributors, license]
     # @classmethod
     # def get_arche_dump(self):
     #     return reverse('arche:rdf_resources')

@@ -48,6 +48,9 @@ class ProjectListView(GenericListView):
         return table
 
 
+
+
+
 class ProjectRDFView(GenericListView):
     model = Project
     table_class = ProjectTable
@@ -194,6 +197,7 @@ class ResourceListView(GenericListView):
     filter_class = ResourceListFilter
     formhelper_class = ResourceFilterFormHelper
     init_columns = ['id', 'has_title']
+    template_name = 'arche/resource_browse.html'
 
     def get_all_cols(self):
         all_cols = list(self.table_class.base_columns.keys())
@@ -253,3 +257,24 @@ class ResourceDelete(DeleteView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ResourceDelete, self).dispatch(*args, **kwargs)
+
+
+class ResourceInheritProperties(ResourceListView):
+    template_name = 'arche/resource_browse.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ResourceInheritProperties, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ResourceInheritProperties, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        new_props = []
+        for x in self.get_queryset():
+            new = x.inherit_properties()
+            new_props.append(new)
+        context['updat_report'] = new_props
+
+        return context

@@ -98,6 +98,7 @@ class ResourceFilterFormHelper(FormHelper):
                     'Basic search options',
                     'has_title',
                     'description',
+                    'part_of',
                     css_id="basic_search_fields"
                 ),
                 AccordionGroup(

@@ -30,6 +30,11 @@ class ResourceListFilter(django_filters.FilterSet):
         help_text=Resource._meta.get_field('description').help_text,
         label=Resource._meta.get_field('description').verbose_name
         )
+    part_of = django_filters.ModelMultipleChoiceFilter(
+        queryset=Collection.objects.all(),
+        help_text=Resource._meta.get_field('part_of').help_text,
+        label=Resource._meta.get_field('part_of').verbose_name
+        )
 
     class Meta:
         model = Resource

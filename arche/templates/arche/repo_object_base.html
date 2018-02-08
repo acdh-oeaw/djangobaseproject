@@ -34,11 +34,15 @@
                     {{ object.checked }}
                 </td>
             </tr>
+            <tr>
+                <th>
+                    acdh:hasLicense
+                </th>
+                <td>
+                    {{ object.has_license }}
+                </td>
+            </tr>
         </table>
-        {% block more_info %}
-        {% endblock %}
-        {% block related_objects %}
-        {% endblock %}
         <legend>Related Person</legend>
         <table class="table table-bordered table-hover">
             {% if object.has_principal.all %}
@@ -84,6 +88,11 @@
                 </tr>
             {% endif %}
         </table>
+        {% block more_info %}
+        {% endblock %}
+        {% block related_objects %}
+        {% endblock %}
+
     </div>
     <div class="panel-footer">
         {{ object.label }}
