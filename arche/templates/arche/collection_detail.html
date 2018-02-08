@@ -29,6 +29,12 @@
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true" title="edit"></span>
                                 </a>
                             </small>
+                            <small>
+                                <a href="{% url 'arche:resource_inherit' %}?part_of={{ object.id }}">
+                                    propragate properties
+                                </a>
+                            </small>
+
                     {% endif %}
                 </h1>
             </div>

@@ -48,9 +48,6 @@ class ProjectListView(GenericListView):
         return table
 
 
-
-
-
 class ProjectRDFView(GenericListView):
     model = Project
     table_class = ProjectTable
@@ -274,7 +271,7 @@ class ResourceInheritProperties(ResourceListView):
         new_props = []
         for x in self.get_queryset():
             new = x.inherit_properties()
-            new_props.append(new)
+        new_props.append(new)
         context['updat_report'] = new_props
 
         return context

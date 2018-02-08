@@ -1,14 +1,15 @@
-{% extends "browsing/generic_list.html" %}
-{% load staticfiles %}
-{% load django_tables2 %}
-{% load browsing_extras %}
-{% load i18n %}
-
-    {% block customView %}
-        <a href="{% url 'arche:resource_inherit' %}{% querystring %}">propragate resources</a>
-        {% for x in updat_report %}
+{% extends "webpage/base.html" %}
+{% block content %}
+<div class="container">
+	<h1>Propragated properties</h1>
+    {% for x in updat_report %}
+        {% for y in x %}
             <li>
-                {{ x }}
+                {{ y }}
             </li>
         {% endfor %}
-    {% endblock %}
+    {% endfor %}
+
+    <input type="button" value="Back" onclick="window.history.back()"/> 
+
+{% endblock %}
