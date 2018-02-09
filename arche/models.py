@@ -6,6 +6,9 @@ from entities.models import Person, Institution
 
 
 class RepoObject(models.Model):
+    """
+    An abstract class providing properties for subclasses.
+    """
     has_title = models.CharField(
         max_length=250, blank=True, verbose_name="acdh:hasTitle",
         help_text="Title or name of Collection."
@@ -29,11 +32,24 @@ class RepoObject(models.Model):
         help_text="Denotes the license attached to an object."
     )
 
+    def copy_instance(self):
+        """Saves a copy of the current object and returns it"""
+        obj = self
+        obj.id = None
+        obj.save()
+        return obj
+
     class Meta:
         abstract = True
 
 
 class Collection(RepoObject):
+    """
+    Mimiks acdh:Collection class:
+    Set of Repo Objects (Collections or Resources), much like folders in a file system.
+    A Collection can be optionally related to a Project (acdh:hasRelatedProject),
+    in which it was created or curated.
+    """
     part_of = models.ForeignKey(
         'Collection', blank=True, null=True, verbose_name="acdh:isPartOf",
         help_text="Indicates A is a part of aggregate B, \
