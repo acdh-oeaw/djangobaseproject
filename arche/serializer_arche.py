@@ -39,6 +39,29 @@ def collection_to_arche(itmes):
             g.add((subject, ARCHE.isPartOf, temp_col))
     return g
 
+def resource_to_arche(items):
+
+    """takes queryset of Resources objects and returns an ARCHE rdflib.Graph"""
+
+    g = rdflib.Graph()
+    for obj in items:
+        subject = URIRef('/'.join([base_url, 'resource', str(obj.id)]))
+        g.add((subject, RDF.type, ARCHE.Resource))
+        if obj.has_title:
+            g.add((subject, ARCHE.hasTitle, Literal(obj.has_title)))
+        if obj.description:
+            g.add((subject, ARCHE.hasDescription, Literal(obj.description)))
+        if obj.has_contributor.all():
+            authors_g = person_to_arche(obj.has_contributor.all())
+            g = g + authors_g
+            for x in obj.has_contributor.all():
+                temp_a = URIRef('/'.join([base_url, 'person', str(x.id)]))
+                g.add((subject, ARCHE.hasContributor, temp_a))
+        if obj.part_of:
+            temp_col = URIRef('/'.join([base_url, 'collection', str(obj.part_of.id)]))
+            g.add((subject, ARCHE.isPartOf, temp_col))
+    return g
+
 
 def project_to_arche(itmes):
 

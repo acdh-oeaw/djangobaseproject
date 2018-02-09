@@ -166,9 +166,10 @@ class Resource(RepoObject):
         for x in contributors:
             self.has_contributor.add(x)
         return [creators, contributors, license]
-    # @classmethod
-    # def get_arche_dump(self):
-    #     return reverse('arche:rdf_resources')
+
+    @classmethod
+    def get_arche_dump(self):
+        return reverse('arche:rdf_resources')
 
     def get_next(self):
         next = Resource.objects.filter(id__gt=self.id)

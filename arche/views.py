@@ -14,7 +14,7 @@ from .models import Project, Collection, Resource
 from .forms import *
 from .filters import *
 from .tables import *
-from .serializer_arche import collection_to_arche, project_to_arche
+from .serializer_arche import *
 from browsing.views import GenericListView
 from browsing.forms import GenericFilterFormHelper
 
@@ -316,3 +316,21 @@ class ResourceInheritProperties(ResourceListView):
         context['updat_report'] = new_props
 
         return context
+
+
+class ResourceRDFView(GenericListView):
+    model = Resource
+    table_class = ResourceTable
+    template_name = 'browsing/rdflib_template.txt'
+    filter_class = ResourceListFilter
+    formhelper_class = GenericFilterFormHelper
+
+    def render_to_response(self, context):
+        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+        response = HttpResponse(content_type='application/xml; charset=utf-8')
+        filename = "{}_{}".format(self.model.__name__, timestamp)
+        response['Content-Disposition'] = 'attachment; filename="{}.rdf"'.format(filename)
+        g = resource_to_arche(self.get_queryset())
+        get_format = self.request.GET.get('format', default='n3')
+        result = g.serialize(destination=response, format=get_format)
+        return response
