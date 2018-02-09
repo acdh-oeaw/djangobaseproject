@@ -28,6 +28,12 @@
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true" title="edit"></span>
                                 </a>
                             </small>
+                            |
+                            <small>
+                                <a href="{% url 'arche:resource_copy' %}?class-name=arche&id={{ object.id }}&class-name=resource">
+                                    <span class="glyphicon glyphicon-copy" aria-hidden="true" title="copy object"></span>
+                                </a>
+                            </small>
                         {% endif %}
                     </h1>
                 </div>

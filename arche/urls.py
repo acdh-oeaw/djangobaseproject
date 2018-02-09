@@ -33,5 +33,6 @@ urlpatterns = [
     url(r'^resource/edit/(?P<pk>[0-9]+)$', views.ResourceUpdate.as_view(),
         name='resource_edit'),
     url(r'^resource/delete/(?P<pk>[0-9]+)$', views.ResourceDelete.as_view(),
-        name='resource_delete')
+        name='resource_delete'),
+    url(r'^resources-copy/$', views.copy_view, name='resource_copy'),
 ]

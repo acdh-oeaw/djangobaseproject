@@ -2,7 +2,8 @@ import time
 import datetime
 from django.http import HttpResponse
 import rdflib
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.urls import reverse, reverse_lazy
@@ -16,6 +17,47 @@ from .tables import *
 from .serializer_arche import collection_to_arche, project_to_arche
 from browsing.views import GenericListView
 from browsing.forms import GenericFilterFormHelper
+
+
+def copy_view(request):
+    class_name = request.GET.get('class-name','')
+    object_id = request.GET.get('id','')
+    app_name = request.GET.get('app-name','arche')
+    if object_id and class_name:
+        class_name = class_name.lower()
+        app_name = app_name.lower()
+        try:
+            object_id = int(object_id)
+        except ValueError:
+            html = "<html><body>Wrong format of id-param</body></html>"
+            return HttpResponse(html)
+        try:
+            cont_type = ContentType.objects.get(app_label=app_name, model=class_name)
+        except:
+            html = "<html><body>Wrong format of class_name-param</body></html>"
+            return HttpResponse(html)
+        try:
+            current_object = cont_type.get_object_for_this_type(id=object_id)
+        except:
+            html = "<html><body>Resource matching query does not exist.</body></html>"
+            return HttpResponse(html)
+        new_object = current_object.copy_instance()
+        try:
+            return redirect(new_object)
+        except:
+            html = """<html>
+            <body>The object was saved but somehting is wrong with the redirect.
+            Please check if the Class of the instance you try to copy has a
+            get_absolute_url method defined<
+            /body>
+            </html>"""
+            return HttpResponse(html)
+    else:
+        html = """<html>
+        <body>Either id or class-name params are missing</body>
+        </html>"""
+        return HttpResponse(html)
+
 
 
 class ProjectListView(GenericListView):
