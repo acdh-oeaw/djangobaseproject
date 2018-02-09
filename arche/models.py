@@ -1,7 +1,6 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
-
 from entities.models import Person, Institution
 
 
@@ -191,6 +190,10 @@ class Resource(RepoObject):
 
 
 class Project(RepoObject):
+    """
+    Mimiks acdh:Project:
+    Effort or activity with defined goals and (normally) limited time scope, usually in collaborative setup with dedicated funding.
+    """
     has_principal = models.ManyToManyField(
         Person, blank=True, verbose_name="acdh:hasPrincipalInvestigator",
         help_text="Person officially designated as head of project team or subproject \

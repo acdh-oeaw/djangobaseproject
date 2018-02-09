@@ -26,6 +26,8 @@ def collection_to_arche(itmes):
         g.add((subject, RDF.type, ARCHE.Collection))
         if obj.has_title:
             g.add((subject, ARCHE.hasTitle, Literal(obj.has_title)))
+        if obj.has_license:
+            g.add((subject, ARCHE.hasTitle, Literal(obj.has_license)))
         if obj.description:
             g.add((subject, ARCHE.hasDescription, Literal(obj.description)))
         if obj.has_contributor.all():
@@ -49,6 +51,12 @@ def resource_to_arche(items):
         g.add((subject, RDF.type, ARCHE.Resource))
         if obj.has_title:
             g.add((subject, ARCHE.hasTitle, Literal(obj.has_title)))
+        if obj.has_license:
+            g.add((subject, ARCHE.hasLicense, Literal(obj.has_license)))
+        if obj.has_filetype:
+            g.add((subject, ARCHE.hasFormat, Literal(obj.has_filetype)))
+        if obj.file_size:
+            g.add((subject, ARCHE.hasBinarySize, Literal(obj.file_size)))
         if obj.description:
             g.add((subject, ARCHE.hasDescription, Literal(obj.description)))
         if obj.has_contributor.all():
@@ -57,6 +65,22 @@ def resource_to_arche(items):
             for x in obj.has_contributor.all():
                 temp_a = URIRef('/'.join([base_url, 'person', str(x.id)]))
                 g.add((subject, ARCHE.hasContributor, temp_a))
+        if obj.has_contributor.all():
+            authors_g = person_to_arche(obj.has_contributor.all())
+            g = g + authors_g
+            for x in obj.has_contributor.all():
+                temp_a = URIRef('/'.join([base_url, 'person', str(x.id)]))
+                g.add((subject, ARCHE.hasContributor, temp_a))
+            authors_g = None
+            temp_a = None
+        if obj.has_creator.all():
+            authors_g = person_to_arche(obj.has_creator.all())
+            g = g + authors_g
+            for x in obj.has_creator.all():
+                temp_a = URIRef('/'.join([base_url, 'person', str(x.id)]))
+                g.add((subject, ARCHE.hasCreator, temp_a))
+            authors_g = None
+            temp_a = None
         if obj.part_of:
             temp_col = URIRef('/'.join([base_url, 'collection', str(obj.part_of.id)]))
             g.add((subject, ARCHE.isPartOf, temp_col))

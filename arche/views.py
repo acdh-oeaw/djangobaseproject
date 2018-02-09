@@ -20,9 +20,12 @@ from browsing.forms import GenericFilterFormHelper
 
 
 def copy_view(request):
-    class_name = request.GET.get('class-name','')
-    object_id = request.GET.get('id','')
-    app_name = request.GET.get('app-name','arche')
+    """View looks for get-params with: name of application, of model and id\
+    of instance of model which should be copied"""
+
+    class_name = request.GET.get('class-name', '')
+    object_id = request.GET.get('id', '')
+    app_name = request.GET.get('app-name', 'arche')
     if object_id and class_name:
         class_name = class_name.lower()
         app_name = app_name.lower()
@@ -57,7 +60,6 @@ def copy_view(request):
         <body>Either id or class-name params are missing</body>
         </html>"""
         return HttpResponse(html)
-
 
 
 class ProjectListView(GenericListView):
