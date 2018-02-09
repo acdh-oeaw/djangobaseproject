@@ -194,7 +194,6 @@ class ResourceListView(GenericListView):
     filter_class = ResourceListFilter
     formhelper_class = ResourceFilterFormHelper
     init_columns = ['id', 'has_title']
-    template_name = 'arche/resource_browse.html'
 
     def get_all_cols(self):
         all_cols = list(self.table_class.base_columns.keys())
