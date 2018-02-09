@@ -26,15 +26,28 @@ def path2cols(path, separator="_"):
     return cols
 
 
-def create_acdhids(resource, joiner="/", base_url='https://id.acdh.oeaw.ac.at'):
+def create_acdhid(resource, trim=0, base_url='https://id.acdh.oeaw.ac.at', preserve=False):
     """
     Endpoint to process text from the ACDH internal json standard
 
     param *resource*: a Collection or Resource object:
-    param *joiner*: a string which is used to join the identifiers components with default: '/')
+    param *trim*: a interger value providing an index for cutting the beginning of string
     param *base_url*: a base url of the identifier with default 'https://id.acdh.oeaw.ac.at'
+    param *preserve*: if true nothing happens.
     """
-    path = "{}".format(resource.part_of)
-    name = "{}".format(resource.has_title)
-    acdhid = joiner.join([base_url, path, name])
-    return acdhid
+    if preserve:
+        return resource
+    else:
+        if base_url.endswith('/'):
+            base_url = base_url[:-1]
+            print(base_url)
+        try:
+            id_ending = "{}".format(resource.label()[trim:])
+            acdhid = "/".join([base_url, id_ending])
+            resource.acdh_id = acdhid
+        except TypeError:
+            id_ending = "{}".format(resource.label())
+            acdhid = "/".join([base_url, id_ending])
+            resource.acdh_id = acdhid
+        resource.save()
+        return resource

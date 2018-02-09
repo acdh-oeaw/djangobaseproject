@@ -98,6 +98,9 @@ class Collection(RepoObject):
             return prev.first().id
         return False
 
+    def label(self):
+        return self.has_title
+
 
 class Resource(RepoObject):
     """
@@ -183,16 +186,14 @@ class Resource(RepoObject):
         return False
 
     def label(self):
-        if self.acdh_id:
-            return self.acdh_id
-        else:
-            return "{}/{}".format(self.part_of.has_title, self.has_title)
+        return "{}/{}".format(self.part_of.has_title, self.has_title)
 
 
 class Project(RepoObject):
     """
     Mimiks acdh:Project:
-    Effort or activity with defined goals and (normally) limited time scope, usually in collaborative setup with dedicated funding.
+    Effort or activity with defined goals and (normally) limited time scope, usually\
+    in collaborative setup with dedicated funding.
     """
     has_principal = models.ManyToManyField(
         Person, blank=True, verbose_name="acdh:hasPrincipalInvestigator",
