@@ -1,4 +1,25 @@
 from .models import Collection
+from django.conf import settings
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
+from rdflib import URIRef
+
+try:
+    base_url = settings.ARCHE_SETTINGS['base_url']
+except AttributeError:
+    base_url = "https://please/provide/ARCHE-SETTINGS"
+
+
+def arche_ids(obj, class_name, base_url=base_url):
+    if obj.acdh_id:
+        try:
+            URLValidator(str(obj.acdh_id))
+            subject = URIRef(str(obj.acdh_id))
+        except ValidationError:
+            subject = URIRef('/'.join([base_url, 'class_name', str(str(obj.id))]))
+    else:
+        subject = URIRef('/'.join([base_url, 'class_name', str(obj.id)]))
+    return subject
 
 
 def path2cols(path, separator="_"):

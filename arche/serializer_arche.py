@@ -3,7 +3,10 @@ from django.conf import settings
 from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef, RDFS, ConjunctiveGraph
 from rdflib.namespace import DC, FOAF, RDFS, XSD
 from rdflib.namespace import SKOS
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 from entities.serializer_arche import place_to_arche, inst_to_arche, person_to_arche
+from .helpers import arche_ids
 
 ARCHE = Namespace('https://vocabs.acdh.oeaw.ac.at/schema#')
 ACDH = Namespace('https://id.acdh.oeaw.ac.at/')
@@ -22,7 +25,8 @@ def collection_to_arche(itmes):
 
     g = rdflib.Graph()
     for obj in itmes:
-        subject = URIRef('/'.join([base_url, 'collection', str(obj.id)]))
+        subject = arche_ids(obj, 'collection')
+        print(subject)
         g.add((subject, RDF.type, ARCHE.Collection))
         if obj.has_title:
             g.add((subject, ARCHE.hasTitle, Literal(obj.has_title)))
@@ -40,6 +44,7 @@ def collection_to_arche(itmes):
             temp_col = URIRef('/'.join([base_url, 'collection', str(obj.part_of.id)]))
             g.add((subject, ARCHE.isPartOf, temp_col))
     return g
+
 
 def resource_to_arche(items):
 
