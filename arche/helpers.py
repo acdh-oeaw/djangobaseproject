@@ -2,7 +2,8 @@ from .models import Collection
 from django.conf import settings
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
-from rdflib import URIRef
+from rdflib import URIRef, Graph
+from rdflib.namespace import SKOS, RDF
 
 try:
     base_url = settings.ARCHE_SETTINGS['base_url']
@@ -11,14 +12,20 @@ except AttributeError:
 
 
 def arche_ids(obj, class_name, base_url=base_url):
+    """checks if an object has a valid(!) arche_id and returns this,\
+    if not it returns a generic id"""
+
     if obj.acdh_id:
         try:
-            URLValidator(str(obj.acdh_id))
+            g = Graph()
             subject = URIRef(str(obj.acdh_id))
-        except ValidationError:
-            subject = URIRef('/'.join([base_url, 'class_name', str(str(obj.id))]))
+            g.add((subject, RDF.type, SKOS.Concept))
+            g.serialize(format='nt')
+            subject = URIRef(str(obj.acdh_id))
+        except:
+            subject = URIRef('/'.join([base_url, class_name, str(str(obj.id))]))
     else:
-        subject = URIRef('/'.join([base_url, 'class_name', str(obj.id)]))
+        subject = URIRef('/'.join([base_url, class_name, str(obj.id)]))
     return subject
 
 

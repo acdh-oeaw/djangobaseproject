@@ -41,7 +41,7 @@ def collection_to_arche(itmes):
                 temp_a = URIRef('/'.join([base_url, 'person', str(x.id)]))
                 g.add((subject, ARCHE.hasContributor, temp_a))
         if obj.part_of:
-            temp_col = URIRef('/'.join([base_url, 'collection', str(obj.part_of.id)]))
+            temp_col = arche_ids(obj.part_of, 'collection')
             g.add((subject, ARCHE.isPartOf, temp_col))
     return g
 
@@ -52,7 +52,7 @@ def resource_to_arche(items):
 
     g = rdflib.Graph()
     for obj in items:
-        subject = URIRef('/'.join([base_url, 'resource', str(obj.id)]))
+        subject = arche_ids(obj, 'resource')
         g.add((subject, RDF.type, ARCHE.Resource))
         if obj.has_title:
             g.add((subject, ARCHE.hasTitle, Literal(obj.has_title)))
@@ -87,7 +87,7 @@ def resource_to_arche(items):
             authors_g = None
             temp_a = None
         if obj.part_of:
-            temp_col = URIRef('/'.join([base_url, 'collection', str(obj.part_of.id)]))
+            temp_col = arche_ids(obj, 'collection')
             g.add((subject, ARCHE.isPartOf, temp_col))
     return g
 
