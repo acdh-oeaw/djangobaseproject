@@ -68,13 +68,15 @@ def resource_to_arche(items):
             authors_g = person_to_arche(obj.has_contributor.all())
             g = g + authors_g
             for x in obj.has_contributor.all():
-                temp_a = URIRef('/'.join([base_url, 'person', str(x.id)]))
+                temp_a = arche_ids(x, 'person',  id_prop='authority_url')
                 g.add((subject, ARCHE.hasContributor, temp_a))
+            authors_g = None
+            temp_a = None
         if obj.has_contributor.all():
             authors_g = person_to_arche(obj.has_contributor.all())
             g = g + authors_g
             for x in obj.has_contributor.all():
-                temp_a = URIRef('/'.join([base_url, 'person', str(x.id)]))
+                temp_a = arche_ids(x, 'person',  id_prop='authority_url')
                 g.add((subject, ARCHE.hasContributor, temp_a))
             authors_g = None
             temp_a = None
@@ -82,7 +84,7 @@ def resource_to_arche(items):
             authors_g = person_to_arche(obj.has_creator.all())
             g = g + authors_g
             for x in obj.has_creator.all():
-                temp_a = URIRef('/'.join([base_url, 'person', str(x.id)]))
+                temp_a = arche_ids(x, 'person',  id_prop='authority_url')
                 g.add((subject, ARCHE.hasCreator, temp_a))
             authors_g = None
             temp_a = None

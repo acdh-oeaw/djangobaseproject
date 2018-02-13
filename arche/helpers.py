@@ -11,17 +11,19 @@ except AttributeError:
     base_url = "https://please/provide/ARCHE-SETTINGS"
 
 
-def arche_ids(obj, class_name, base_url=base_url):
+def arche_ids(obj, class_name, base_url=base_url, id_prop='acdh_id'):
     """checks if an object has a valid(!) arche_id and returns this,\
     if not it returns a generic id"""
 
-    if obj.acdh_id:
+    custom_id = getattr(obj, id_prop, None)
+    print(custom_id)
+    if custom_id:
         try:
             g = Graph()
-            subject = URIRef(str(obj.acdh_id))
+            subject = URIRef(str(custom_id))
             g.add((subject, RDF.type, SKOS.Concept))
             g.serialize(format='nt')
-            subject = URIRef(str(obj.acdh_id))
+            subject = URIRef(str(custom_id))
         except:
             subject = URIRef('/'.join([base_url, class_name, str(str(obj.id))]))
     else:

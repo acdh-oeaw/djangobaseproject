@@ -4,6 +4,7 @@ from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef, RDFS, Conjunct
 from rdflib.namespace import DC, FOAF, RDFS
 from rdflib.namespace import SKOS
 from .models import Place, Institution
+from arche.helpers import arche_ids
 
 project_name = settings.ROOT_URLCONF.split('.')[0]
 ARCHE = Namespace('https://vocabs.acdh.oeaw.ac.at/schema#')
@@ -45,7 +46,7 @@ def inst_to_arche(insitutions):
 
     g = rdflib.Graph()
     for obj in insitutions:
-        inst = URIRef('/'.join([base_url, 'institution', str(obj.id)]))
+        inst = arche_ids(obj, 'institution', id_prop="authority_url")
         if obj.written_name:
             g.add((inst, ARCHE.hasTitle, Literal(obj.written_name)))
         if obj.alt_names:
@@ -54,10 +55,12 @@ def inst_to_arche(insitutions):
             g.add((inst, ARCHE.hasAlternativeTitle, Literal(obj.abbreviation)))
         if obj.parent_institution:
             g.add((
-                inst, ARCHE.isMember,
-                URIRef('/'.join([
-                    base_url, 'institution', str(obj.parent_institution.id)
-                ]))
+                inst, ARCHE.isMember, arche_ids(
+                    obj.parent_institution, 'institution', id_prop='authority_url'
+                )
+                # URIRef('/'.join([
+                #     base_url, 'institution', str(obj.parent_institution.id)
+                # ]))
             ))
         if obj.location:
             pl = URIRef('/'.join([base_url, 'place', str(obj.location.id)]))
@@ -75,7 +78,7 @@ def person_to_arche(itmes):
 
     g = rdflib.Graph()
     for obj in itmes:
-        subject = URIRef('/'.join([base_url, 'person', str(obj.id)]))
+        subject = arche_ids(obj, 'person', id_prop="authority_url")
         if obj.written_name:
             g.add((subject, ARCHE.hasAlternativeTitle, Literal(obj.written_name)))
         if obj.name:
@@ -85,9 +88,7 @@ def person_to_arche(itmes):
         if obj.acad_title and obj.acad_title != 'nan':
             g.add((subject, ARCHE.hasPersonalTitle, Literal(obj.acad_title)))
         if obj.belongs_to_institution:
-            inst = URIRef(
-                '/'.join([base_url, 'institution', str(obj.belongs_to_institution.id)])
-            )
+            inst = arche_ids(obj.belongs_to_institution, 'institution', id_prop='authority_url')
             inst_g = inst_to_arche([obj.belongs_to_institution])
             g = g + inst_g
             g.add((subject, ARCHE.isMember, inst))
