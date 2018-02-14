@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.functional import cached_property
 from entities.models import Person, Institution
+from .controlled_vocabs import *
 
 
 class RepoObject(models.Model):
@@ -29,6 +30,19 @@ class RepoObject(models.Model):
     has_license = models.CharField(
         max_length=250, blank=True, verbose_name="acdh:hasLicense",
         help_text="Denotes the license attached to an object."
+    )
+    has_category = models.CharField(
+        max_length=250, blank=True, verbose_name="acdh:hasCategory",
+        help_text="Type of resource, e. g. corpus. Choose from list.\
+        Can be refined with description, format, extent, etc.",
+        choices=RES_TYPE
+    )
+    has_lcs = models.CharField(
+        max_length=250, blank=True, verbose_name="acdh:hasLifeCycleStatus",
+        help_text="Indication if the Project, Collection or Resource (A) still in\
+        the making or completed? A verbose status description can\
+        be added with acdh:hasCompleteness",
+        choices=LCS
     )
 
     def copy_instance(self):
@@ -66,6 +80,11 @@ class Collection(RepoObject):
         help_text="Person (B) responsible for creation of resource (A).\
         Will be included in the citation.",
         related_name="created_collection"
+    )
+    has_access_restriction = models.CharField(
+        max_length=250, blank=True, verbose_name="acdh:hasAccessRestriction",
+        help_text="Denotes if restricted access applies to the Resource (A).",
+        choices=ACCESS_RESTRICTIONS
     )
 
     def __str__(self):
@@ -135,6 +154,11 @@ class Resource(RepoObject):
         help_text="Indicates A is a part of aggregate B, \
         e. g. elements of a series, items of a collection.", related_name="has_part_resource",
         on_delete=models.CASCADE
+    )
+    has_access_restriction = models.CharField(
+        max_length=250, blank=True, verbose_name="acdh:hasAccessRestriction",
+        help_text="Denotes if restricted access applies to the Resource (A).",
+        choices=ACCESS_RESTRICTIONS
     )
 
     def __str__(self):
