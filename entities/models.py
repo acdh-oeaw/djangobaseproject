@@ -92,6 +92,12 @@ class Place(IdProvider):
         except:
             return None
 
+    def save(self, *args, **kwargs):
+        if self.geonames_id:
+            new_id = self.get_geonames_url()
+            self.geonames_id = new_id
+        super(Place, self).save(*args, **kwargs)
+
     @classmethod
     def get_listview_url(self):
         return reverse('browsing:browse_places')

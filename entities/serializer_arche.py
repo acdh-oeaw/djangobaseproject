@@ -13,20 +13,22 @@ GEONAMES = Namespace('http://www.geonames.org/ontology#')
 base_url = "https://id.acdh.oeaw.ac.at/{}".format(project_name)
 
 
-def place_to_arche(itmes):
+def place_to_arche(items):
 
     """takes queryset of Place objects and returns a ARCHE rdflib.Graph"""
 
     g = rdflib.Graph()
-    for obj in itmes:
-        subject = URIRef('/'.join([base_url, 'place', str(obj.id)]))
+    for obj in items:
+        subject = arche_ids(obj, 'place', id_prop="geonames_id")
         if obj.name:
             g.add((subject, ARCHE.hasTitle, Literal(obj.name)))
         if obj.alternative_name:
             for x in obj.alternative_name.all():
                 if x.name:
                     g.add((subject, ARCHE.hasAlternativeTitle, Literal(x.name)))
-        if obj.geonames_id:
+        if obj.geonames_id == "{}".format(subject):
+            pass
+        else:
             g.add((subject, ARCHE.hasIdentifier, URIRef(obj.get_geonames_url())))
         if obj.lat:
             g.add((subject, ARCHE.hasLongitude, Literal(obj.lng)))
@@ -35,7 +37,7 @@ def place_to_arche(itmes):
             if obj.part_of.geonames_id:
                 g.add((
                     subject, GEONAMES.parentFeature,
-                    URIRef('/'.join([base_url, 'place', str(obj.part_of.id)]))
+                    arche_ids(obj.part_of, 'place', id_prop="geonames_id")
                 ))
     return g
 
@@ -58,9 +60,6 @@ def inst_to_arche(insitutions):
                 inst, ARCHE.isMember, arche_ids(
                     obj.parent_institution, 'institution', id_prop='authority_url'
                 )
-                # URIRef('/'.join([
-                #     base_url, 'institution', str(obj.parent_institution.id)
-                # ]))
             ))
         if obj.location:
             pl = URIRef('/'.join([base_url, 'place', str(obj.location.id)]))
@@ -72,12 +71,12 @@ def inst_to_arche(insitutions):
     return g
 
 
-def person_to_arche(itmes):
+def person_to_arche(items):
 
     """takes queryset of Person objects and returns a ARCHE rdflib.Graph"""
 
     g = rdflib.Graph()
-    for obj in itmes:
+    for obj in items:
         subject = arche_ids(obj, 'person', id_prop="authority_url")
         if obj.written_name:
             g.add((subject, ARCHE.hasAlternativeTitle, Literal(obj.written_name)))
