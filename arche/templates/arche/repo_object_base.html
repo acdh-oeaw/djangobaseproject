@@ -50,6 +50,30 @@
                     {{ object.has_license }}
                 </td>
             </tr>
+            <tr>
+                <th>
+                    acdh:hasCategory
+                </th>
+                <td>
+                    <a href="{{ object.has_category }}">{{ object.has_category }}</a>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    acdh:hasLifeCycleStatus
+                </th>
+                <td>
+                    <a href="{{ object.has_lcs }}">{{ object.has_lcs }}</a>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    acdh:hasAccessRestriction
+                </th>
+                <td>
+                    <a href="{{ object.has_access_restriction }}">{{ object.has_access_restriction }}</a>
+                </td>
+            </tr>
         </table>
         <legend>Related Person</legend>
         <table class="table table-bordered table-hover">

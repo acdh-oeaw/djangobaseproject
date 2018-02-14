@@ -185,13 +185,33 @@ class Resource(RepoObject):
             self.save()
         else:
             license = None
+        category = self.part_of.has_category
+        if category:
+            self.has_category = category
+            self.save()
+        else:
+            category = None
+        lcs = self.part_of.has_lcs
+        if lcs:
+            self.has_lcs = lcs
+            self.save()
+        else:
+            lcs = None
+
+        access_restriction = self.part_of.has_access_restriction
+        if access_restriction:
+            self.has_access_restriction = access_restriction
+            self.save()
+        else:
+            access_restriction = None
+
         creators = self.part_of.has_creator.all()
         for x in creators:
             self.has_creator.add(x)
         contributors = self.part_of.has_contributor.all()
         for x in contributors:
             self.has_contributor.add(x)
-        return [creators, contributors, license]
+        return [creators, contributors, license, category, lcs, access_restriction]
 
     @classmethod
     def get_arche_dump(self):
