@@ -1,7 +1,7 @@
 import rdflib
 from django.conf import settings
 from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef, RDFS, ConjunctiveGraph
-from rdflib.namespace import DC, FOAF, RDFS
+from rdflib.namespace import DC, FOAF, RDFS, RDF
 from rdflib.namespace import SKOS
 from .models import Place, Institution
 from arche.helpers import arche_ids
@@ -20,6 +20,7 @@ def place_to_arche(items):
     g = rdflib.Graph()
     for obj in items:
         subject = arche_ids(obj, 'place', id_prop="geonames_id")
+        g.add((subject, RDF.type, ARCHE.Place))
         if obj.name:
             g.add((subject, ARCHE.hasTitle, Literal(obj.name)))
         if obj.alternative_name:
@@ -49,6 +50,7 @@ def inst_to_arche(insitutions):
     g = rdflib.Graph()
     for obj in insitutions:
         inst = arche_ids(obj, 'institution', id_prop="authority_url")
+        g.add((inst, RDF.type, ARCHE.Organisation))
         if obj.written_name:
             g.add((inst, ARCHE.hasTitle, Literal(obj.written_name)))
         if obj.alt_names:
@@ -62,7 +64,7 @@ def inst_to_arche(insitutions):
                 )
             ))
         if obj.location:
-            pl = URIRef('/'.join([base_url, 'place', str(obj.location.id)]))
+            pl = arche_ids(obj.location, 'place', id_prop='geonames_id')
             loc_g = place_to_arche([obj.location])
             g = g + loc_g
             g.add((inst, ARCHE.hasSpatialCoverage, URIRef(pl)))
@@ -78,6 +80,7 @@ def person_to_arche(items):
     g = rdflib.Graph()
     for obj in items:
         subject = arche_ids(obj, 'person', id_prop="authority_url")
+        g.add((subject, RDF.type, ARCHE.Person))
         if obj.written_name:
             g.add((subject, ARCHE.hasAlternativeTitle, Literal(obj.written_name)))
         if obj.name:
