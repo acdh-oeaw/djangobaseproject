@@ -22,9 +22,9 @@ For development just append `--settings={nameOfYouProject}.settings.dev` to the 
 
 6. Run `makemigrations`, `migrate`, and `runserver` and check [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 
-### Jypiter notebook
+### Jupyter notebook
 
-In case you want to use [Jupyter Notebook and Django-Extensions](https://andrewbrookins.com/python/using-ipython-notebook-with-django/) use the `requirements_dev.txt` for your virtual environment. 
+In case you want to use [Jupyter Notebook and Django-Extensions](https://andrewbrookins.com/python/using-ipython-notebook-with-django/) use the `requirements_dev.txt` for your virtual environment.
 
 ## Next steps
 
