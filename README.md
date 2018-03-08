@@ -4,11 +4,11 @@
 
 ## About
 
-As the name suggests, this is a basic django project. The idea of this base project is mainly to bootstrap the web application development process through setting up such a Django Base Project which already provides a couple a django apps providing quite generic functionalites needed for building web application bound to the Digital Humanities Domain.
+As the name suggests, this is a basic Django project. The idea of this base project is mainly to bootstrap the web application development process through setting up such a Django Base Project which already provides a couple of Django apps providing quite generic functionalities needed for building web application bound to the Digital Humanities Domain.
 
 ## Install
 
-1. Download or Clone this repo.
+1. Download or clone this repository.
 2. Rename the root folder of this project `djangobaseproject` and the `djangobaseproject` folder in your projects root folder to the name chosen for your new project (e.g. to `mynewproject`).
 3. In all files in the project directory, rename `djangobaseproject` to the name chosen for your new project. (Use `Find and Replace All` feature provided by your code editor.)
 4. Adapt the information in `webpage/metadata.py` according to your needs.
@@ -32,10 +32,12 @@ Build your custom awesome Web App.
 
 ## Tests
 
-To get needed software you can run
+Install required packages
 
     pip install -r requirements_test.txt
 
-To run the tests execute
+Run tests
 
     python manage.py test --settings=djangobaseproject.settings.test
+
+After running the test a HTML coverage report will be available at cover/index.html
