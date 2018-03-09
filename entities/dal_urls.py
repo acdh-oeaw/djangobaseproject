@@ -23,7 +23,7 @@ urlpatterns = [
     ),
     url(
         r'^institution-autocomplete/$', dal_views.InstitutionAC.as_view(
-            model=Institution, create_field='name',),
+            model=Institution, create_field='written_name',),
         name='institution-autocomplete',
     ),
 ]

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from dal import autocomplete
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from .models import Place, AlternativeName, Institution, Person
@@ -9,6 +10,11 @@ class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
         fields = "__all__"
+        widgets = {
+            'belongs_to_institution': autocomplete.ModelSelect2(
+                url='entities-ac:institution-autocomplete'),
+        }
+
 
     def __init__(self, *args, **kwargs):
         super(PersonForm, self).__init__(*args, **kwargs)
@@ -24,6 +30,9 @@ class InstitutionForm(forms.ModelForm):
     class Meta:
         model = Institution
         fields = "__all__"
+        widgets = {
+            'location': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
+        }
 
     def __init__(self, *args, **kwargs):
         super(InstitutionForm, self).__init__(*args, **kwargs)
@@ -65,6 +74,9 @@ class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
         fields = "__all__"
+        widgets = {
+            'part_of': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
+        }
 
     def __init__(self, *args, **kwargs):
         super(PlaceForm, self).__init__(*args, **kwargs)
@@ -76,6 +88,9 @@ class PlaceFormCreate(forms.ModelForm):
     class Meta:
         model = Place
         fields = "__all__"
+        widgets = {
+            'part_of': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
+        }
 
     def __init__(self, *args, **kwargs):
         super(PlaceFormCreate, self).__init__(*args, **kwargs)
