@@ -34,7 +34,10 @@ class InstitutionForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'location': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
-            'parent_institution': autocomplete.ModelSelect2(url='entities-ac:institution-autocomplete'),
+            'parent_institution': autocomplete.ModelSelect2(
+                url='entities-ac:institution-autocomplete'),
+            'alt_names': autocomplete.ModelSelect2Multiple(
+                url='entities-ac:altname-autocomplete'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -79,7 +82,7 @@ class PlaceForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'part_of': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
-            'alternative_name': autocomplete.ModelSelect2Multiple(
+            'alt_names': autocomplete.ModelSelect2Multiple(
                 url='entities-ac:altname-autocomplete'),
         }
 
@@ -95,7 +98,7 @@ class PlaceFormCreate(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'part_of': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
-            'alternative_name': autocomplete.ModelSelect2Multiple(
+            'alt_names': autocomplete.ModelSelect2Multiple(
                 url='entities-ac:altname-autocomplete'),
         }
 

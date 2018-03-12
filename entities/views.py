@@ -14,14 +14,14 @@ from .forms import PlaceForm, PlaceFormCreate, AlternativeNameForm, InstitutionF
 
 class PersonDetailView(DetailView):
     model = Person
-    template_name = 'places/person_detail.html'
+    template_name = 'entities/person_detail.html'
 
 
 class PersonCreate(CreateView):
 
     model = Person
     form_class = PersonForm
-    template_name = 'places/person_create.html'
+    template_name = 'entities/person_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -32,7 +32,7 @@ class PersonUpdate(UpdateView):
 
     model = Person
     form_class = PersonForm
-    template_name = 'places/person_create.html'
+    template_name = 'entities/person_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -53,7 +53,7 @@ class InstitutionCreate(CreateView):
 
     model = Institution
     form_class = InstitutionForm
-    template_name = 'places/institution_create.html'
+    template_name = 'entities/institution_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -64,7 +64,7 @@ class InstitutionUpdate(UpdateView):
 
     model = Institution
     form_class = InstitutionForm
-    template_name = 'places/institution_create.html'
+    template_name = 'entities/institution_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -73,7 +73,7 @@ class InstitutionUpdate(UpdateView):
 
 class InstitutionDetailView(DetailView):
     model = Institution
-    template_name = 'places/institution_detail.html'
+    template_name = 'entities/institution_detail.html'
 
 
 class InstitutionDelete(DeleteView):
@@ -97,7 +97,7 @@ class AlternativeNameCreate(CreateView):
 
     model = AlternativeName
     form_class = AlternativeNameForm
-    template_name = 'places/alternativenames_create.html'
+    template_name = 'entities/alternativenames_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -108,7 +108,7 @@ class AlternativeNameUpdate(UpdateView):
 
     model = AlternativeName
     form_class = AlternativeNameForm
-    template_name = 'places/alternativenames_create.html'
+    template_name = 'entities/alternativenames_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -117,16 +117,26 @@ class AlternativeNameUpdate(UpdateView):
 
 class AlternativeNameDetailView(DetailView):
     model = AlternativeName
-    template_name = 'places/alternativenames_detail.html'
+    template_name = 'entities/alternativenames_detail.html'
+
+
+class AlternativeNameDelete(DeleteView):
+    model = AlternativeName
+    template_name = 'webpage/confirm_delete.html'
+    success_url = reverse_lazy('browsing:browse_altnames')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AlternativeNameDelete, self).dispatch(*args, **kwargs)
 
 
 class PlaceDetailView(DetailView):
     model = Place
-    template_name = 'places/place_detail.html'
+    template_name = 'entities/place_detail.html'
 
 
 class PlaceListView(generic.ListView):
-    template_name = "places/list_places.html"
+    template_name = "entities/list_places.html"
     context_object_name = 'object_list'
 
     def get_queryset(self):
@@ -141,10 +151,10 @@ def create_place(request):
             form.save()
             return redirect('browsing:browse_places')
         else:
-            return render(request, 'places/edit_places.html', {'form': form})
+            return render(request, 'entities/edit_places.html', {'form': form})
     else:
         form = PlaceFormCreate()
-        return render(request, 'places/edit_places.html', {'form': form})
+        return render(request, 'entities/edit_places.html', {'form': form})
 
 
 @login_required
@@ -164,7 +174,7 @@ def edit_place(request, pk):
             form = PlaceForm(instance=instance)
             print(url)
             return render(
-                request, 'places/edit_places.html',
+                request, 'entities/edit_places.html',
                 {'object': instance, 'form': form, 'responseJSON': responseJSON}
             )
         except requests.exceptions.RequestException as e:
@@ -173,7 +183,7 @@ def edit_place(request, pk):
 
         responseJSON = "hansi"
         return render(
-            request, 'places/edit_places.html',
+            request, 'entities/edit_places.html',
             {'object': instance, 'form': form, 'responseJSON': responseJSON}
         )
     else:
