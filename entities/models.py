@@ -53,10 +53,11 @@ class Place(IdProvider):
     name = models.CharField(
         max_length=250, blank=True, help_text="Normalized name"
     )
-    alternative_name = models.ManyToManyField(
+    alt_names = models.ManyToManyField(
         AlternativeName,
         max_length=250, blank=True,
-        help_text="Alternative names"
+        help_text="Alternative names",
+        related_name="altname_of_place"
     )
     geonames_id = models.CharField(
         max_length=50, blank=True,
@@ -133,7 +134,12 @@ class Institution(IdProvider):
     legacy_id = models.CharField(max_length=300, blank=True)
     written_name = models.CharField(max_length=300, blank=True)
     authority_url = models.CharField(max_length=300, blank=True)
-    alt_names = models.CharField(max_length=300, blank=True)
+    alt_names = models.ManyToManyField(
+        AlternativeName,
+        max_length=250, blank=True,
+        help_text="Alternative names",
+        related_name="altname_of_inst"
+    )
     abbreviation = models.CharField(max_length=300, blank=True)
     location = models.ForeignKey(
         Place, blank=True, null=True, on_delete=models.PROTECT
@@ -181,10 +187,24 @@ class Person(IdProvider):
     forename = models.CharField(max_length=300, blank=True)
     name = models.CharField(max_length=300, blank=True)
     acad_title = models.CharField(max_length=300, blank=True)
-    alt_names = models.CharField(max_length=300, blank=True)
+    alt_names = models.ManyToManyField(
+        AlternativeName,
+        max_length=250, blank=True,
+        help_text="Alternative names",
+        related_name="altname_of_persons"
+    )
     belongs_to_institution = models.ForeignKey(
         Institution, blank=True, null=True, related_name="has_member",
         on_delete=models.PROTECT
+    )
+    place_of_birth = models.ForeignKey(
+        Place, blank=True, null=True, related_name="is_birthplace",
+        on_delete=models.PROTECT
+    )
+    date_of_birth = models.DateField(
+        auto_now=False, auto_now_add=False, blank=True, null=True,
+        verbose_name="Date of Birth",
+        help_text="YYYY-MM-DD"
     )
     authority_url = models.CharField(max_length=300, blank=True)
     comment = models.TextField(blank=True)

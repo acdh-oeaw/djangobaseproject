@@ -13,8 +13,10 @@ class PersonForm(forms.ModelForm):
         widgets = {
             'belongs_to_institution': autocomplete.ModelSelect2(
                 url='entities-ac:institution-autocomplete'),
+            'place_of_birth': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
+            'alt_names': autocomplete.ModelSelect2Multiple(
+                url='entities-ac:altname-autocomplete'),
         }
-
 
     def __init__(self, *args, **kwargs):
         super(PersonForm, self).__init__(*args, **kwargs)
@@ -32,6 +34,7 @@ class InstitutionForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'location': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
+            'parent_institution': autocomplete.ModelSelect2(url='entities-ac:institution-autocomplete'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -76,6 +79,8 @@ class PlaceForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'part_of': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
+            'alternative_name': autocomplete.ModelSelect2Multiple(
+                url='entities-ac:altname-autocomplete'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -90,6 +95,8 @@ class PlaceFormCreate(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'part_of': autocomplete.ModelSelect2(url='entities-ac:place-autocomplete'),
+            'alternative_name': autocomplete.ModelSelect2Multiple(
+                url='entities-ac:altname-autocomplete'),
         }
 
     def __init__(self, *args, **kwargs):

@@ -23,8 +23,8 @@ def place_to_arche(items):
         g.add((subject, RDF.type, ARCHE.Place))
         if obj.name:
             g.add((subject, ARCHE.hasTitle, Literal(obj.name)))
-        if obj.alternative_name:
-            for x in obj.alternative_name.all():
+        if obj.alt_names:
+            for x in obj.alt_names.all():
                 if x.name:
                     g.add((subject, ARCHE.hasAlternativeTitle, Literal(x.name)))
         if obj.geonames_id == "{}".format(subject):
@@ -54,7 +54,9 @@ def inst_to_arche(insitutions):
         if obj.written_name:
             g.add((inst, ARCHE.hasTitle, Literal(obj.written_name)))
         if obj.alt_names:
-            g.add((inst, ARCHE.hasAlternativeTitle, Literal(obj.alt_names)))
+            for x in obj.alt_names.all():
+                if x.name:
+                    g.add((inst, ARCHE.hasAlternativeTitle, Literal(x.name)))
         if obj.abbreviation:
             g.add((inst, ARCHE.hasAlternativeTitle, Literal(obj.abbreviation)))
         if obj.parent_institution:
@@ -85,6 +87,10 @@ def person_to_arche(items):
             g.add((subject, ARCHE.hasAlternativeTitle, Literal(obj.written_name)))
         if obj.name:
             g.add((subject, ARCHE.hasLastName, Literal(obj.name)))
+        if obj.alt_names:
+            for x in obj.alt_names.all():
+                if x.name:
+                    g.add((subject, ARCHE.hasAlternativeTitle, Literal(x.name)))
         if obj.forename:
             g.add((subject, ARCHE.hasFirstName, Literal(obj.forename)))
         if obj.acad_title and obj.acad_title != 'nan':

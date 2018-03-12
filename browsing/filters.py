@@ -76,10 +76,10 @@ class PlaceListFilter(django_filters.FilterSet):
         help_text=Place._meta.get_field('geonames_id').help_text,
         label=Place._meta.get_field('geonames_id').verbose_name
         )
-    alternative_name = django_filters.ModelMultipleChoiceFilter(
+    alt_names = django_filters.ModelMultipleChoiceFilter(
         queryset=AlternativeName.objects.all(),
-        help_text=Place._meta.get_field('alternative_name').help_text,
-        label=Place._meta.get_field('alternative_name').verbose_name
+        help_text=Place._meta.get_field('alt_names').help_text,
+        label=Place._meta.get_field('alt_names').verbose_name
         )
     part_of = django_filters.ModelMultipleChoiceFilter(
         queryset=Place.objects.all(),
