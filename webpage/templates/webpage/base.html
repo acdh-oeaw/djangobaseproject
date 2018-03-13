@@ -160,7 +160,13 @@
     </nav>
 </header>
 <section class="main-content">
-    <div id="content" class="container">{% block content %}{% endblock %}</div>
+    <div id="content" class="container">
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Warning!</strong> Draft Version.
+        </div>
+        {% block content %}{% endblock %}
+    </div>
 </section>
 <div style="text-align:center">
     <span class="socialShare"><!-- The share buttons will be inserted here --></span>
