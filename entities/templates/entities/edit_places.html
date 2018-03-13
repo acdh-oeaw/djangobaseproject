@@ -64,14 +64,6 @@
 {% endif %}
 
 
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("#id_alias_name-autocomplete").after('<button id="add_aliasName" type="button" class="btn btn-sm btn-success" onclick="popupCreateName()"><span class="glyphicon glyphicon-plus" /></button>');
-    });
-    $(document).ready(function(){
-        $("#id_alternative_name-autocomplete").after('<button id="add_alternativeName" type="button" class="btn btn-sm btn-success" onclick="popupCreateName()"><span class="glyphicon glyphicon-plus"/></button>');
-    });
-</script>
 {% if object %}
 <script type="text/javascript">
     $( document ).ready(function() {
@@ -104,11 +96,16 @@
         var geonameId = placeName.split(/\|/)[4];
         $('#id_lat').val(parseFloat(gps1));
         $('#id_lng').val(parseFloat(gps2));
-        $('#id_geonames_id').val(parseInt(geonameId));
-        var gndURL = "http://www.geonames.org/"+geonameId.trim();
+        $('#id_geonames_id').val(geonameId);
+        console.log(geonameId)
+        if (String(geonameId).startsWith('http')) {
+            var gndURL = geonameId.trim();
+        }   else {
+            gndURL = "http://www.geonames.org/"+geonameId.trim();
+        }
         var lookupButton = $("#currentID");
         $(lookupButton).text(gndURL);
-        $(lookupButton).parent().attr("href",gndURL);
+        $(lookupButton).parent().attr("href", gndURL);
 
     });
 </script>
@@ -117,18 +114,22 @@
     $("#geonamesSELECT").change(function(){
         $("#map").remove()
         $("#parentMap").append("<div id='map'></div>");
-       var placeName = $("#geonamesSELECT option:selected").text();
+        var placeName = $("#geonamesSELECT option:selected").text();
         var gps1 = placeName.split(/\|/)[2];
         var gps2 = placeName.split(/\|/)[3];
         var map = L.map('map').setView([gps1, gps2], 15);
-        var geonameId = placeName.split(/\|/)[4];
+        var geonameId = placeName.split(/\|/)[4].trim();
         $('#id_lat').val(parseFloat(gps1));
         $('#id_lng').val(parseFloat(gps2));
-        $('#id_geonames_id').val(parseInt(geonameId));
-       var gndURL = "http://www.geonames.org/"+geonameId.trim();
+        $('#id_geonames_id').val((geonameId));
+        if (String(geonameId).startsWith('http')) {
+            var gndURL = geonameId.trim();
+        }   else {
+            gndURL = "http://www.geonames.org/"+geonameId.trim();
+        }
         var lookupButton = $("#currentID");
         $(lookupButton).text(gndURL);
-        $(lookupButton).parent().attr("href",gndURL);
+        $(lookupButton).parent().attr("href", gndURL);
 
        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',

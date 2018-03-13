@@ -83,6 +83,8 @@ class Place(IdProvider):
     def get_geonames_url(self):
         if self.geonames_id.startswith('ht') and self.geonames_id.endswith('.html'):
             return self.geonames_id
+        elif self.geonames_id.startswith('ht'):
+            return self.geonames_id
         else:
             return "http://www.geonames.org/{}".format(self.geonames_id)
 
