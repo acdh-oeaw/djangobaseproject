@@ -9,5 +9,7 @@ PROJECT_METADATA = {
     'github': 'https://github.com/acdh-oeaw/djangobaseproject',
     'purpose_de': 'Ziel von Django Base Project ist die Schaffung einer einheitlichen und generischen Grundlage für Web Applikationen.',
     'purpose_en': 'The purpose of Django Base Project is to bootstrap web developments.',
-    'version': '1.1.0'
+    'version': '0.0.1',
+    'matomo_id': 'provide some',
+    'matomo_url': '//piwik.apollo.arz.oeaw.ac.at/'
 }
