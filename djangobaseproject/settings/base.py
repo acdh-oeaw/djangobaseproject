@@ -122,3 +122,11 @@ ARCHE_SETTINGS = {
     'project_name': ROOT_URLCONF.split('.')[0],
     'base_url': "https://id.acdh.oeaw.ac.at/{}".format(ROOT_URLCONF.split('.')[0])
 }
+
+VOCABS_DEFAULT_PEFIX = os.path.basename(BASE_DIR)
+
+VOCABS_SETTINGS = {
+    'default_prefix': VOCABS_DEFAULT_PEFIX,
+    'default_ns': "http://www.vocabs/{}/".format(VOCABS_DEFAULT_PEFIX),
+    'default_lang': "eng"
+}

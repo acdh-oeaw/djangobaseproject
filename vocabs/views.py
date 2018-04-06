@@ -6,9 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django_tables2 import SingleTableView, RequestConfig
 from .models import SkosConcept, SkosConceptScheme, SkosLabel
-from .forms import SkosConceptForm, SkosConceptSchemeForm, SkosLabelForm, GenericFilterFormHelper
+from .forms import *
 from .tables import SkosConceptTable
-from .filters import SkosConceptFilter
+from .filters import SkosConceptListFilter
 
 
 class GenericListView(SingleTableView):
@@ -16,6 +16,11 @@ class GenericListView(SingleTableView):
     formhelper_class = None
     context_filter_name = 'filter'
     paginate_by = 25
+    template_name = 'vocabs/generic_list.html'
+
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
 
     def get_queryset(self, **kwargs):
         qs = super(GenericListView, self).get_queryset()
@@ -32,27 +37,57 @@ class GenericListView(SingleTableView):
     def get_context_data(self, **kwargs):
         context = super(GenericListView, self).get_context_data()
         context[self.context_filter_name] = self.filter
+        context['docstring'] = "{}".format(self.model.__doc__)
+        if self.model.__name__.endswith('s'):
+            context['class_name'] = "{}".format(self.model.__name__)
+        else:
+            context['class_name'] = "{}s".format(self.model.__name__)
+        try:
+            context['get_arche_dump'] = self.model.get_arche_dump()
+        except AttributeError:
+            context['get_arche_dump'] = None
+        try:
+            context['create_view_link'] = self.model.get_createview_url()
+        except AttributeError:
+            context['create_view_link'] = None
         return context
 
 
-class SkosConceptFilterView(GenericListView):
+class SkosConceptListView(GenericListView):
     model = SkosConcept
     table_class = SkosConceptTable
-    template_name = 'vocabs/skosconcept_filter.html'
-    filter_class = SkosConceptFilter
-    formhelper_class = GenericFilterFormHelper
+    filter_class = SkosConceptListFilter
+    formhelper_class = SkosConceptFormHelper
+    init_columns = ['id', 'broader_concept', 'pref_label', 'all_schemes']
+
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
+
+    def get_context_data(self, **kwargs):
+        context = super(SkosConceptListView, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        return context
+
+    def get_table(self, **kwargs):
+        table = super(GenericListView, self).get_table()
+        RequestConfig(self.request, paginate={
+            'page': 1, 'per_page': self.paginate_by
+        }).configure(table)
+        default_cols = self.init_columns
+        all_cols = self.get_all_cols()
+        selected_cols = self.request.GET.getlist("columns") + default_cols
+        exclude_vals = [x for x in all_cols if x not in selected_cols]
+        table.exclude = exclude_vals
+        return table
 
 
 class SkosConceptDetailView(DetailView):
 
     model = SkosConcept
     template_name = 'vocabs/skosconcept_detail.html'
-
-
-class SkosConceptListView(ListView):
-
-    model = SkosConcept
-    template_name = 'vocabs/skosconcept_list.html'
 
 
 class SkosConceptCreate(CreateView):

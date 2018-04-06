@@ -3,23 +3,49 @@
 {% block content %}
 <div class="container">
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h1 style="text-align: center;">
-                <small>{{ object }}</small><br />
-                <small>a skos:Concept</small>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'vocabs:skosconcept_update' pk=object.id %}">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></span>
-                    </a>
+        <div class="panel-heading procustom-panel-heading">
+            <div class="row">
+                <div class="col-md-2">
+                    {% if object.get_prev %}
+                        <h2>
+                            <a href="{% url 'vocabs:skosconcept_detail' pk=object.get_prev %}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true" title="previous"></span></a>
+                        </h2>
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <h1 style="text-align: center;">
+                        <small>SkosConcept:</small> {{ object }}
+                        {% if user.is_authenticated %}
+                            <small>
+                                <a href="{% url 'vocabs:skosconcept_update' pk=object.id %}">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="edit"></span>
+                                </a>
+                            </small>
+                            |
+                            <small>
+                                <a href="{% url 'vocabs:skosconcept_delete' pk=object.id %}">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true" title="edit"></span>
+                                </a>
+                            </small>
+                        {% endif %}
+                    </h1>
+                </div>
+            <div class="col-md-2">
+                <h2>
+                    {% if object.get_next %}
+                    <a href="{% url 'vocabs:skosconcept_detail' pk=object.get_next %}" style="float:right"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true" title="next"></span></a>
+                </h2>
                 {% endif %}
-            </h1>
+            </div>
         </div>
+    </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-sm-2">
                     <div class="panel panel-default">
                         <div class="panel-heading">skos:broader</div>
                         <div class="panel-body">
+                            <h3>{{ object.broader_concept }}</h3>
                             {% for x in object.get_broader %}
                                 <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a>
                             {% endfor %}
@@ -124,7 +150,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">skos:narrower</div>
                         <div class="panel-body">
-                            {% for x in object.get_narrower %}
+                            {% for x in object.narrower_concepts.all %}
                                 <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
                             {% endfor %}
                         </div>

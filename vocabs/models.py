@@ -6,9 +6,22 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.functional import cached_property
 
-DEFAULT_PEFIX = os.path.basename(settings.BASE_DIR)
 
-DEFAULT_NAMESPACE = "http://www.vocabs/{}/".format(DEFAULT_PEFIX)
+try:
+    DEFAULT_NAMESPACE = settings.VOCABS_SETTINGS['default_nsgg']
+except KeyError:
+    DEFAULT_NAMESPACE = "http://www.vocabs/provide-some-namespace/"
+
+try:
+    DEFAULT_PREFIX = settings.VOCABS_SETTINGS['default_prefix']
+except KeyError:
+    DEFAULT_PREFIX = "provideSome"
+
+try:
+    DEFAULT_LANG = settings.VOCABS_SETTINGS['default_lang']
+except KeyError:
+    DEFAULT_LANG = "eng"
+
 
 LABEL_TYPES = (
     ('prefLabel', 'prefLabel'),
@@ -19,7 +32,7 @@ LABEL_TYPES = (
 
 class SkosNamespace(models.Model):
     namespace = models.URLField(blank=True, default=DEFAULT_NAMESPACE)
-    prefix = models.CharField(max_length=50, blank=True, default=DEFAULT_PEFIX)
+    prefix = models.CharField(max_length=50, blank=True, default=DEFAULT_PREFIX)
 
     def __str__(self):
         return "{}".format(self.prefix)
@@ -28,7 +41,7 @@ class SkosNamespace(models.Model):
 class SkosConceptScheme(models.Model):
     dc_title = models.CharField(max_length=300, blank=True)
     namespace = models.ForeignKey(
-        SkosNamespace, blank=True, null=True, on_delete=models.PROTECT
+        SkosNamespace, blank=True, null=True, on_delete=models.CASCADE
     )
     dct_creator = models.URLField(blank=True)
     legacy_id = models.CharField(max_length=200, blank=True)
@@ -36,7 +49,7 @@ class SkosConceptScheme(models.Model):
     def save(self, *args, **kwargs):
         if self.namespace is None:
             temp_namespace, _ = SkosNamespace.objects.get_or_create(
-                namespace=DEFAULT_NAMESPACE, prefix=DEFAULT_PEFIX)
+                namespace=DEFAULT_NAMESPACE, prefix=DEFAULT_PREFIX)
             temp_namespace.save()
             self.namespace = temp_namespace
         else:
@@ -69,14 +82,20 @@ class SkosLabel(models.Model):
 
 class SkosConcept(models.Model):
     pref_label = models.CharField(max_length=300, blank=True)
-    pref_label_lang = models.CharField(max_length=3, blank=True, default="eng")
+    pref_label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
     scheme = models.ManyToManyField(SkosConceptScheme, blank=True)
     definition = models.TextField(blank=True)
-    definition_lang = models.CharField(max_length=3, blank=True, default="eng")
+    definition_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
     label = models.ManyToManyField(SkosLabel, blank=True)
     notation = models.CharField(max_length=300, blank=True)
     namespace = models.ForeignKey(
-        SkosNamespace, blank=True, null=True, on_delete=models.PROTECT
+        SkosNamespace, blank=True, null=True, on_delete=models.CASCADE
+    )
+    broader_concept = models.ForeignKey(
+        'SkosConcept', help_text="Broader Term.",
+        verbose_name="Broader Term",
+        blank=True, null=True, on_delete=models.CASCADE,
+        related_name="narrower_concepts"
     )
     skos_broader = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="narrower"
@@ -102,7 +121,8 @@ class SkosConcept(models.Model):
         verbose_name='Name reverse',
         help_text='Inverse relation like: \
         "is sub-class of" vs. "is super-class of".',
-        blank=True)
+        blank=True
+    )
 
     def get_broader(self):
         broader = self.skos_broader.all()
@@ -133,23 +153,57 @@ class SkosConcept(models.Model):
 
         if self.namespace is None:
             temp_namespace, _ = SkosNamespace.objects.get_or_create(
-                namespace=DEFAULT_NAMESPACE, prefix=DEFAULT_PEFIX)
+                namespace=DEFAULT_NAMESPACE, prefix=DEFAULT_PREFIX)
             temp_namespace.save()
             self.namespace = temp_namespace
         else:
             pass
         super(SkosConcept, self).save(*args, **kwargs)
 
-    def __str__(self):
-        parents = self.skos_broader.all()
-        if parents:
-            parent = "|".join([x.__str__() for x in parents])
-        else:
-            parent = None
-        if parent:
-            return "{} >> {}".format(parent, self.pref_label)
-        else:
-            return self.pref_label
+    @cached_property
+    def label(self):
+        # 'borrowed from https://github.com/sennierer'
+        d = self
+        res = self.pref_label
+        while d.broader_concept:
+            res = d.broader_concept.pref_label + ' >> ' + res
+            d = d.broader_concept
+        return res
+
+    @classmethod
+    def get_listview_url(self):
+        return reverse('vocabs:browse_vocabs')
+
+    @classmethod
+    def get_createview_url(self):
+        return reverse('vocabs:skosconcept_create')
 
     def get_absolute_url(self):
         return reverse('vocabs:skosconcept_detail', kwargs={'pk': self.id})
+
+    def get_next(self):
+        next = SkosConcept.objects.filter(id__gt=self.id)
+        if next:
+            return next.first().id
+        return False
+
+    def get_prev(self):
+        prev = SkosConcept.objects.filter(id__lt=self.id).order_by('-id')
+        if prev:
+            return prev.first().id
+        return False
+
+    def __str__(self):
+        return self.pref_label
+
+
+def get_all_children(self, include_self=True):
+    # many thanks to https://stackoverflow.com/questions/4725343
+    r = []
+    if include_self:
+        r.append(self)
+    for c in SkosConcept.objects.filter(broader_concept=self):
+        _r = get_all_children(c, include_self=True)
+        if 0 < len(_r):
+            r.extend(_r)
+    return r
