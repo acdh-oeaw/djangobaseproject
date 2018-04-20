@@ -102,7 +102,7 @@ class PlaceFilterFormHelper(FormHelper):
                     'Basic search options',
                     'name',
                     'alternative_name',
-                    css_id="basic_search_fields"
+                    css_id="basic_search_fields",
                 ),
                 AccordionGroup(
                     'Advanced search'
