@@ -20,7 +20,7 @@
         <meta name="theme-color" content="#ffffff"/>
     <!--favicons end -->
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="{% static 'webpage/libraries/bootstrap337/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'webpage/libraries/bootstrap400/css/bootstrap.min.css' %}" />
     <!-- custom css -->
     <link rel="stylesheet" href="{% static 'webpage/css/style.css' %}" />
     <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,500" rel="stylesheet">
@@ -70,100 +70,97 @@
 </head>
 <body role="document">
 <header>
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation!</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                 <ul class="nav navbar-nav">
-                 <li><a href="/">Home</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">About
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'webpage:staticpage' template='about' %}">About project</a></li>
-                            <li><a href="{% url 'webpage:staticpage' template='imprint' %}">Impressum / Imprint</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                 <ul class="navbar-nav mr-auto">
+                 <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About
+                  <span class="caret"/>
+                  </a>
+                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'webpage:staticpage' template='about' %}">About project</a>
+                    <a class="dropdown-item" href="{% url 'webpage:staticpage' template='imprint' %}">Imprint | Impressum</a>
+                </div>
+              </li>
+                <li class="nav-item dropdown">
                         {% if user.is_authenticated %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                Curate and Browse the Data <span class="caret"></span>
-                            </a>
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Curate and Browse the Data
+                        <span class="caret"/>
+                        </a>
                         {% else %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                Browse the Data <span class="caret"></span>
-                            </a>
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Browse the Data
+                        <span class="caret"/>
+                        </a>
                         {% endif %}
-                        <ul class="dropdown-menu">
+                        <div class="dropdown-menu">
                             {% nav_menu app='entities' as links %}
                             {% for x in links %}
-                                <li>
-                                    <a href="{{ x.link}}">{{ x.name }}</a>
-                                </li>
+                                
+                                    <a class="dropdown-item" href="{{ x.link}}">{{ x.name }}</a>
+                                
                             {% endfor %}
 
                             {% if user.is_authenticated %}
-                            <li role="separator" class="divider"></li>
+                            <div class="dropdown-divider"></div>
                             {% nav_menu app='arche' as links %}
                             {% for x in links %}
-                                <li>
-                                    <a href="{{ x.link}}">{{ x.name }}</a>
-                                </li>
+                                
+                                    <a class="dropdown-item" href="{{ x.link}}">{{ x.name }}</a>
+                                
                             {% endfor %}
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'bib:synczotero' %}">Import new Items from Zotero</a></li>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'bib:synczotero' %}">Import new Items from Zotero</a>
                             {% endif %}
-                        </ul>
+                        </div>
                     </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                           Retrieve the Data <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                        <li><a href="{% url 'sparql:query' %}">SPARQL</a></li></ul>
+                    <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Retrieve the Data
+                    <span class="caret"/>
+                    </a> 
+                        <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'sparql:query' %}">SPARQL</a>
+                        </div>
                     </li>
                     {% if user.is_authenticated %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            Vocabs Curation <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'vocabs:skosconceptscheme_list' %}">Concept Schemes</a></li>
-                            <li><a href="{% url 'vocabs:browse_vocabs' %}">Concepts</a></li>
-                            <li><a href="{% url 'vocabs:skoslabel_list' %}">Labels</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="{% url 'vocabs:skos_import' %}">Import SKOS (RDF/XML)</a></li>
-                            <li><a href="{% url 'vocabs:skos_csv_import' %}">Import Vocabs from CSV</a></li>
-                            <li><a href="{% url 'api-root' %}">Export SKOS (API)</a></li>
-                        </ul>
+                    <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Vocabs Curation
+                    <span class="caret"/>
+                    </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item"href="{% url 'vocabs:skosconceptscheme_list' %}">Concept Schemes</a>
+                            <a class="dropdown-item" href="{% url 'vocabs:browse_vocabs' %}">Concepts</a>
+                            <a class="dropdown-item" href="{% url 'vocabs:skoslabel_list' %}">Labels</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'vocabs:skos_import' %}">Import SKOS (RDF/XML)</a>
+                            <a class="dropdown-item" href="{% url 'vocabs:skos_csv_import' %}">Import Vocabs from CSV</a>
+                            <a class="dropdown-item" href="{% url 'api-root' %}">Export SKOS (API)</a>
+                        </div>
                     </li>
                     {% endif %}
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="navbar-nav ml-auto">
                     <li class="dropdown">
                         {% if user.is_authenticated %}
                             <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                                 {{ user.get_username }}
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{% url 'webpage:user_logout' %}">Log-Out</a></li>
-                            </ul>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="nav-link" href="{% url 'webpage:user_logout' %}">Log-Out</a>
+                            </div>
                         {% else %}
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{% url 'webpage:user_login' %}">Log-In</a></li>
-                            </ul>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="nav-link" href="{% url 'webpage:user_login' %}">Log-In</a>
+                            </div>
                         {% endif %}
                     </li>
                 </ul>
@@ -173,10 +170,10 @@
 </header>
 <section class="main-content">
     <div id="content" class="container">
-        <div class="alert alert-warning alert-dismissible">
+      <!--   <div class="alert alert-warning alert-dismissible">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>Warning!</strong> Draft Version.
-        </div>
+        </div> -->
         {% block content %}{% endblock %}
     </div>
 </section>
@@ -203,7 +200,7 @@
     </div>
 </footer>
 {% block scripts %}
-<script type="text/javascript" src="{% static 'webpage/libraries/bootstrap337/js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'webpage/libraries/bootstrap400/js/bootstrap.min.js' %}"></script>
 <!-- cool share -->
 <script type="text/javascript">
     $(function (){

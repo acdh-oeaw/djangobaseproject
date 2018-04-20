@@ -7,7 +7,7 @@ body {
     flex-direction: column;
     height: 100%;
     font-family: 'Libre Franklin', sans-serif;
-    padding-top: 70px;
+    /*padding-top: 70px;*/
 }
 
 /*remove round corners everywhere*/

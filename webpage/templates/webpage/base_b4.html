@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load webpage_extras %}
+{% load browsing_extras %}
+<html lang="en">
+<head>
+<meta charset="utf-8">
+       <meta charset="utf-8">
+    <title>{% block title %} {% projects_metadata 'title' %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block metaDescription %}
+        <meta name="description" content="{{ metadata.description }}">
+        <meta name="author" content="{{ metadata.author }}">
+    {% endblock %}
+    <!-- favicons -->
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'webpage/img/favicon/apple-touch-icon.png' %}"/>
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'webpage/img/favicon/favicon-32x32.png' %}"/>
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'webpage/img/favicon/favicon-16x16.png' %}"/>
+        <link rel="manifest" href="{% static 'webpage/img/favicon/manifest.json' %}"/>
+        <link rel="mask-icon" href="{% static 'webpage/img/favicon/safari-pinned-tab.svg' %}" color="#00aba9"/>
+        <meta name="theme-color" content="#ffffff"/>
+    <!--favicons end -->
+      <!-- Bootstrap -->
+      <link rel="stylesheet" href="{% static 'webpage/libraries/bootstrap400/css/bootstrap.min.css' %}"/></link>
+      <!-- custom css -->
+    <!-- <link rel="stylesheet" href="{% static 'webpage/css/style.css' %}" /> -->
+
+      <!--scroll to top CSS -->
+      <link rel="stylesheet" href="{% static 'webpage/libraries/scroll-to-top/css/ap-scroll-top.min.css'%}"></link>
+      <!-- jQuery -->
+        <script type="text/javascript" src="{% static 'webpage/libraries/jquery/jquery.js' %}"></script>
+<link href="https://fundament.acdh.oeaw.ac.at/dist/fundament/css/fundament.min.css" rel="stylesheet">
+
+
+<!--scroll to top -->
+    <script src="{% static 'webpage/libraries/scroll-to-top/js/ap-scroll-top.min.js'%}"></script>
+    <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+    <script type="text/javascript">
+        window.cookieconsent_options = {
+            "message":"This website uses cookies to ensure you get the best experience on our website",
+            "dismiss":"Got it!",
+            "learnMore":"More info",
+            "link":"{% url 'webpage:staticpage' template='imprint' %}",
+            "theme":"dark-bottom"};
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+    <!-- End Cookie Consent plugin -->
+    <!-- cool-share plugin http://tutorialzine.com/2014/08/cool-share-jquery-plugin/ -->
+    <link rel="stylesheet" href="{% static 'webpage/libraries/cool-share/plugin.css' %}" />
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+     
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+             <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About
+                  <span class="caret"/>
+                  </a>
+                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'webpage:staticpage' template='about' %}">About project</a>
+                    <a class="dropdown-item" href="{% url 'webpage:staticpage' template='imprint' %}">Imprint | Impressum</a>
+                </div>
+              </li>
+             
+            
+            <ul class="navbar-nav ml-auto">
+                    
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                {{ user.get_username }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="nav-link" href="{% url 'webpage:user_logout' %}">Log Out</a>
+                            </div>
+                          </li>
+                        {% else %}
+                        <li class="nav-item">
+                                <a class="nav-link" href="{% url 'webpage:user_login' %}">Log In</a>
+                         </li>  
+                        {% endif %}
+                    
+                </ul>
+        </div>
+    </nav>
+</header>
+<section class="main-content">
+    <div id="content" class="container">
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Warning!</strong> Draft Version.
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+</section>
+<footer>
+</footer>
+<script defer src="https://fundament.acdh.oeaw.ac.at/dist/fundament/vendor/js/fontawesome-all.min.js"></script>
+<script src="https://fundament.acdh.oeaw.ac.at/dist/fundament/vendor/js/jquery.min.js"></script>
+<script src="https://fundament.acdh.oeaw.ac.at/dist/fundament/js/fundament.min.js"></script>
+</body>
+</html>
