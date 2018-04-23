@@ -57,6 +57,7 @@ class AlternativeNameFilterFormHelper(FormHelper):
                 'name',
                 css_id="basic_search_fields"
                 ),
+############# Uncomment accordion if there are advanced search options ############
             # Accordion(
             #     AccordionGroup(
             #         'Basic search options',
@@ -104,9 +105,9 @@ class PlaceFilterFormHelper(FormHelper):
         self.layout = Layout(
             Fieldset(
                 'Basic search options',
-                    'name',
-                    'alternative_name',
-                    css_id="basic_search_fields"
+                'name',
+                'alternative_name',
+                css_id="basic_search_fields"
                 ),
             Accordion(
                 AccordionGroup(
