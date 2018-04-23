@@ -5,7 +5,7 @@ colorama==0.3.9
 decorator==4.2.1
 Django==2.0.2
 django-autocomplete-light==3.3.0rc3
-django-crispy-forms==1.7.0
+django-crispy-forms==1.7.2
 django-extensions==1.9.9
 django-filter==1.0.4
 django-rest-framework==0.1.0
@@ -55,4 +55,5 @@ update==0.0.1
 urllib3==1.21.1
 wcwidth==0.1.7
 webencodings==0.5.1
+win-unicode-console==0.5
 wincertstore==0.2

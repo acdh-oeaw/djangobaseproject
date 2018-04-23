@@ -24,13 +24,13 @@ class PersonFilterFormHelper(FormHelper):
         self.helper.form_tag = False
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
-            Accordion(
-                AccordionGroup(
-                    'Basic search options',
+            Fieldset(
+                'Basic search options',
                     'name',
                     'written_name',
                     css_id="basic_search_fields"
                 ),
+            Accordion(
                 AccordionGroup(
                     'Advanced search',
                     'acad_title',
@@ -52,13 +52,18 @@ class AlternativeNameFilterFormHelper(FormHelper):
         self.helper.form_tag = False
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
-            Accordion(
-                AccordionGroup(
-                    'Basic search options',
+            Fieldset(
+                'Basic search options',
                     'name',
                     css_id="basic_search_fields"
-                    ),
-                )
+                ),
+            # Accordion(
+            #     AccordionGroup(
+            #         'Basic search options',
+            #         'name',
+            #         css_id="basic_search_fields"
+            #         ),
+            #     )
             )
 
 
@@ -71,15 +76,15 @@ class InstitutionFilterFormHelper(FormHelper):
         self.helper.form_tag = False
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
-            Accordion(
-                AccordionGroup(
-                    'Basic search options',
+            Fieldset(
+                'Basic search options',
                     'written_name',
                     'alt_names',
                     css_id="basic_search_fields"
                 ),
+            Accordion(
                 AccordionGroup(
-                    'Advanced search'
+                    'Advanced search',
                     'authority_url',
                     'location',
                     css_id="more"
@@ -97,15 +102,15 @@ class PlaceFilterFormHelper(FormHelper):
         self.helper.form_tag = False
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
-            Accordion(
-                AccordionGroup(
-                    'Basic search options',
+            Fieldset(
+                'Basic search options',
                     'name',
                     'alternative_name',
-                    css_id="basic_search_fields",
+                    css_id="basic_search_fields"
                 ),
+            Accordion(
                 AccordionGroup(
-                    'Advanced search'
+                    'Advanced search',
                     'geonames_id',
                     'part_of',
                     css_id="more"

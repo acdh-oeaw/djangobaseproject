@@ -25,11 +25,7 @@ $("#goto option").each(function() {
 </style>
 <div class="container-fluid">
 
-<!-- <div class="container"> -->
-<!-- <div class="card procustom-panel-list"> -->
-    <!-- <div class="card-header procustom-panel-heading"> -->
-
-        <h1><span class="fa fa-search" style="padding-left:10px; padding-right: 10px;"></span>Browse {% class_definition %} {% block list_title %}{% endblock %}</h1>
+        <h1 style="margin-bottom:15px; margin-top:15px;"><span class="fa fa-search" style="padding-left:10px; padding-right: 10px;"></span>Browse {% class_definition %} {% block list_title %}{% endblock %}</h1>
         {% if get_arche_dump %}
             <a class ="btn btn-outline-secondary"  href="{{ get_arche_dump}}{% querystring %}">Dump as RDF</a>
         {% endif %}
@@ -41,9 +37,6 @@ $("#goto option").each(function() {
     {% block customView %}{% endblock %}
     {% block create_button %}{% endblock %}
 
-   <!--  </div> -->
-    <!-- <div class="card-body procustom-panel-body"> -->
-
         <div class="row">
             <div class="col-md-4">
             <div class="card">
@@ -51,12 +44,10 @@ $("#goto option").each(function() {
                 {% load django_tables2 crispy_forms_tags %}
             <form action="." class="uniForm" method="get">
                 {% if togglable_colums %}
-                    <br/>
                     <legend>Select additional columns</legend>
                     {% column_selector  %}
                     {% endif %}
                 <br/>
-                <legend>Refine your search</legend>
                 {% crispy filter.form filter.form.helper %}
             </form>
           {% block reset_button %}
@@ -230,10 +221,5 @@ $("#goto option").each(function() {
         </div>
         </div>
 </div>
-
-
-   <!--  </div>
-</div> -->
-<!-- </div> -->
 
 {% endblock %}

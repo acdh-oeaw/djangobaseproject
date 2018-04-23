@@ -65,11 +65,9 @@ footer {
 
 /*Button's text is all in caps and bold. When adding html markup text should be all in lowercase. */
 .btn {
-    font-weight: bold;
-    font-variant: small-caps;
+   /* font-weight: bold;
+    font-variant: small-caps;*/
     white-space: normal;
-}
-
-.btn-default {
     margin-bottom: 10px;
 }
+
