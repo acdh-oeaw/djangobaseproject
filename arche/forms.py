@@ -15,18 +15,19 @@ class ProjectFilterFormHelper(FormHelper):
         self.helper.form_tag = False
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
-            Accordion(
-                AccordionGroup(
-                    'Basic search options',
-                    'has_title',
-                    'description',
-                    css_id="basic_search_fields"
+            Fieldset(
+                'Basic search options',
+                'has_title',
+                'description',
+                css_id="basic_search_fields"
                 ),
-                AccordionGroup(
-                    'Advanced search',
-                    css_id="more"
-                    ),
-                )
+############# Uncomment accordion if there are advanced search options ############
+            # Accordion(
+            #     AccordionGroup(
+            #         'Advanced search',
+            #         css_id="more"
+            #         ),
+            #     )
             )
 
 
@@ -54,18 +55,19 @@ class CollectionFilterFormHelper(FormHelper):
         self.helper.form_tag = False
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
-            Accordion(
-                AccordionGroup(
-                    'Basic search options',
-                    'has_title',
-                    'description',
-                    css_id="basic_search_fields"
+            Fieldset(
+                'Basic search options',
+                'has_title',
+                'description',
+                css_id="basic_search_fields"
                 ),
-                AccordionGroup(
-                    'Advanced search',
-                    css_id="more"
-                    ),
-                )
+############# Uncomment accordion if there are advanced search options ############
+            # Accordion(
+            #     AccordionGroup(
+            #         'Advanced search',
+            #         css_id="more"
+            #         ),
+            #     )
             )
 
 
@@ -93,19 +95,20 @@ class ResourceFilterFormHelper(FormHelper):
         self.helper.form_tag = False
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
-            Accordion(
-                AccordionGroup(
-                    'Basic search options',
-                    'has_title',
-                    'description',
-                    'part_of',
-                    css_id="basic_search_fields"
+            Fieldset(
+                'Basic search options',
+                'has_title',
+                'description',
+                'part_of',
+                css_id="basic_search_fields"
                 ),
-                AccordionGroup(
-                    'Advanced search',
-                    css_id="more"
-                    ),
-                )
+############# Uncomment accordion if there are advanced search options ############
+            # Accordion(
+            #     AccordionGroup(
+            #         'Advanced search',
+            #         css_id="more"
+            #         ),
+            #     )
             )
 
 

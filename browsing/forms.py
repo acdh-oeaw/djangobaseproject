@@ -26,9 +26,9 @@ class PersonFilterFormHelper(FormHelper):
         self.layout = Layout(
             Fieldset(
                 'Basic search options',
-                    'name',
-                    'written_name',
-                    css_id="basic_search_fields"
+                'name',
+                'written_name',
+                css_id="basic_search_fields"
                 ),
             Accordion(
                 AccordionGroup(
@@ -54,8 +54,8 @@ class AlternativeNameFilterFormHelper(FormHelper):
         self.layout = Layout(
             Fieldset(
                 'Basic search options',
-                    'name',
-                    css_id="basic_search_fields"
+                'name',
+                css_id="basic_search_fields"
                 ),
             # Accordion(
             #     AccordionGroup(
@@ -78,9 +78,9 @@ class InstitutionFilterFormHelper(FormHelper):
         self.layout = Layout(
             Fieldset(
                 'Basic search options',
-                    'written_name',
-                    'alt_names',
-                    css_id="basic_search_fields"
+                'written_name',
+                'alt_names',
+                css_id="basic_search_fields"
                 ),
             Accordion(
                 AccordionGroup(
