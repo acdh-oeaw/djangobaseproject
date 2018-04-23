@@ -20,7 +20,7 @@
     <h3>Example-Queries</h3>
     <hr/>
 {% for x in examples %}
-<button  type="button" class="btn btn-default" data-toggle="collapse" data-target="#see-example-{{ x.id }}" id="see-example-btn-{{ x.id }}">{{ x.title }}</button>
+<button  type="button" class="btn btn-outline-secondary" data-toggle="collapse" data-target="#see-example-{{ x.id }}" id="see-example-btn-{{ x.id }}">{{ x.title }}</button>
 
      <div id="see-example-{{ x.id }}" class="collapse">
      <h5>{{ x.title }}: {{ x.description }}</abbr></h5>
@@ -43,9 +43,9 @@
     <div id="yasr"></div>
 </div>
 <br>
-<div class="panel panel-info">
-      <div class="panel-heading"><span class="glyphicon glyphicon-info-sign"></span>  Credits</div>
-      <div class="panel-body">SPARQL endpoint interface is built with <a href="http://about.yasgui.org/">YASGUI</a> package.</div>
+<div class="card border-info mb-3">
+      <div class="card-header"><i class="fas fa-info-circle"></i>  Credits</div>
+      <div class="card-body">SPARQL endpoint interface is built with <a href="http://about.yasgui.org/">YASGUI</a> package.</div>
 </div>
 
 

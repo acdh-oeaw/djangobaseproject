@@ -16,16 +16,16 @@
 
 {% block content %}
 {% load crispy_forms_tags %}
-
+<div class="container">
 {% if object %}
 <div class="row">
     <div class="col-md-4">
 {% endif %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card">
+            <div class="card-header">
                   <h3>{%if object %} Edit {% else %} Create {% endif %}</h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <form action="" method="post">
                     {% csrf_token %}
                     {% crispy form %}
@@ -42,8 +42,8 @@
 {% if object %}
    </div>
     <div class ="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card card-default">
+            <div class="card-header">
                 <form class="form-group">
                     <select class="form-control" id="geonamesSELECT">
                             {% if object.geonames_id or object.lat %}
@@ -55,7 +55,7 @@
                         </select>
                     </form>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <div id="parentMap"></div>
             </div>
         </div>
@@ -144,4 +144,5 @@
 });
 </script>
 {% endif %}
+</div>
 {% endblock %}
