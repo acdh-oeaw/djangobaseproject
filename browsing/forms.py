@@ -60,9 +60,9 @@ class AlternativeNameFilterFormHelper(FormHelper):
 ############# Uncomment accordion if there are advanced search options ############
             # Accordion(
             #     AccordionGroup(
-            #         'Basic search options',
+            #         'Advanced search',
             #         'name',
-            #         css_id="basic_search_fields"
+            #         css_id="more"
             #         ),
             #     )
             )
