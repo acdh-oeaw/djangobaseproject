@@ -1,8 +1,8 @@
 {% extends "webpage/base.html" %}
 {% block content %}
 <div class="container">
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card">
+        <div class="card-header">
             <h1>
                 {{ object }}<br/> <small>skos:prefLabel</small>
                 {% if user.is_authenticated %}
@@ -12,7 +12,7 @@
                 {% endif %}
             </h1>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Label</th>

@@ -2,8 +2,8 @@
 {% block Title %}{{ object }}{% endblock %}
 {% block content %}
 <div class="container">
-    <div class="panel panel-default">
-        <div class="panel-heading procustom-panel-heading">
+    <div class="card">
+        <div class="card-header procustom-panel-heading">
             <div class="row">
                 <div class="col-md-2">
                     {% if object.get_prev %}
@@ -39,37 +39,37 @@
             </div>
         </div>
     </div>
-        <div class="panel-body">
+        <div class="card-body">
             <div class="row">
                 <div class="col-sm-2">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">skos:broader</div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <div class="card-header">skos:broader</div>
+                        <div class="card-body">
                             <h3>{{ object.broader_concept }}</h3>
                             {% for x in object.get_broader %}
                                 <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a>
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">skos:related</div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <div class="card-header">skos:related</div>
+                        <div class="card-body">
                             {% for x in object.skos_related.all %}
                                 <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">skos:broadMatch</div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <div class="card-header">skos:broadMatch</div>
+                        <div class="card-body">
                             {% for x in object.skos_broadmatch.all %}
                                 <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">skos:closeMatch</div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <div class="card-header">skos:closeMatch</div>
+                        <div class="card-body">
                             {% for x in object.skos_closematch.all %}
                                 <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
                             {% endfor %}
@@ -78,9 +78,9 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">skos:exactMatch</div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <div class="card-header">skos:exactMatch</div>
+                        <div class="card-body">
                             {% for x in object.skos_exactmatch.all %}
                                 <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
                             {% endfor %}
@@ -88,9 +88,9 @@
                     </div>
                 </div>
                 <div class="col-sm-8">
-                    <div class="panel panel-default">
+                    <div class="card">
 
-                        <div class="panel-body">
+                        <div class="card-body">
                             <legend>about</legend>
                             <table class="table table-bordered table-striped table-hover">
                                 <tr>
@@ -147,9 +147,9 @@
                     </div>
                 </div>
                 <div class="col-sm-2">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">skos:narrower</div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <div class="card-header">skos:narrower</div>
+                        <div class="card-body">
                             {% for x in object.narrower_concepts.all %}
                                 <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
                             {% endfor %}
