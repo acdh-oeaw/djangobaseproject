@@ -11,8 +11,13 @@ from django.utils.decorators import method_decorator
 from django_tables2 import RequestConfig
 from .models import Place, AlternativeName, Institution, Person
 from .forms import *
-from .tables import PersonTable, InstitutionTable, PlaceTable
-from .filters import PersonListFilter, InstitutionListFilter, PlaceListFilter
+from .tables import PersonTable, InstitutionTable, PlaceTable, AlternativeNameTable
+from .filters import (
+    PersonListFilter,
+    InstitutionListFilter,
+    PlaceListFilter,
+    AlternativeNameListFilter,
+)
 from webpage.utils import GenericListView, BaseCreateView, BaseUpdateView
 
 
@@ -154,33 +159,38 @@ class PersonDelete(DeleteView):
         return super(PersonDelete, self).dispatch(*args, **kwargs)
 
 
-class AlternativeNameListView(generic.ListView):
-    context_object_name = 'object_list'
-
-    def get_queryset(self):
-        return AlternativeName.objects.all()
-
-
-class AlternativeNameCreate(CreateView):
-
+class AlternativeNameListView(GenericListView):
     model = AlternativeName
-    form_class = AlternativeNameForm
-    template_name = 'entities/alternativenames_create.html'
+    table_class = AlternativeNameTable
+    filter_class = AlternativeNameListFilter
+    formhelper_class = AlternativeNameFilterFormHelper
+    init_columns = [
+        'id',
+        'name',
+    ]
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(AlternativeNameCreate, self).dispatch(*args, **kwargs)
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
 
+    def get_context_data(self, **kwargs):
+        context = super(AlternativeNameListView, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        return context
 
-class AlternativeNameUpdate(UpdateView):
-
-    model = AlternativeName
-    form_class = AlternativeNameForm
-    template_name = 'entities/alternativenames_create.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(AlternativeNameUpdate, self).dispatch(*args, **kwargs)
+    def get_table(self, **kwargs):
+        table = super(GenericListView, self).get_table()
+        RequestConfig(self.request, paginate={
+            'page': 1, 'per_page': self.paginate_by
+        }).configure(table)
+        default_cols = self.init_columns
+        all_cols = self.get_all_cols()
+        selected_cols = self.request.GET.getlist("columns") + default_cols
+        exclude_vals = [x for x in all_cols if x not in selected_cols]
+        table.exclude = exclude_vals
+        return table
 
 
 class AlternativeNameDetailView(DetailView):
@@ -188,10 +198,30 @@ class AlternativeNameDetailView(DetailView):
     template_name = 'entities/alternativenames_detail.html'
 
 
+class AlternativeNameCreate(BaseCreateView):
+
+    model = AlternativeName
+    form_class = AlternativeNameForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AlternativeNameCreate, self).dispatch(*args, **kwargs)
+
+
+class AlternativeNameUpdate(BaseUpdateView):
+
+    model = AlternativeName
+    form_class = AlternativeNameForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AlternativeNameUpdate, self).dispatch(*args, **kwargs)
+
+
 class AlternativeNameDelete(DeleteView):
     model = AlternativeName
     template_name = 'webpage/confirm_delete.html'
-    success_url = reverse_lazy('browsing:browse_altnames')
+    success_url = reverse_lazy('entities:browse_altnames')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

@@ -14,9 +14,9 @@ class AlternativeName(IdProvider):
             'entities:alternativename_detail', kwargs={'pk': self.id}
         )
 
-    # @classmethod
-    # def get_listview_url(self):
-    #     return reverse('browsing:browse_altnames')
+    @classmethod
+    def get_listview_url(self):
+        return reverse('entities:browse_altnames')
 
     @classmethod
     def get_createview_url(self):
