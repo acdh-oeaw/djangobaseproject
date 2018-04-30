@@ -109,9 +109,9 @@ class Place(IdProvider):
     def get_createview_url(self):
         return reverse('entities:place_create')
 
-    # @classmethod
-    # def get_arche_dump(self):
-    #     return reverse('browsing:rdf_places')
+    @classmethod
+    def get_arche_dump(self):
+        return reverse('entities:rdf_places')
 
     def get_next(self):
         next = Place.objects.filter(id__gt=self.id)
@@ -152,9 +152,9 @@ class Institution(IdProvider):
     )
     comment = models.TextField(blank=True)
 
-    # @classmethod
-    # def get_arche_dump(self):
-    #     return reverse('browsing:rdf_institutions')
+    @classmethod
+    def get_arche_dump(self):
+        return reverse('entities:rdf_institutions')
 
     @classmethod
     def get_listview_url(self):
@@ -219,9 +219,9 @@ class Person(IdProvider):
     def get_listview_url(self):
         return reverse('entities:browse_persons')
 
-    # @classmethod
-    # def get_arche_dump(self):
-    #     return reverse('browsing:rdf_persons')
+    @classmethod
+    def get_arche_dump(self):
+        return reverse('entities:rdf_persons')
 
     def get_absolute_url(self):
         return reverse('entities:person_detail', kwargs={'pk': self.id})

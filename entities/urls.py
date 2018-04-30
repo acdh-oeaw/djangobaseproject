@@ -36,4 +36,7 @@ urlpatterns = [
         name='person_edit'),
     url(r'^person/delete/(?P<pk>[0-9]+)$', views.PersonDelete.as_view(),
         name='person_delete'),
+    url(r'places-rdf/$', views.PlaceRDFView.as_view(), name='rdf_places'),
+    url(r'persons-rdf/$', views.PersonRDFView.as_view(), name='rdf_persons'),
+    url(r'institutions-rdf/$', views.InstitutionRDFView.as_view(), name='rdf_institutions'),
 ]

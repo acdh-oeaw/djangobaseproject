@@ -1,6 +1,9 @@
 import requests
 import re
 import json
+import time
+import datetime
+from django.http import HttpResponse
 from django.shortcuts import (render, render_to_response, get_object_or_404, redirect)
 from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -11,6 +14,7 @@ from django.utils.decorators import method_decorator
 from django_tables2 import RequestConfig
 from .models import Place, AlternativeName, Institution, Person
 from .forms import *
+from .serializer_arche import *
 from .tables import PersonTable, InstitutionTable, PlaceTable, AlternativeNameTable
 from .filters import (
     PersonListFilter,
@@ -53,6 +57,24 @@ class InstitutionListView(GenericListView):
         exclude_vals = [x for x in all_cols if x not in selected_cols]
         table.exclude = exclude_vals
         return table
+
+
+class InstitutionRDFView(GenericListView):
+    model = Institution
+    table_class = InstitutionTable
+    template_name = None
+    filter_class = InstitutionListFilter
+    formhelper_class = InstitutionFilterFormHelper
+
+    def render_to_response(self, context):
+        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+        response = HttpResponse(content_type='application/xml; charset=utf-8')
+        filename = "institutions_{}".format(timestamp)
+        response['Content-Disposition'] = 'attachment; filename="{}.rdf"'.format(filename)
+        g = inst_to_arche(self.get_queryset())
+        get_format = self.request.GET.get('format', default='n3')
+        result = g.serialize(destination=response, format=get_format)
+        return response
 
 
 class InstitutionDetailView(DetailView):
@@ -122,6 +144,24 @@ class PersonListView(GenericListView):
         exclude_vals = [x for x in all_cols if x not in selected_cols]
         table.exclude = exclude_vals
         return table
+
+
+class PersonRDFView(GenericListView):
+    model = Person
+    table_class = PersonTable
+    template_name = None
+    filter_class = PersonListFilter
+    formhelper_class = PersonFilterFormHelper
+
+    def render_to_response(self, context):
+        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+        response = HttpResponse(content_type='application/xml; charset=utf-8')
+        filename = "places_{}".format(timestamp)
+        response['Content-Disposition'] = 'attachment; filename="{}.rdf"'.format(filename)
+        g = person_to_arche(self.get_queryset())
+        get_format = self.request.GET.get('format', default='n3')
+        result = g.serialize(destination=response, format=get_format)
+        return response
 
 
 class PersonDetailView(DetailView):
@@ -261,6 +301,24 @@ class PlaceListView(GenericListView):
         exclude_vals = [x for x in all_cols if x not in selected_cols]
         table.exclude = exclude_vals
         return table
+
+
+class PlaceRDFView(GenericListView):
+    model = Place
+    table_class = PlaceTable
+    template_name = None
+    filter_class = PlaceListFilter
+    formhelper_class = PlaceFilterFormHelper
+
+    def render_to_response(self, context):
+        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+        response = HttpResponse(content_type='application/xml; charset=utf-8')
+        filename = "places_{}".format(timestamp)
+        response['Content-Disposition'] = 'attachment; filename="{}.rdf"'.format(filename)
+        g = place_to_arche(self.get_queryset())
+        get_format = self.request.GET.get('format', default='n3')
+        result = g.serialize(destination=response, format=get_format)
+        return response
 
 
 class PlaceDetailView(DetailView):

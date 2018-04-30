@@ -15,8 +15,7 @@ from .forms import *
 from .filters import *
 from .tables import *
 from .serializer_arche import *
-from browsing.views import GenericListView
-from browsing.forms import GenericFilterFormHelper
+from webpage.utils import GenericListView, BaseCreateView, BaseUpdateView
 
 
 def copy_view(request):
@@ -67,7 +66,10 @@ class ProjectListView(GenericListView):
     table_class = ProjectTable
     filter_class = ProjectListFilter
     formhelper_class = ProjectFilterFormHelper
-    init_columns = ['id', 'has_title']
+    init_columns = [
+        'id',
+        'has_title',
+    ]
 
     def get_all_cols(self):
         all_cols = list(self.table_class.base_columns.keys())
@@ -95,9 +97,9 @@ class ProjectListView(GenericListView):
 class ProjectRDFView(GenericListView):
     model = Project
     table_class = ProjectTable
-    template_name = 'browsing/rdflib_template.txt'
+    template_name = None
     filter_class = ProjectListFilter
-    formhelper_class = GenericFilterFormHelper
+    formhelper_class = ProjectFilterFormHelper
 
     def render_to_response(self, context):
         timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
@@ -115,22 +117,20 @@ class ProjectDetailView(DetailView):
     template_name = 'arche/project_detail.html'
 
 
-class ProjectCreate(CreateView):
+class ProjectCreate(BaseCreateView):
 
     model = Project
     form_class = ProjectForm
-    template_name = 'arche/project_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ProjectCreate, self).dispatch(*args, **kwargs)
 
 
-class ProjectUpdate(UpdateView):
+class ProjectUpdate(BaseUpdateView):
 
     model = Project
     form_class = ProjectForm
-    template_name = 'arche/project_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -152,7 +152,10 @@ class CollectionListView(GenericListView):
     table_class = CollectionTable
     filter_class = CollectionListFilter
     formhelper_class = CollectionFilterFormHelper
-    init_columns = ['id', 'has_title']
+    init_columns = [
+        'id',
+        'has_title'
+    ]
 
     def get_all_cols(self):
         all_cols = list(self.table_class.base_columns.keys())
@@ -180,9 +183,9 @@ class CollectionListView(GenericListView):
 class CollectionRDFView(GenericListView):
     model = Collection
     table_class = CollectionTable
-    template_name = 'browsing/rdflib_template.txt'
+    template_name = None
     filter_class = CollectionListFilter
-    formhelper_class = GenericFilterFormHelper
+    formhelper_class = CollectionFilterFormHelper
 
     def render_to_response(self, context):
         timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
@@ -200,7 +203,7 @@ class CollectionDetailView(DetailView):
     template_name = 'arche/collection_detail.html'
 
 
-class CollectionCreate(CreateView):
+class CollectionCreate(BaseCreateView):
 
     model = Collection
     form_class = CollectionForm
@@ -211,11 +214,10 @@ class CollectionCreate(CreateView):
         return super(CollectionCreate, self).dispatch(*args, **kwargs)
 
 
-class CollectionUpdate(UpdateView):
+class CollectionUpdate(BaseUpdateView):
 
     model = Collection
     form_class = CollectionForm
-    template_name = 'arche/collection_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -237,7 +239,10 @@ class ResourceListView(GenericListView):
     table_class = ResourceTable
     filter_class = ResourceListFilter
     formhelper_class = ResourceFilterFormHelper
-    init_columns = ['id', 'has_title']
+    init_columns = [
+        'id',
+        'has_title',
+    ]
 
     def get_all_cols(self):
         all_cols = list(self.table_class.base_columns.keys())
@@ -267,22 +272,20 @@ class ResourceDetailView(DetailView):
     template_name = 'arche/resource_detail.html'
 
 
-class ResourceCreate(CreateView):
+class ResourceCreate(BaseCreateView):
 
     model = Resource
     form_class = ResourceForm
-    template_name = 'arche/resource_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ResourceCreate, self).dispatch(*args, **kwargs)
 
 
-class ResourceUpdate(UpdateView):
+class ResourceUpdate(BaseUpdateView):
 
     model = Resource
     form_class = ResourceForm
-    template_name = 'arche/resource_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -292,7 +295,7 @@ class ResourceUpdate(UpdateView):
 class ResourceDelete(DeleteView):
     model = Resource
     template_name = 'webpage/confirm_delete.html'
-    success_url = reverse_lazy('arche:browse_projects')
+    success_url = reverse_lazy('arche:browse_resources')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -316,16 +319,15 @@ class ResourceInheritProperties(ResourceListView):
             new = x.inherit_properties()
         new_props.append(new)
         context['updat_report'] = new_props
-
         return context
 
 
 class ResourceRDFView(GenericListView):
     model = Resource
     table_class = ResourceTable
-    template_name = 'browsing/rdflib_template.txt'
+    template_name = None
     filter_class = ResourceListFilter
-    formhelper_class = GenericFilterFormHelper
+    formhelper_class = ResourceFilterFormHelper
 
     def render_to_response(self, context):
         timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
