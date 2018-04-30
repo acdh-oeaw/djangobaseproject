@@ -7,50 +7,9 @@ from django.urls import reverse_lazy
 from django_tables2 import SingleTableView, RequestConfig
 from .models import SkosConcept, SkosConceptScheme, SkosLabel
 from .forms import *
-from .tables import SkosConceptTable
-from .filters import SkosConceptListFilter
-
-
-class GenericListView(SingleTableView):
-    filter_class = None
-    formhelper_class = None
-    context_filter_name = 'filter'
-    paginate_by = 25
-    template_name = 'vocabs/generic_list.html'
-
-    def get_all_cols(self):
-        all_cols = list(self.table_class.base_columns.keys())
-        return all_cols
-
-    def get_queryset(self, **kwargs):
-        qs = super(GenericListView, self).get_queryset()
-        self.filter = self.filter_class(self.request.GET, queryset=qs)
-        self.filter.form.helper = self.formhelper_class()
-        return self.filter.qs
-
-    def get_table(self, **kwargs):
-        table = super(GenericListView, self).get_table()
-        RequestConfig(self.request, paginate={
-            'page': 1, 'per_page': self.paginate_by}).configure(table)
-        return table
-
-    def get_context_data(self, **kwargs):
-        context = super(GenericListView, self).get_context_data()
-        context[self.context_filter_name] = self.filter
-        context['docstring'] = "{}".format(self.model.__doc__)
-        if self.model.__name__.endswith('s'):
-            context['class_name'] = "{}".format(self.model.__name__)
-        else:
-            context['class_name'] = "{}s".format(self.model.__name__)
-        try:
-            context['get_arche_dump'] = self.model.get_arche_dump()
-        except AttributeError:
-            context['get_arche_dump'] = None
-        try:
-            context['create_view_link'] = self.model.get_createview_url()
-        except AttributeError:
-            context['create_view_link'] = None
-        return context
+from .tables import SkosConceptTable, SkosConceptSchemeTable
+from .filters import SkosConceptListFilter, SkosConceptSchemeListFilter
+from webpage.utils import GenericListView, BaseCreateView, BaseUpdateView
 
 
 class SkosConceptListView(GenericListView):
@@ -58,7 +17,12 @@ class SkosConceptListView(GenericListView):
     table_class = SkosConceptTable
     filter_class = SkosConceptListFilter
     formhelper_class = SkosConceptFormHelper
-    init_columns = ['id', 'broader_concept', 'pref_label', 'all_schemes']
+    init_columns = [
+        'id',
+        'broader_concept',
+        'pref_label',
+        'all_schemes'
+    ]
 
     def get_all_cols(self):
         all_cols = list(self.table_class.base_columns.keys())
@@ -90,10 +54,9 @@ class SkosConceptDetailView(DetailView):
     template_name = 'vocabs/skosconcept_detail.html'
 
 
-class SkosConceptCreate(CreateView):
+class SkosConceptCreate(BaseCreateView):
 
     model = SkosConcept
-    template_name = 'vocabs/skosconcept_create.html'
     form_class = SkosConceptForm
 
     @method_decorator(login_required)
@@ -101,11 +64,10 @@ class SkosConceptCreate(CreateView):
         return super(SkosConceptCreate, self).dispatch(*args, **kwargs)
 
 
-class SkosConceptUpdate(UpdateView):
+class SkosConceptUpdate(BaseUpdateView):
 
     model = SkosConcept
     form_class = SkosConceptForm
-    template_name = 'vocabs/skosconcept_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -127,6 +89,40 @@ class SkosConceptDelete(DeleteView):
 #####################################################
 
 
+class SkosConceptSchemeListView(GenericListView):
+    model = SkosConceptScheme
+    table_class = SkosConceptSchemeTable
+    filter_class = SkosConceptSchemeListFilter
+    formhelper_class = SkosConceptSchemeFormHelper
+    init_columns = [
+        'id',
+        'dc_title',
+    ]
+
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
+
+    def get_context_data(self, **kwargs):
+        context = super(SkosConceptSchemeListView, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        return context
+
+    def get_table(self, **kwargs):
+        table = super(GenericListView, self).get_table()
+        RequestConfig(self.request, paginate={
+            'page': 1, 'per_page': self.paginate_by
+        }).configure(table)
+        default_cols = self.init_columns
+        all_cols = self.get_all_cols()
+        selected_cols = self.request.GET.getlist("columns") + default_cols
+        exclude_vals = [x for x in all_cols if x not in selected_cols]
+        table.exclude = exclude_vals
+        return table
+
+
 class SkosConceptSchemeDetailView(DetailView):
 
     model = SkosConceptScheme
@@ -138,32 +134,34 @@ class SkosConceptSchemeDetailView(DetailView):
         return context
 
 
-class SkosConceptSchemeListView(ListView):
-
-    model = SkosConceptScheme
-    template_name = 'vocabs/skosconceptscheme_list.html'
-
-
-class SkosConceptSchemeCreate(CreateView):
+class SkosConceptSchemeCreate(BaseCreateView):
 
     model = SkosConceptScheme
     form_class = SkosConceptSchemeForm
-    template_name = 'vocabs/skosconceptscheme_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(SkosConceptSchemeCreate, self).dispatch(*args, **kwargs)
 
 
-class SkosConceptSchemeUpdate(UpdateView):
+class SkosConceptSchemeUpdate(BaseUpdateView):
 
     model = SkosConceptScheme
     form_class = SkosConceptSchemeForm
-    template_name = 'vocabs/skosconceptscheme_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(SkosConceptSchemeUpdate, self).dispatch(*args, **kwargs)
+
+
+class SkosConceptSchemeDelete(DeleteView):
+    model = SkosConceptScheme
+    template_name = 'vocabs/confirm_delete.html'
+    success_url = reverse_lazy('vocabs:browse_schemes')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(SkosConceptSchemeDelete, self).dispatch(*args, **kwargs)
 
 
 ###################################################

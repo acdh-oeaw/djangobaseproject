@@ -76,3 +76,21 @@ class SkosConceptFilter(django_filters.FilterSet):
     class Meta:
         model = SkosConcept
         fields = '__all__'
+
+
+class SkosConceptSchemeListFilter(django_filters.FilterSet):
+
+    dc_title = django_filters.CharFilter(
+        lookup_expr='icontains',
+        help_text=SkosConceptScheme._meta.get_field('dc_title').help_text,
+        label=SkosConceptScheme._meta.get_field('dc_title').verbose_name
+        )
+    dct_creator = django_filters.CharFilter(
+        lookup_expr='icontains',
+        help_text=SkosConceptScheme._meta.get_field('dct_creator').help_text,
+        label=SkosConceptScheme._meta.get_field('dct_creator').verbose_name
+        )
+
+    class Meta:
+        model = SkosConceptScheme
+        fields = '__all__'

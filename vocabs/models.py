@@ -41,7 +41,7 @@ class SkosNamespace(models.Model):
 class SkosConceptScheme(models.Model):
     dc_title = models.CharField(max_length=300, blank=True)
     namespace = models.ForeignKey(
-        SkosNamespace, blank=True, null=True, on_delete=models.CASCADE
+        SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
     )
     dct_creator = models.URLField(blank=True)
     legacy_id = models.CharField(max_length=200, blank=True)
@@ -55,6 +55,29 @@ class SkosConceptScheme(models.Model):
         else:
             pass
         super(SkosConceptScheme, self).save(*args, **kwargs)
+
+    @classmethod
+    def get_listview_url(self):
+        return reverse('vocabs:browse_schemes')
+
+    @classmethod
+    def get_createview_url(self):
+        return reverse('vocabs:skosconceptscheme_create')
+
+    def get_absolute_url(self):
+        return reverse('vocabs:skosconceptscheme_detail', kwargs={'pk': self.id})
+
+    def get_next(self):
+        next = SkosConceptScheme.objects.filter(id__gt=self.id)
+        if next:
+            return next.first().id
+        return False
+
+    def get_prev(self):
+        prev = SkosConceptScheme.objects.filter(id__lt=self.id).order_by('-id')
+        if prev:
+            return prev.first().id
+        return False
 
     def get_absolute_url(self):
         return reverse('vocabs:skosconceptscheme_detail', kwargs={'pk': self.id})
@@ -83,18 +106,20 @@ class SkosLabel(models.Model):
 class SkosConcept(models.Model):
     pref_label = models.CharField(max_length=300, blank=True)
     pref_label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    scheme = models.ManyToManyField(SkosConceptScheme, blank=True)
+    scheme = models.ManyToManyField(
+        SkosConceptScheme, blank=True, related_name="has_concepts"
+    )
     definition = models.TextField(blank=True)
     definition_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
     label = models.ManyToManyField(SkosLabel, blank=True)
     notation = models.CharField(max_length=300, blank=True)
     namespace = models.ForeignKey(
-        SkosNamespace, blank=True, null=True, on_delete=models.CASCADE
+        SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
     )
     broader_concept = models.ForeignKey(
         'SkosConcept', help_text="Broader Term.",
         verbose_name="Broader Term",
-        blank=True, null=True, on_delete=models.CASCADE,
+        blank=True, null=True, on_delete=models.SET_NULL,
         related_name="narrower_concepts"
     )
     skos_broader = models.ManyToManyField(

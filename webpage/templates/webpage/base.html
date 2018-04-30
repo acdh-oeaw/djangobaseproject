@@ -137,12 +137,10 @@
                     <span class="caret"/>
                     </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item"href="{% url 'vocabs:skosconceptscheme_list' %}">Concept Schemes</a>
+                            <a class="dropdown-item"href="{% url 'vocabs:browse_schemes' %}">Concept Schemes</a>
                             <a class="dropdown-item" href="{% url 'vocabs:browse_vocabs' %}">Concepts</a>
                             <a class="dropdown-item" href="{% url 'vocabs:skoslabel_list' %}">Labels</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'vocabs:skos_import' %}">Import SKOS (RDF/XML)</a>
-                            <a class="dropdown-item" href="{% url 'vocabs:skos_csv_import' %}">Import Vocabs from CSV</a>
                             <a class="dropdown-item" href="{% url 'api-root' %}">Export SKOS (API)</a>
                         </div>
                     </li>
