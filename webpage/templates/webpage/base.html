@@ -32,6 +32,8 @@
     <script type="text/javascript" src="{% static 'webpage/libraries/less/less.min.js' %}"></script>
     <!-- jQuery -->
     <script type="text/javascript" src="{% static 'webpage/libraries/jquery/jquery.js' %}"></script>
+    <!-- Popper -->
+    <script type="text/javascript" src="{% static 'webpage/libraries/popper/popper.min.js' %}"></script>
     <!--scroll to top -->
     <script src="{% static 'webpage/libraries/scroll-to-top/js/ap-scroll-top.min.js'%}"></script>
     <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
@@ -103,18 +105,18 @@
                         <div class="dropdown-menu">
                             {% nav_menu app='entities' as links %}
                             {% for x in links %}
-                                
+
                                     <a class="dropdown-item" href="{{ x.link}}">{{ x.name }}</a>
-                                
+
                             {% endfor %}
 
                             {% if user.is_authenticated %}
                             <div class="dropdown-divider"></div>
                             {% nav_menu app='arche' as links %}
                             {% for x in links %}
-                                
+
                                     <a class="dropdown-item" href="{{ x.link}}">{{ x.name }}</a>
-                                
+
                             {% endfor %}
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{% url 'bib:synczotero' %}">Import new Items from Zotero</a>
@@ -124,7 +126,7 @@
                     <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Retrieve the Data
                     <span class="caret"/>
-                    </a> 
+                    </a>
                         <div class="dropdown-menu">
                         <a class="dropdown-item" href="{% url 'sparql:query' %}">SPARQL</a>
                         </div>
@@ -202,6 +204,9 @@
 {% block scripts %}
 <script type="text/javascript" src="{% static 'webpage/libraries/bootstrap400/js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'webpage/libraries/bootstrap400/js/bootstrap-tab.js' %}"></script>
+<!--bootstrap-select must be after bootstrap js-->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css" />
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <!-- cool share -->
 <script type="text/javascript">
     $(function (){
