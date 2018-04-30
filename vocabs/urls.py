@@ -31,7 +31,7 @@ urlpatterns = [
         views.SkosConceptSchemeDelete.as_view(),
         name='skosconceptscheme_delete',
     ),
-    url(r'^label/$', views.SkosLabelListView.as_view(), name='skoslabel_list'),
+    url(r'^label/$', views.SkosLabelListView.as_view(), name='browse_skoslabels'),
     url(
         r'^label/(?P<pk>[0-9]+)$', views.SkosLabelDetailView.as_view(),
         name='skoslabel_detail'),
@@ -41,4 +41,9 @@ urlpatterns = [
     url(
         r'^label/update/(?P<pk>[0-9]+)$', views.SkosLabelUpdate.as_view(),
         name='skoslabel_update'),
+    url(
+        r'^skoslabel/delete/(?P<pk>[0-9]+)$',
+        views.SkosLabelDelete.as_view(),
+        name='skoslabel_delete',
+    ),
 ]

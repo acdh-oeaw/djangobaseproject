@@ -79,9 +79,6 @@ class SkosConceptScheme(models.Model):
             return prev.first().id
         return False
 
-    def get_absolute_url(self):
-        return reverse('vocabs:skosconceptscheme_detail', kwargs={'pk': self.id})
-
     def __str__(self):
         return "{}:{}".format(self.namespace, self.dc_title)
 
@@ -93,14 +90,34 @@ class SkosLabel(models.Model):
     isoCode = models.CharField(
         max_length=3, blank=True, help_text="The ISO 639-3 code for the label's language.")
 
+    @classmethod
+    def get_listview_url(self):
+        return reverse('vocabs:browse_skoslabels')
+
+    @classmethod
+    def get_createview_url(self):
+        return reverse('vocabs:skoslabel_create')
+
+    def get_absolute_url(self):
+        return reverse('vocabs:skoslabel_detail', kwargs={'pk': self.id})
+
+    def get_next(self):
+        next = SkosLabel.objects.filter(id__gt=self.id)
+        if next:
+            return next.first().id
+        return False
+
+    def get_prev(self):
+        prev = SkosLabel.objects.filter(id__lt=self.id).order_by('-id')
+        if prev:
+            return prev.first().id
+        return False
+
     def __str__(self):
         if self.label_type != "":
             return "{} @{} ({})".format(self.label, self.isoCode, self.label_type)
         else:
             return "{} @{}".format(self.label, self.isoCode)
-
-    def get_absolute_url(self):
-        return reverse('vocabs:skoslabel_detail', kwargs={'pk': self.id})
 
 
 class SkosConcept(models.Model):

@@ -7,8 +7,8 @@ from django.urls import reverse_lazy
 from django_tables2 import SingleTableView, RequestConfig
 from .models import SkosConcept, SkosConceptScheme, SkosLabel
 from .forms import *
-from .tables import SkosConceptTable, SkosConceptSchemeTable
-from .filters import SkosConceptListFilter, SkosConceptSchemeListFilter
+from .tables import SkosConceptTable, SkosConceptSchemeTable, SkosLabelTable
+from .filters import SkosConceptListFilter, SkosConceptSchemeListFilter, SkosLabelListFilter
 from webpage.utils import GenericListView, BaseCreateView, BaseUpdateView
 
 
@@ -19,9 +19,8 @@ class SkosConceptListView(GenericListView):
     formhelper_class = SkosConceptFormHelper
     init_columns = [
         'id',
-        'broader_concept',
         'pref_label',
-        'all_schemes'
+        'broader_concept',
     ]
 
     def get_all_cols(self):
@@ -169,22 +168,49 @@ class SkosConceptSchemeDelete(DeleteView):
 ###################################################
 
 
+class SkosLabelListView(GenericListView):
+    model = SkosLabel
+    table_class = SkosLabelTable
+    filter_class = SkosLabelListFilter
+    formhelper_class = SkosLabelFormHelper
+    init_columns = [
+        'id',
+        'label',
+    ]
+
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
+
+    def get_context_data(self, **kwargs):
+        context = super(SkosLabelListView, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        return context
+
+    def get_table(self, **kwargs):
+        table = super(GenericListView, self).get_table()
+        RequestConfig(self.request, paginate={
+            'page': 1, 'per_page': self.paginate_by
+        }).configure(table)
+        default_cols = self.init_columns
+        all_cols = self.get_all_cols()
+        selected_cols = self.request.GET.getlist("columns") + default_cols
+        exclude_vals = [x for x in all_cols if x not in selected_cols]
+        table.exclude = exclude_vals
+        return table
+
+
 class SkosLabelDetailView(DetailView):
 
     model = SkosLabel
     template_name = 'vocabs/skoslabel_detail.html'
 
 
-class SkosLabelListView(ListView):
+class SkosLabelCreate(BaseCreateView):
 
     model = SkosLabel
-    template_name = 'vocabs/skoslabel_list.html'
-
-
-class SkosLabelCreate(CreateView):
-
-    model = SkosLabel
-    template_name = 'vocabs/skoslabel_create.html'
     form_class = SkosLabelForm
 
     @method_decorator(login_required)
@@ -192,12 +218,21 @@ class SkosLabelCreate(CreateView):
         return super(SkosLabelCreate, self).dispatch(*args, **kwargs)
 
 
-class SkosLabelUpdate(UpdateView):
+class SkosLabelUpdate(BaseUpdateView):
 
     model = SkosLabel
     form_class = SkosLabelForm
-    template_name = 'vocabs/skoslabel_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(SkosLabelUpdate, self).dispatch(*args, **kwargs)
+
+
+class SkosLabelDelete(DeleteView):
+    model = SkosLabel
+    template_name = 'vocabs/confirm_delete.html'
+    success_url = reverse_lazy('vocabs:browse_skoslabels')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(SkosLabelDelete, self).dispatch(*args, **kwargs)

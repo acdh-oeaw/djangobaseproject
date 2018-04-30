@@ -1,6 +1,6 @@
 import django_filters
 from dal import autocomplete
-from .models import SkosConcept, SkosConceptScheme, get_all_children
+from .models import SkosConcept, SkosConceptScheme, get_all_children, SkosLabel
 
 
 django_filters.filters.LOOKUP_TYPES = [
@@ -93,4 +93,17 @@ class SkosConceptSchemeListFilter(django_filters.FilterSet):
 
     class Meta:
         model = SkosConceptScheme
+        fields = '__all__'
+
+
+class SkosLabelListFilter(django_filters.FilterSet):
+
+    label = django_filters.CharFilter(
+        lookup_expr='icontains',
+        help_text=SkosLabel._meta.get_field('label').help_text,
+        label=SkosLabel._meta.get_field('label').verbose_name
+        )
+
+    class Meta:
+        model = SkosLabel
         fields = '__all__'
