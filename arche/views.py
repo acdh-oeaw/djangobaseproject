@@ -50,8 +50,7 @@ def copy_view(request):
             html = """<html>
             <body>The object was saved but somehting is wrong with the redirect.
             Please check if the Class of the instance you try to copy has a
-            get_absolute_url method defined<
-            /body>
+            get_absolute_url method defined</body>
             </html>"""
             return HttpResponse(html)
     else:
