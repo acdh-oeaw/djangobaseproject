@@ -33,10 +33,17 @@ include 'autocomplete_light/static.html
                     <h1 style="text-align: center;">
                         <small>institution:</small> {{ object }}
                         {% if user.is_authenticated %}
-                        <small><a href="{% url 'entities:institution_edit' pk=object.id %}">
+                        <small>
+                        <a href="{% url 'entities:institution_edit' pk=object.id %}">
                             <i class="far fa-edit" title="edit"></i>
                         </a>
-                    </small>
+                        </small>
+                        |
+                        <small>
+                        <a href="{% url 'entities:institution_delete' pk=object.id %}">
+                            <i class="far fa-trash-alt" title="delete"></i>
+                        </a>
+                        </small>
                     {% endif %}
                 </h1>
             </div>
@@ -126,10 +133,6 @@ include 'autocomplete_light/static.html
                     </li>
                     {% endfor %}
                 </ul>
-
-                {% if user.is_authenticated %}
-                    <a class="btn btn-danger" href="{% url 'entities:institution_delete' pk=object.id %}">delete</a>
-                {% endif %}
             </div>
             <div class="col-md-6">
                 <div id="map"/>

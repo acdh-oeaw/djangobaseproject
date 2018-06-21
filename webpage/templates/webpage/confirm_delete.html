@@ -13,10 +13,11 @@
                 <form action="" method="post">
                     {% csrf_token %}
                     <h4>
-                        Are you sure you want to delete the {{ object.get_classname }}:<br />
+                        Are you sure you want to delete:<br />
                         <strong>{{ object }}</strong> ?
                     </h4>
                     <input  class="btn btn-danger" type="submit" value="Yes, I want to delete" />
+                    <input class="btn btn-outline-secondary" action="action" onclick="window.history.go(-1); return false;" type="button" value="Cancel" />
                 </form>
             </div>
             <div class="modal-footer"></div>
