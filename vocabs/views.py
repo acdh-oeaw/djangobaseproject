@@ -75,7 +75,7 @@ class SkosConceptUpdate(BaseUpdateView):
 
 class SkosConceptDelete(DeleteView):
     model = SkosConcept
-    template_name = 'vocabs/confirm_delete.html'
+    template_name = 'webpage/confirm_delete.html'
     success_url = reverse_lazy('vocabs:browse_vocabs')
 
     @method_decorator(login_required)
@@ -155,7 +155,7 @@ class SkosConceptSchemeUpdate(BaseUpdateView):
 
 class SkosConceptSchemeDelete(DeleteView):
     model = SkosConceptScheme
-    template_name = 'vocabs/confirm_delete.html'
+    template_name = 'webpage/confirm_delete.html'
     success_url = reverse_lazy('vocabs:browse_schemes')
 
     @method_decorator(login_required)
@@ -230,7 +230,7 @@ class SkosLabelUpdate(BaseUpdateView):
 
 class SkosLabelDelete(DeleteView):
     model = SkosLabel
-    template_name = 'vocabs/confirm_delete.html'
+    template_name = 'webpage/confirm_delete.html'
     success_url = reverse_lazy('vocabs:browse_skoslabels')
 
     @method_decorator(login_required)
