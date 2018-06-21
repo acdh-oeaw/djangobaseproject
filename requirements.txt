@@ -9,6 +9,7 @@ django-crispy-forms==1.7.2
 django-extensions==1.9.9
 django-filter==1.0.4
 django-rest-framework==0.1.0
+django-reversion==2.0.13
 django-tables2==1.9.0
 djangorestframework==3.7.7
 entrypoints==0.2.3

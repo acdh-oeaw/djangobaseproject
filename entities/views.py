@@ -23,6 +23,7 @@ from .filters import (
     AlternativeNameListFilter,
 )
 from webpage.utils import GenericListView, BaseCreateView, BaseUpdateView
+from reversion.models import Version
 
 
 class InstitutionListView(GenericListView):
@@ -80,6 +81,11 @@ class InstitutionRDFView(GenericListView):
 class InstitutionDetailView(DetailView):
     model = Institution
     template_name = 'entities/institution_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(InstitutionDetailView, self).get_context_data(**kwargs)
+        context['history'] = Version.objects.get_for_object(self.object)
+        return context
 
 
 class InstitutionCreate(BaseCreateView):
@@ -168,6 +174,11 @@ class PersonDetailView(DetailView):
     model = Person
     template_name = 'entities/person_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(PersonDetailView, self).get_context_data(**kwargs)
+        context['history'] = Version.objects.get_for_object(self.object)
+        return context
+
 
 class PersonCreate(BaseCreateView):
 
@@ -236,6 +247,11 @@ class AlternativeNameListView(GenericListView):
 class AlternativeNameDetailView(DetailView):
     model = AlternativeName
     template_name = 'entities/alternativenames_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AlternativeNameDetailView, self).get_context_data(**kwargs)
+        context['history'] = Version.objects.get_for_object(self.object)
+        return context
 
 
 class AlternativeNameCreate(BaseCreateView):
@@ -324,6 +340,11 @@ class PlaceRDFView(GenericListView):
 class PlaceDetailView(DetailView):
     model = Place
     template_name = 'entities/place_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PlaceDetailView, self).get_context_data(**kwargs)
+        context['history'] = Version.objects.get_for_object(self.object)
+        return context
 
 
 @login_required

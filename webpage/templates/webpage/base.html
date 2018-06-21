@@ -50,7 +50,7 @@
     <!-- cool-share plugin http://tutorialzine.com/2014/08/cool-share-jquery-plugin/ -->
     <link rel="stylesheet" href="{% static 'webpage/libraries/cool-share/plugin.css' %}" />
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
-    <script src="{% static 'webpage/libraries/cool-share/plugin.js' %}"></script>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
     <!-- End fo cool-share -->
     <!-- Matomo -->
       <script type="text/javascript">
@@ -178,9 +178,6 @@
         {% block content %}{% endblock %}
     </div>
 </section>
-<div style="text-align:center">
-    <span class="socialShare"><!-- The share buttons will be inserted here --></span>
-</div>
 <footer>
     <div class="container">
         <div class="row text-center">
@@ -226,6 +223,7 @@
         $.apScrollTop({'onInit': function(evt) {console.log('apScrollTop: init');}});
     });
 </script>
+<script src="{% static 'webpage/libraries/cool-share/plugin.js' %}"></script>
 {% endblock %}
 {% block scripts2 %}
 {% endblock scripts2 %}

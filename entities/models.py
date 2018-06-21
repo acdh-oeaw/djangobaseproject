@@ -2,8 +2,10 @@ import re
 from django.db import models
 from django.urls import reverse
 from idprovider.models import IdProvider
+import reversion
 
 
+@reversion.register()
 class AlternativeName(IdProvider):
     name = models.CharField(
         max_length=250, blank=True, help_text="Alternative Name"
@@ -43,6 +45,7 @@ class AlternativeName(IdProvider):
         return "{}".format(self.name)
 
 
+@reversion.register()
 class Place(IdProvider):
     PLACE_TYPES = (
         ("city", "city"),
@@ -132,6 +135,7 @@ class Place(IdProvider):
         return "{}".format(self.name)
 
 
+@reversion.register()
 class Institution(IdProvider):
     legacy_id = models.CharField(max_length=300, blank=True)
     written_name = models.CharField(max_length=300, blank=True)
@@ -183,6 +187,7 @@ class Institution(IdProvider):
         return "{}".format(self.written_name)
 
 
+@reversion.register()
 class Person(IdProvider):
     legacy_id = models.CharField(max_length=300, blank=True)
     written_name = models.CharField(max_length=300, blank=True)

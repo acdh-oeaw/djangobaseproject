@@ -73,8 +73,23 @@ include 'autocomplete_light/static.html
                         </ul>
                     </td>
                 </tr>
-            </tbody>
-        </table>
+            </table>
+        <!--change history collapse button-->
+        {% if history %}
+        <button class="btn btn-outline-info" type="button" data-toggle="collapse" data-target="#changeHistory" aria-expanded="false" aria-controls="changeHistory">
+        Change history
+        </button>
+        <div class="collapse" id="changeHistory">
+            <div class="card card-body">
+                   {% for x in history %}
+                    <li>
+                   {{ x.revision.date_created }} changed by {{ x.revision.user }} 
+                   </li>
+                   {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <!--change history ends here-->                
     </div>
 </div>
 </div>
