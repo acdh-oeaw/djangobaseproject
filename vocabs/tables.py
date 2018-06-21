@@ -3,6 +3,24 @@ from django_tables2.utils import A
 from vocabs.models import *
 
 
+class SkosLabelTable(tables.Table):
+    label = tables.LinkColumn('vocabs:skoslabel_detail', args=[A('pk')])
+
+    class Meta:
+        model = SkosLabel
+        sequence = ['id', 'label']
+        attrs = {"class": "table table-hover table-striped table-condensed"}
+
+
+class SkosConceptSchemeTable(tables.Table):
+    dc_title = tables.LinkColumn('vocabs:skosconceptscheme_detail', args=[A('pk')])
+
+    class Meta:
+        model = SkosConceptScheme
+        sequence = ['id', 'dc_title']
+        attrs = {"class": "table table-hover table-striped table-condensed"}
+
+
 class SkosConceptTable(tables.Table):
     broader_concept = tables.Column(verbose_name='Broader Term')
     pref_label = tables.LinkColumn('vocabs:skosconcept_detail', args=[A('pk')])

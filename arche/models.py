@@ -230,7 +230,10 @@ class Resource(RepoObject):
         return False
 
     def label(self):
-        return "{}/{}".format(self.part_of.has_title, self.has_title)
+        try:
+            return "{}/{}".format(self.part_of.has_title, self.has_title)
+        except AttributeError:
+            return "{}/{}".format('no parent', self.has_title)
 
 
 class Project(RepoObject):

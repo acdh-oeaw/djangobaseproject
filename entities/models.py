@@ -16,7 +16,7 @@ class AlternativeName(IdProvider):
 
     @classmethod
     def get_listview_url(self):
-        return reverse('browsing:browse_altnames')
+        return reverse('entities:browse_altnames')
 
     @classmethod
     def get_createview_url(self):
@@ -74,7 +74,7 @@ class Place(IdProvider):
         "Place", null=True, blank=True,
         help_text="A place (country) this place is part of.",
         related_name="has_child",
-        on_delete=models.PROTECT
+        on_delete=models.SET_NULL
     )
     place_type = models.CharField(
         choices=PLACE_TYPES, null=True, blank=True, max_length=50
@@ -103,7 +103,7 @@ class Place(IdProvider):
 
     @classmethod
     def get_listview_url(self):
-        return reverse('browsing:browse_places')
+        return reverse('entities:browse_places')
 
     @classmethod
     def get_createview_url(self):
@@ -111,7 +111,7 @@ class Place(IdProvider):
 
     @classmethod
     def get_arche_dump(self):
-        return reverse('browsing:rdf_places')
+        return reverse('entities:rdf_places')
 
     def get_next(self):
         next = Place.objects.filter(id__gt=self.id)
@@ -144,21 +144,21 @@ class Institution(IdProvider):
     )
     abbreviation = models.CharField(max_length=300, blank=True)
     location = models.ForeignKey(
-        Place, blank=True, null=True, on_delete=models.PROTECT
+        Place, blank=True, null=True, on_delete=models.SET_NULL
     )
     parent_institution = models.ForeignKey(
         'Institution', blank=True, null=True, related_name='children_institutions',
-        on_delete=models.PROTECT
+        on_delete=models.SET_NULL
     )
     comment = models.TextField(blank=True)
 
     @classmethod
     def get_arche_dump(self):
-        return reverse('browsing:rdf_institutions')
+        return reverse('entities:rdf_institutions')
 
     @classmethod
     def get_listview_url(self):
-        return reverse('browsing:browse_institutions')
+        return reverse('entities:browse_institutions')
 
     @classmethod
     def get_createview_url(self):
@@ -197,11 +197,11 @@ class Person(IdProvider):
     )
     belongs_to_institution = models.ForeignKey(
         Institution, blank=True, null=True, related_name="has_member",
-        on_delete=models.PROTECT
+        on_delete=models.SET_NULL
     )
     place_of_birth = models.ForeignKey(
         Place, blank=True, null=True, related_name="is_birthplace",
-        on_delete=models.PROTECT
+        on_delete=models.SET_NULL
     )
     date_of_birth = models.DateField(
         auto_now=False, auto_now_add=False, blank=True, null=True,
@@ -217,11 +217,11 @@ class Person(IdProvider):
 
     @classmethod
     def get_listview_url(self):
-        return reverse('browsing:browse_persons')
+        return reverse('entities:browse_persons')
 
     @classmethod
     def get_arche_dump(self):
-        return reverse('browsing:rdf_persons')
+        return reverse('entities:rdf_persons')
 
     def get_absolute_url(self):
         return reverse('entities:person_detail', kwargs={'pk': self.id})

@@ -1,6 +1,9 @@
 import requests
 import re
 import json
+import time
+import datetime
+from django.http import HttpResponse
 from django.shortcuts import (render, render_to_response, get_object_or_404, redirect)
 from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -8,8 +11,157 @@ from django.views.generic.detail import DetailView
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django_tables2 import RequestConfig
 from .models import Place, AlternativeName, Institution, Person
-from .forms import PlaceForm, PlaceFormCreate, AlternativeNameForm, InstitutionForm, PersonForm
+from .forms import *
+from .serializer_arche import *
+from .tables import PersonTable, InstitutionTable, PlaceTable, AlternativeNameTable
+from .filters import (
+    PersonListFilter,
+    InstitutionListFilter,
+    PlaceListFilter,
+    AlternativeNameListFilter,
+)
+from webpage.utils import GenericListView, BaseCreateView, BaseUpdateView
+
+
+class InstitutionListView(GenericListView):
+    model = Institution
+    table_class = InstitutionTable
+    filter_class = InstitutionListFilter
+    formhelper_class = InstitutionFilterFormHelper
+    init_columns = [
+        'id',
+        'written_name',
+    ]
+
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
+
+    def get_context_data(self, **kwargs):
+        context = super(InstitutionListView, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        return context
+
+    def get_table(self, **kwargs):
+        table = super(GenericListView, self).get_table()
+        RequestConfig(self.request, paginate={
+            'page': 1, 'per_page': self.paginate_by
+        }).configure(table)
+        default_cols = self.init_columns
+        all_cols = self.get_all_cols()
+        selected_cols = self.request.GET.getlist("columns") + default_cols
+        exclude_vals = [x for x in all_cols if x not in selected_cols]
+        table.exclude = exclude_vals
+        return table
+
+
+class InstitutionRDFView(GenericListView):
+    model = Institution
+    table_class = InstitutionTable
+    template_name = None
+    filter_class = InstitutionListFilter
+    formhelper_class = InstitutionFilterFormHelper
+
+    def render_to_response(self, context):
+        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+        response = HttpResponse(content_type='application/xml; charset=utf-8')
+        filename = "institutions_{}".format(timestamp)
+        response['Content-Disposition'] = 'attachment; filename="{}.rdf"'.format(filename)
+        g = inst_to_arche(self.get_queryset())
+        get_format = self.request.GET.get('format', default='n3')
+        result = g.serialize(destination=response, format=get_format)
+        return response
+
+
+class InstitutionDetailView(DetailView):
+    model = Institution
+    template_name = 'entities/institution_detail.html'
+
+
+class InstitutionCreate(BaseCreateView):
+
+    model = Institution
+    form_class = InstitutionForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(InstitutionCreate, self).dispatch(*args, **kwargs)
+
+
+class InstitutionUpdate(BaseUpdateView):
+
+    model = Institution
+    form_class = InstitutionForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(InstitutionUpdate, self).dispatch(*args, **kwargs)
+
+
+class InstitutionDelete(DeleteView):
+    model = Institution
+    template_name = 'webpage/confirm_delete.html'
+    success_url = reverse_lazy('entities:browse_institutions')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(InstitutionDelete, self).dispatch(*args, **kwargs)
+
+
+class PersonListView(GenericListView):
+    model = Person
+    table_class = PersonTable
+    filter_class = PersonListFilter
+    formhelper_class = PersonFilterFormHelper
+    init_columns = [
+        'id',
+        'name',
+    ]
+
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonListView, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        return context
+
+    def get_table(self, **kwargs):
+        table = super(GenericListView, self).get_table()
+        RequestConfig(self.request, paginate={
+            'page': 1, 'per_page': self.paginate_by
+        }).configure(table)
+        default_cols = self.init_columns
+        all_cols = self.get_all_cols()
+        selected_cols = self.request.GET.getlist("columns") + default_cols
+        exclude_vals = [x for x in all_cols if x not in selected_cols]
+        table.exclude = exclude_vals
+        return table
+
+
+class PersonRDFView(GenericListView):
+    model = Person
+    table_class = PersonTable
+    template_name = None
+    filter_class = PersonListFilter
+    formhelper_class = PersonFilterFormHelper
+
+    def render_to_response(self, context):
+        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+        response = HttpResponse(content_type='application/xml; charset=utf-8')
+        filename = "places_{}".format(timestamp)
+        response['Content-Disposition'] = 'attachment; filename="{}.rdf"'.format(filename)
+        g = person_to_arche(self.get_queryset())
+        get_format = self.request.GET.get('format', default='n3')
+        result = g.serialize(destination=response, format=get_format)
+        return response
 
 
 class PersonDetailView(DetailView):
@@ -17,22 +169,20 @@ class PersonDetailView(DetailView):
     template_name = 'entities/person_detail.html'
 
 
-class PersonCreate(CreateView):
+class PersonCreate(BaseCreateView):
 
     model = Person
     form_class = PersonForm
-    template_name = 'entities/person_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(PersonCreate, self).dispatch(*args, **kwargs)
 
 
-class PersonUpdate(UpdateView):
+class PersonUpdate(BaseUpdateView):
 
     model = Person
     form_class = PersonForm
-    template_name = 'entities/person_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -42,77 +192,45 @@ class PersonUpdate(UpdateView):
 class PersonDelete(DeleteView):
     model = Person
     template_name = 'webpage/confirm_delete.html'
-    success_url = reverse_lazy('browsing:browse_persons')
+    success_url = reverse_lazy('entities:browse_entities')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(PersonDelete, self).dispatch(*args, **kwargs)
 
 
-class InstitutionCreate(CreateView):
-
-    model = Institution
-    form_class = InstitutionForm
-    template_name = 'entities/institution_create.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(InstitutionCreate, self).dispatch(*args, **kwargs)
-
-
-class InstitutionUpdate(UpdateView):
-
-    model = Institution
-    form_class = InstitutionForm
-    template_name = 'entities/institution_create.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(InstitutionUpdate, self).dispatch(*args, **kwargs)
-
-
-class InstitutionDetailView(DetailView):
-    model = Institution
-    template_name = 'entities/institution_detail.html'
-
-
-class InstitutionDelete(DeleteView):
-    model = Institution
-    template_name = 'webpage/confirm_delete.html'
-    success_url = reverse_lazy('browsing:browse_institutions')
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(InstitutionDelete, self).dispatch(*args, **kwargs)
-
-
-class AlternativeNameListView(generic.ListView):
-    context_object_name = 'object_list'
-
-    def get_queryset(self):
-        return AlternativeName.objects.all()
-
-
-class AlternativeNameCreate(CreateView):
-
+class AlternativeNameListView(GenericListView):
     model = AlternativeName
-    form_class = AlternativeNameForm
-    template_name = 'entities/alternativenames_create.html'
+    table_class = AlternativeNameTable
+    filter_class = AlternativeNameListFilter
+    formhelper_class = AlternativeNameFilterFormHelper
+    init_columns = [
+        'id',
+        'name',
+    ]
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(AlternativeNameCreate, self).dispatch(*args, **kwargs)
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
 
+    def get_context_data(self, **kwargs):
+        context = super(AlternativeNameListView, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        return context
 
-class AlternativeNameUpdate(UpdateView):
-
-    model = AlternativeName
-    form_class = AlternativeNameForm
-    template_name = 'entities/alternativenames_create.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(AlternativeNameUpdate, self).dispatch(*args, **kwargs)
+    def get_table(self, **kwargs):
+        table = super(GenericListView, self).get_table()
+        RequestConfig(self.request, paginate={
+            'page': 1, 'per_page': self.paginate_by
+        }).configure(table)
+        default_cols = self.init_columns
+        all_cols = self.get_all_cols()
+        selected_cols = self.request.GET.getlist("columns") + default_cols
+        exclude_vals = [x for x in all_cols if x not in selected_cols]
+        table.exclude = exclude_vals
+        return table
 
 
 class AlternativeNameDetailView(DetailView):
@@ -120,27 +238,92 @@ class AlternativeNameDetailView(DetailView):
     template_name = 'entities/alternativenames_detail.html'
 
 
+class AlternativeNameCreate(BaseCreateView):
+
+    model = AlternativeName
+    form_class = AlternativeNameForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AlternativeNameCreate, self).dispatch(*args, **kwargs)
+
+
+class AlternativeNameUpdate(BaseUpdateView):
+
+    model = AlternativeName
+    form_class = AlternativeNameForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AlternativeNameUpdate, self).dispatch(*args, **kwargs)
+
+
 class AlternativeNameDelete(DeleteView):
     model = AlternativeName
     template_name = 'webpage/confirm_delete.html'
-    success_url = reverse_lazy('browsing:browse_altnames')
+    success_url = reverse_lazy('entities:browse_altnames')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AlternativeNameDelete, self).dispatch(*args, **kwargs)
 
 
+class PlaceListView(GenericListView):
+    model = Place
+    table_class = PlaceTable
+    filter_class = PlaceListFilter
+    formhelper_class = PlaceFilterFormHelper
+    init_columns = [
+        'id',
+        'name',
+        'part_oc'
+    ]
+
+    def get_all_cols(self):
+        all_cols = list(self.table_class.base_columns.keys())
+        return all_cols
+
+    def get_context_data(self, **kwargs):
+        context = super(PlaceListView, self).get_context_data()
+        context[self.context_filter_name] = self.filter
+        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
+        context['togglable_colums'] = togglable_colums
+        return context
+
+    def get_table(self, **kwargs):
+        table = super(GenericListView, self).get_table()
+        RequestConfig(self.request, paginate={
+            'page': 1, 'per_page': self.paginate_by
+        }).configure(table)
+        default_cols = self.init_columns
+        all_cols = self.get_all_cols()
+        selected_cols = self.request.GET.getlist("columns") + default_cols
+        exclude_vals = [x for x in all_cols if x not in selected_cols]
+        table.exclude = exclude_vals
+        return table
+
+
+class PlaceRDFView(GenericListView):
+    model = Place
+    table_class = PlaceTable
+    template_name = None
+    filter_class = PlaceListFilter
+    formhelper_class = PlaceFilterFormHelper
+
+    def render_to_response(self, context):
+        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+        response = HttpResponse(content_type='application/xml; charset=utf-8')
+        filename = "places_{}".format(timestamp)
+        response['Content-Disposition'] = 'attachment; filename="{}.rdf"'.format(filename)
+        g = place_to_arche(self.get_queryset())
+        get_format = self.request.GET.get('format', default='n3')
+        result = g.serialize(destination=response, format=get_format)
+        return response
+
+
 class PlaceDetailView(DetailView):
     model = Place
     template_name = 'entities/place_detail.html'
-
-
-class PlaceListView(generic.ListView):
-    template_name = "entities/list_places.html"
-    context_object_name = 'object_list'
-
-    def get_queryset(self):
-        return Place.objects.all()
 
 
 @login_required
@@ -196,7 +379,7 @@ def edit_place(request, pk):
 class PlaceDelete(DeleteView):
     model = Place
     template_name = 'webpage/confirm_delete.html'
-    success_url = reverse_lazy('browsing:browse_places')
+    success_url = reverse_lazy('entities:browse_places')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

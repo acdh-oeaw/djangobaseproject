@@ -53,7 +53,7 @@ class InstitutionListFilter(django_filters.FilterSet):
         label=Institution._meta.get_field('authority_url').verbose_name
         )
     location = django_filters.ModelMultipleChoiceFilter(
-        queryset=AlternativeName.objects.all(),
+        queryset=Place.objects.all(),
         help_text=Institution._meta.get_field('location').help_text,
         label=Institution._meta.get_field('location').verbose_name
         )

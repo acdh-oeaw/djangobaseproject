@@ -21,6 +21,10 @@ class PersonTable(tables.Table):
 
 
 class InstitutionTable(tables.Table):
+    id = tables.LinkColumn(
+        'entities:institution_detail',
+        args=[A('pk')], verbose_name='ID'
+    )
     written_name = tables.LinkColumn(
         'entities:institution_detail',
         args=[A('pk')], verbose_name='Name'

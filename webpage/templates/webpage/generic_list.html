@@ -3,53 +3,72 @@
 {% load django_tables2 %}
 {% load browsing_extras %}
 {% load i18n %}
+{% load crispy_forms_field %}
+{% load crispy_forms_tags %}
 {% block Titel %} Browse {{ class_name }} {% endblock %}
 {% block scriptHeader %}
 {% endblock %}
 {% block content %}
 
-
 <script type="text/javascript">
-
 $(document).ready(function() {
-
 var fetchedParameter = "{{ table.page.number }}";
 $("#goto option").each(function() {
     if($(this).text() == fetchedParameter) {
         $(this).attr('selected', 'selected');
     }
 });
-
 });
 </script>
-<div class="container">
-<div class="panel panel-default">
-    <div class="panel-heading procustom-panel-heading">
+<style>
 
-        <h3><span class="fa fa-search" style="padding-left:10px; padding-right: 10px;"></span>Browse {% class_definition %} {% block list_title %}{% endblock %}</h3>
-        <button type="button" class="btn btn-info btn-default" data-toggle="modal" data-target="#myFilter">
-          <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
-        </button>
-        <a class ="btn btn-default"  href=".">Reset search</a>
+</style>
+<div class="container-fluid">
+
+        <h1 style="margin-bottom:15px; margin-top:15px;"><i class="fas fa-search" style="padding-left:10px; padding-right: 10px;"></i>Browse {% class_definition %} {% block list_title %}{% endblock %}</h1>
         {% if get_arche_dump %}
-            <a class ="btn btn-default"  href="{{ get_arche_dump}}{% querystring %}">Dump as RDF</a>
+            <a class ="btn btn-outline-secondary"  href="{{ get_arche_dump}}{% querystring %}">Dump as RDF</a>
+        {% endif %}
+        {% if dl_csv_link %}
+            <a class ="btn btn-outline-secondary"  href="{{ dl_csv_link}}{% querystring %}">Dump as CSV</a>
         {% endif %}
         {% if user.is_authenticated %}
             {% if create_view_link  %}
-                <a class ="btn btn-default"  href="{{ create_view_link }}">Create new {{class_name}}</a>
+                <a class ="btn btn-outline-secondary"  href="{{ create_view_link }}">Create new {{class_name}}</a>
             {% endif %}
         {% endif %}
     {% block customView %}{% endblock %}
     {% block create_button %}{% endblock %}
-    </div>
-    <div class="panel-body procustom-panel-body">
+
         <div class="row">
-            <div class="col-md-12">
-                {% with table.paginator.count as total %}
-                <legend>Total results: {{ total }}</legend>
-                {% endwith %}
+            <div class="col-md-4">
+            <div class="card">
+            <div class="card-body">
+                {% load django_tables2 crispy_forms_tags %}
+            <form action="." class="uniForm" method="get">
+                {% if togglable_colums %}
+                    <legend>Select additional columns</legend>
+                    {% column_selector  %}
+                    {% endif %}
+                <br/>
+                {% crispy filter.form filter.form.helper %}
+            </form>
+          {% block reset_button %}
+          <a class ="btn btn-outline-secondary"  href=".">Reset search</a>
+          {% endblock %}
+            </div>
+            </div>
+            </div>
+            <div class="col-md-8" id="results">
+            <div class="card">
+            <div class="card-body">
+    {% with table.paginator.count as total %}
+    <legend>Total results: {{ total }}</legend>
+    {% endwith %}
+
+
       {% block table %}
-      <table{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
+      <table class="table" {% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
           {% block table.thead %}
           {% if table.show_header %}
           <thead>
@@ -71,7 +90,8 @@ $("#goto option").each(function() {
               {% block table.tbody.row %}
               <tr {{ row.attrs.as_html }}>
                   {% for column, cell in row.items %}
-                      <td {{ column.attrs.td.as_html }}>{% if column.localize == None %}{{ cell }}{% else %}{% if column.localize %}{{ cell|localize }}{% else %}{{ cell|unlocalize }}{% endif %}{% endif %}</td>
+                  <td {{ column.attrs.td.as_html }}>{% if column.localize == None %}{{ cell }}{% else %}{% if column.localize %}{{ cell|localize }}{% else %}{{ cell|unlocalize }}{% endif %}{% endif %}</td>
+
                   {% endfor %}
               </tr>
               {% endblock table.tbody.row %}
@@ -97,25 +117,28 @@ $("#goto option").each(function() {
           {% endblock table.tfoot %}
       </table>
       {% endblock table %}
+
       {% block pagination.allpages %}
 
+      <div>
+      {% with table.page.object_list|length as count %}
+      <p>Page total: {{ count }}</p>
+      {% endwith %}
+      </div>
+
       <ul class="pagination">
-<div>
-{% with table.page.object_list|length as count %}
-<p>Page total: {{ count }}</p>
-{% endwith %}
-</div>
+
 
 <!--if more than 15 pages switches to select page form -->
 
-        {% if table.paginator.page_range|length > 15 %}
+        {% if table.paginator.page_range|length > 10 %}
 
 <!--if has previous page - previous button -->
 
         {% if table.page.has_previous %}
         {% block pagination.previous.goto %}
         <li class="previous">
-          <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}" style="border-radius: 0px;">{% trans "Previous" %}</a>
+          <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">{% trans "Previous" %}</a>
         </li>
         {% endblock pagination.previous.goto %}
         {% endif %}
@@ -164,85 +187,42 @@ $("#goto option").each(function() {
         {% if table.page.has_previous %}
         {% block pagination.previous %}
         <li class="previous">
-          <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}" style="border-radius: 0px;">{% trans "Previous" %}</a>
+          <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">{% trans "Previous" %}</a>
         </li>
         {% endblock pagination.previous %}
         {% endif %}
 
         {% for p in table.paginator.page_range %}
         {% if p == table.page.number %}
-        <li><a href="{% querystring table.prefixed_page_field=p %}" style="background-color:#337ab7; border-color: #2e6da4; color: #ffffff; border-radius: 0px;"> {{ p }}</a>
+        <li><a href="{% querystring table.prefixed_page_field=p %}" style="background-color:#007bff; border-color: #2e6da4; color: #ffffff; padding: 5px 10px 5px 10px;">{{ p }}</a>
         </li>
          {% else %}
         <li>
-          <a href="{% querystring table.prefixed_page_field=p %}" style="border-radius: 0px;"> {{ p }}</a>
+          <a href="{% querystring table.prefixed_page_field=p %}"> {{ p }}</a>
         </li>
         {% endif %}
         {% endfor %}
+
+
         {% if table.page.has_next %}
         {% block pagination.next %}
           <li class="next">
-          <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}" style="border-radius: 0px;">{% trans "Next" %}</a>
+          <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}">{% trans "Next" %}</a>
           </li>
         {% endblock pagination.next %}
         {% endif %}
+
+
         {% endif %}
+
+
       </ul>
       {% endblock pagination.allpages %}
 
   </div>
         </div>
-    </div>
-</div>
-</div>
-
-<div class="modal fade" id="myFilter" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="col-md-12">
-            {% load django_tables2 crispy_forms_tags %}
-            <form action="." class="uniForm" method="get">
-                {% if togglable_colums %}
-                    <br/>
-                    <legend>Select additional columns</legend>
-                    {% column_selector  %}
-                    {% endif %}
-                <br/>
-                <legend>Refine your search</legend>
-                {% crispy filter.form filter.form.helper %}
-            </form>
-          {% block reset_button %}
-          <a class ="btn btn-default"  href=".">Reset search</a>
-          {% endblock %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
+        </div>
+        </div>
 </div>
 
-<script type="text/javascript">
-  /* attached to jquery */
-/* attached to Bootstrap.js */
-
-//******ACCORDION TOGGLE - collapse/closed shows plus, and open shows minus
-
-    var $activePanelHeading = $('.panel-group .panel .panel-collapse.in').prev().addClass('active');  //add class="active" to panel-heading div above the "collapse in" (open) div
-    $activePanelHeading.find('a').prepend('<span class="fa fa-minus-square-o"></span> ');  //put the minus-sign inside of the "a" tag
-    $('.panel-group .panel-heading').not($activePanelHeading).find('a').prepend('<span class="fa fa-plus-square-o"></span> ');  //if it's not active, it will put a plus-sign inside of the "a" tag
-    $('.panel-group').on('show.bs.collapse', function (e) {  //event fires when "show" instance is called
-        //$('.panel-group .panel-heading.active').removeClass('active').find('.fa').toggleClass('fa-plus fa-minus-square-o'); - removed so multiple can be open and have minus sign
-        $(e.target).prev().addClass('active').find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
-    });
-    $('.panel-group').on('hide.bs.collapse', function (e) {  //event fires when "hide" method is called
-        $(e.target).prev().removeClass('active').find('.fa').removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
-    });
-</script>
-{% block customScripts %}
-{% endblock %}
 {% endblock %}

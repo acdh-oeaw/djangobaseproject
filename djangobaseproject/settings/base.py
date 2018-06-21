@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'bib',
     'sparql',
     'stats',
-    'browsing',
     'arche',
 ]
 
