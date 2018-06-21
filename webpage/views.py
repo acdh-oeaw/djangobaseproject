@@ -41,3 +41,7 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return render_to_response('webpage/user_logout.html')
+
+
+def handler404(request, exception):
+    return render(request, 'webpage/404-error.html', locals())
