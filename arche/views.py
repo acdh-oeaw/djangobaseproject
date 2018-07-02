@@ -206,7 +206,7 @@ class CollectionCreate(BaseCreateView):
 
     model = Collection
     form_class = CollectionForm
-    template_name = 'arche/collection_create.html'
+    # template_name = 'arche/collection_create.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

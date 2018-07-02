@@ -109,6 +109,7 @@ include 'autocomplete_light/static.html
                     {% endif %}
                 </table>
         <!--change history collapse button-->
+        {% if user.is_authenticated %}
         {% if history %}
         <button class="btn btn-outline-info" type="button" data-toggle="collapse" data-target="#changeHistory" aria-expanded="false" aria-controls="changeHistory">
         Change history
@@ -122,6 +123,7 @@ include 'autocomplete_light/static.html
                    {% endfor %}
             </div>
         </div>
+        {% endif %}
         {% endif %}
         <!--change history ends here-->
             </div>
