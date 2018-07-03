@@ -27,7 +27,7 @@
 					{% for x in saved %}
 					<tr>
 						<td>
-							<a href="{{ x.get_zotero_url }}" target="_blank">{{ x.zoterokey }}</a></td>
+							<a href="{{ x.get_zotero_url }}" target="_blank" rel="noopener">{{ x.zoterokey }}</a></td>
 						<td>{{ x.title }}</td>
 						<td>{{ x.dateModified }}</td>
 					</tr>

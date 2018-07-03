@@ -1,0 +1,77 @@
+{% extends "webpage/base.html" %}
+{% load staticfiles %}
+{% load leaflet_tags %}
+{% load webpage_extras %}
+{% block title %}Reference {{ object.id }}{% endblock %}
+{% block scriptHeader %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-2">
+                    {% if object.get_prev %}
+                        <h2>
+                            <a href="{% url 'bib:reference_detail' pk=object.get_prev %}">
+                                <i class="fas fa-chevron-left" title="previous"></i>
+                            </a>
+                        </h2>
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <h1 style="text-align: center;">
+                        <small>Reference:</small> {{ object }}
+                        {% if user.is_authenticated %}
+                            <small>
+                                <a href="{% url 'bib:reference_edit' pk=object.id %}">
+                                    <i class="far fa-edit" title="edit"></i>
+                                </a>
+                            </small>
+                            |
+                            <small>
+                                <a href="{% url 'bib:reference_delete' pk=object.id %}">
+                                    <i class="far fa-trash-alt" title="delete"></i>
+                                </a>
+                            </small>
+                        {% endif %}
+                    </h1>
+                </div>
+                <div class="col-md-2">
+                    <h2>
+                        {% if object.get_next %}
+                        <a href="{% url 'bib:reference_detail' pk=object.get_next %}" style="float:right">
+                            <i class="fas fa-chevron-right" title="next"></i>
+                        </a>
+                    </h2>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>
+                        {% get_verbose_name reference "zotero_item" %}
+                    </th>
+                    <td>
+                        {{ object.zotero_item }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {% get_verbose_name reference "page" %}
+                    </th>
+                    <td>
+                        {{ object.page }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
