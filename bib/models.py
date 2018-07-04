@@ -4,6 +4,66 @@ from django.db import models
 from django.conf import settings
 
 
+class ZotItem(models.Model):
+
+    """ Stores main bibliographic information of a Zotero Item """
+
+    zot_key = models.CharField(
+        max_length=20, primary_key=True, verbose_name='key',
+        help_text="The Zotero Item Key"
+    )
+    zot_creator = models.TextField(
+        blank=True, verbose_name="creators",
+        help_text="Stores all information from zoteros 'creators' field."
+    )
+    zot_date = models.TextField(
+        blank=True, verbose_name="date",
+        help_text="Stores all information from zoteros 'date' field."
+    )
+    zot_item_type = models.TextField(
+        blank=True, verbose_name="itemType",
+        help_text="Stores all information from zoteros 'itemType' field."
+    )
+    zot_title = models.TextField(
+        blank=True, verbose_name="title",
+        help_text="Stores all information from zoteros 'title' field."
+    )
+    zot_pub_title = models.TextField(
+        blank=True, verbose_name="publicationTitle",
+        help_text="Stores all information from zoteros 'publicationTitle' field."
+    )
+    date_modified = models.DateTimeField(
+        blank=True, null=True, verbose_name="dateModified",
+        help_text="Stores all information from zoteros 'publicationTitle' field."
+    )
+    zot_pages = models.TextField(
+        blank=True, verbose_name="pages",
+        help_text="Stores all information from zoteros 'pages' field."
+    )
+    zot_version = models.CharField(
+        blank=True, verbose_name="version", max_length=50,
+        help_text="Stores all information from zoteros 'pages' field."
+    )
+    zot_html_link = models.CharField(
+        blank=True, verbose_name="selflink html", max_length=500,
+        help_text="Stores all information from zoteros 'selflink' field."
+    )
+    zot_api_link = models.CharField(
+        blank=True, verbose_name="selflink api", max_length=500,
+        help_text="Stores all information from zoteros self api link field."
+    )
+    zot_bibtex = models.TextField(
+        blank=True, verbose_name="bibtex",
+        help_text="Stores the item's bibtex representation."
+    )
+
+    class Meta:
+        ordering = ['-zot_version']
+
+    def __str__(self):
+        return "{}".format(self.zot_key)
+
+
 class Book(models.Model):
     zoterokey = models.CharField(max_length=500, primary_key=True)
     item_type = models.CharField(max_length=500, blank=True, null=True)
