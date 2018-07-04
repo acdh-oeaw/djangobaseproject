@@ -7,6 +7,7 @@ app_name = 'bib'
 urlpatterns = [
     url(r'^synczotero/$', views.sync_zotero, name="synczotero"),
     url(r'^synczotero/result$', views.sync_zotero_action, name="synczotero_action"),
+    url(r'^synczotero/update$', views.update_zotitems, name="synczotero_update"),
     url(r'^reference/detail/(?P<pk>[0-9]+)$', views.ReferenceDetailView.as_view(),
         name='reference_detail'),
     url(r'^reference/create/$', views.ReferenceCreate.as_view(),
