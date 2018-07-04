@@ -2,7 +2,7 @@ from django.conf.urls import url, include, handler404
 from django.contrib import admin
 from rest_framework import routers
 from entities.apis_views import PlaceViewSet, GeoJsonViewSet
-from bib.api_views import BookViewSet
+from bib.api_views import ZotItemViewSet
 
 from vocabs import api_views
 
@@ -13,7 +13,7 @@ router.register(r'skosnamespaces', api_views.SkosNamespaceViewSet)
 router.register(r'skosconceptschemes', api_views.SkosConceptSchemeViewSet)
 router.register(r'skosconcepts', api_views.SkosConceptViewSet)
 router.register(r'places', PlaceViewSet)
-router.register(r'Book', BookViewSet)
+router.register(r'zotitems', ZotItemViewSet)
 
 urlpatterns = [
     url(r'^api/', include(router.urls)),

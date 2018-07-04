@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Book
+from .models import ZotItem
 
 
-class BookSerializer(serializers.HyperlinkedModelSerializer):
+class ZotItemSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Book
+        model = ZotItem
         fields = "__all__"

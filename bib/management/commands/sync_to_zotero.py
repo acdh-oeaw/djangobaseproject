@@ -2,7 +2,7 @@ import requests, json, sys
 from django.core.management.base import NoArgsCommand
 
 import requests, json, sys
-from bib.models import Book
+from bib.models import ZotItem
 from orea.settings.server import Z_USER_ID, Z_COLLECTION, Z_API_KEY
 
 
@@ -24,13 +24,13 @@ class Command(NoArgsCommand):
 		failed = []
 		saved = []
 		for x in response:
-		    NewBook = Book(zoterokey = x["data"]["key"],
+		    NewZotItem = ZotItem(zoterokey = x["data"]["key"],
 		                      item_type =x["data"]["itemType"],
 		                      author=x["data"]["creators"][0]["name"],
 		                      title =x["data"]["title"],
 		                      short_title = x["data"]["shortTitle"])
 		    try:
-		        NewBook.save()
+		        NewZotItem.save()
 		        saved.append(x['data'])
 		    except:
 		        failed.append(x['data'])

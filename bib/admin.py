@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Reference, ZotItem
+from .models import ZotItem
 
 
 class ZotItemAdmin(admin.ModelAdmin):
@@ -17,24 +17,4 @@ class ZotItemAdmin(admin.ModelAdmin):
     ]
 
 
-class BookAdmin(admin.ModelAdmin):
-    search_fields = [
-        'zoterokey', 'item_type', 'author', 'title', 'publication_title',
-        'publication_year', 'isbn', 'url'
-    ]
-    list_display = [
-        'zoterokey', 'item_type', 'author', 'title', 'publication_title',
-        'publication_year', 'isbn', 'url'
-    ]
-
-
-class ReferenceAdmin(admin.ModelAdmin):
-    search_fields = ['id', 'zotero_item', 'page']
-    list_display = ['id', 'zotero_item', 'page']
-
-
-admin.site.register(Book, BookAdmin)
-admin.site.register(Reference, ReferenceAdmin)
 admin.site.register(ZotItem, ZotItemAdmin)
-
-# Register your models here.

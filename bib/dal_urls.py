@@ -6,7 +6,7 @@ app_name = 'bib'
 
 urlpatterns = [
     url(
-        r'^book-autocomplete/$', dal_views.BookAC.as_view(model=Book),
+        r'^book-autocomplete/$', dal_views.ZotItemAC.as_view(model=ZotItem),
         name='book-autocomplete',
     ),
     url(

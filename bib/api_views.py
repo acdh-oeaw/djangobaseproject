@@ -1,8 +1,8 @@
 from rest_framework import viewsets
-from .serializers import BookSerializer
-from .models import Book
+from .serializers import ZotItemSerializer
+from .models import ZotItem
 
 
-class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
+class ZotItemViewSet(viewsets.ModelViewSet):
+    queryset = ZotItem.objects.all()
+    serializer_class = ZotItemSerializer

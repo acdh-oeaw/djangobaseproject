@@ -1,11 +1,11 @@
 from dal import autocomplete
 from django.db.models import Q
-from .models import *
+from . models import *
 
 
-class BookAC(autocomplete.Select2QuerySetView):
+class ZotItemAC(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        qs = Book.objects.all()
+        qs = ZotItem.objects.all()
 
         if self.q:
             qs = qs.filter(
