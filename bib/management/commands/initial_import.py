@@ -31,7 +31,7 @@ class Command(BaseCommand):
         if options['limit']:
             limit = int(options['limit'])
         else:
-            limit = 0
+            limit = None
         if options['since']:
             since = options['since']
         else:

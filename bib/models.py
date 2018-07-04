@@ -60,8 +60,8 @@ class ZotItem(models.Model):
         blank=True, verbose_name="pages",
         help_text="Stores all information from zoteros 'pages' field."
     )
-    zot_version = models.CharField(
-        blank=True, verbose_name="version", max_length=50,
+    zot_version = models.IntegerField(
+        blank=True, null=True, verbose_name="version",
         help_text="Stores all information from zoteros 'pages' field."
     )
     zot_html_link = models.CharField(
