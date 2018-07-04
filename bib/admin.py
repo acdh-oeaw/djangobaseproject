@@ -1,5 +1,20 @@
 from django.contrib import admin
-from .models import Book, Reference
+from .models import Book, Reference, ZotItem
+
+
+class ZotItemAdmin(admin.ModelAdmin):
+    search_fields = [
+        'zot_key',
+        'zot_creator',
+        'zot_date',
+        'zot_version'
+    ]
+    list_display = [
+        'zot_key',
+        'zot_creator',
+        'zot_date',
+        'zot_version'
+    ]
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -20,5 +35,6 @@ class ReferenceAdmin(admin.ModelAdmin):
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(Reference, ReferenceAdmin)
+admin.site.register(ZotItem, ZotItemAdmin)
 
 # Register your models here.

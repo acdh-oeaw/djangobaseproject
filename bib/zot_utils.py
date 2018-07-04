@@ -60,8 +60,11 @@ def items_to_dict(library_id, library_type, api_key, limit=15, since_version=Non
     return result
 
 
-def create_zotitem(bib_item):
-    """ takes a dict with bib info created by 'items_to_dict' and creates/updates a ZotItem """
+def create_zotitem(bib_item, get_bibtex=False):
+    """
+    takes a dict with bib info created by 'items_to_dict'
+    and creates/updates a ZotItem object
+    """
     x = bib_item
     temp_item, _ = ZotItem.objects.get_or_create(
         zot_key=x['key']
@@ -76,5 +79,8 @@ def create_zotitem(bib_item):
     temp_item.zot_version = x['version']
     temp_item.zot_html_link = x['zot_html_link']
     temp_item.zot_api_link = x['zot_api_link']
-    temp_item.save()
+    if get_bibtex:
+        temp_item.save(get_bibtex=True)
+    else:
+        temp_item.save()
     return temp_item

@@ -3,6 +3,26 @@ from django.urls import reverse
 from django.db import models
 from django.conf import settings
 
+from pyzotero import zotero
+
+library_id = settings.Z_ID
+library_type = settings.Z_LIBRARY_TYPE
+api_key = settings.Z_API_KEY
+
+
+def fetch_bibtex(zot_key):
+    """ fetches the bibtex dict of the passed in key """
+    result = {}
+    zot = zotero.Zotero(library_id, library_type, api_key)
+    try:
+        result['bibtex'] = zot.item(zot_key, format='bibtex').entries_dict
+        result['error'] = None
+    except Exception as e:
+        result['bibtex'] = None
+        result['error'] = "{}".format(e)
+
+    return result
+
 
 class ZotItem(models.Model):
 
@@ -62,6 +82,18 @@ class ZotItem(models.Model):
 
     def __str__(self):
         return "{}".format(self.zot_key)
+
+    def save(self, get_bibtex=False, *args, **kwargs):
+        if get_bibtex:
+            bibtex = fetch_bibtex(self.zot_key)
+            if bibtex['bibtex']:
+                self.zot_bibtex = "{}".format(bibtex['bibtex'])
+                self.save()
+            else:
+                pass
+            super(ZotItem, self).save(*args, **kwargs)
+        else:
+            super(ZotItem, self).save(*args, **kwargs)
 
 
 class Book(models.Model):
