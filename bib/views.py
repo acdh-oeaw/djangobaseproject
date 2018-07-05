@@ -36,6 +36,6 @@ def update_zotitems(request):
     items = items_to_dict(library_id, library_type, api_key, limit=limit, since_version=since)
     for x in items['bibs']:
         temp_item = create_zotitem(x)
-        saved.append(temp_item)
+        context["saved"].append(temp_item)
     context["books_after"] = ZotItem.objects.all().count()
     return render(request, 'bib/synczotero_action.html', context)
