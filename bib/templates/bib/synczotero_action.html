@@ -1,4 +1,5 @@
 {% extends "webpage/base.html" %}
+{% load bib_extras %}
 {% block content %}
 <div class="container">
 	<h1>Results</h1>
@@ -17,7 +18,7 @@
                 {% if saved %}
                     {% for x in saved %}
                         <li>
-                            <a href="{{ x.zot_html_link }}" target="_blank" rel="noopener" title="{{ x.zot_bibtex}}">{{ x.zot_key }}</a></td>
+                            {% bib_quote x %}
                         </li>
                     {% endfor %}
                 {% else %}

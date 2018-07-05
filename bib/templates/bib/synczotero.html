@@ -1,9 +1,9 @@
 {% extends "webpage/base.html" %}
+{% load bib_extras %}
+
 {% block content %}
 <div class="container" style="text-align:center;">
-
-
-		<a class ="btn btn-primary btn-lg"  href="{% url 'bib:synczotero_update' %}">Synchronize</a>
+	<a class ="btn btn-primary btn-lg"  href="{% url 'bib:synczotero_update' %}">Synchronize</a>
 </div>
 
 {% endblock %}
