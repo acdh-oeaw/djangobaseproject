@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'webpage',
     'vocabs',
     'entities',
-    'bib',
     'sparql',
     'stats',
     'arche',

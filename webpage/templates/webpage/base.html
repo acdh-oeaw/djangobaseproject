@@ -111,15 +111,17 @@
                             {% endfor %}
 
                             {% if user.is_authenticated %}
-                            <div class="dropdown-divider"></div>
-                            {% nav_menu app='arche' as links %}
-                            {% for x in links %}
-
-                                    <a class="dropdown-item" href="{{ x.link}}">{{ x.name }}</a>
-
-                            {% endfor %}
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{% url 'bib:synczotero' %}">Import new Items from Zotero</a>
+                                {% nav_menu app='arche' as links %}
+                                {% for x in links %}
+
+                                        <a class="dropdown-item" href="{{ x.link}}">{{ x.name }}</a>
+
+                                {% endfor %}
+                                {% if 'bib' in apps %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'bib:synczotero' %}">Import new Items from Zotero</a>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </li>
