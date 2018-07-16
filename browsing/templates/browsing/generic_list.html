@@ -67,7 +67,7 @@ $("#goto option").each(function() {
             <div class="card-body">
     {% with table.paginator.count as total %}
         <legend>Total results: {{ total }}</legend>
-        {% if download %}
+        {% if conf_items %}
             <div class="dropdown">
                 <button class="btn btn-default dropdown-toggle dropdown-custom" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span class="glyphicon glyphicon-download-alt"></span>
@@ -75,9 +75,9 @@ $("#goto option").each(function() {
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a class="dropdown-item" href="{{ download }}{% querystring %}&sep=comma">"," separated</a></li>
-                    <li><a class="dropdown-item" href="{{ download }}{% querystring %}&sep=semicolon">";" separated</a></li>
-                    <li><a class="dropdown-item" href="{{ download }}{% querystring %}&sep=tab">"tab" separated</a></li>
+                    <li><a class="dropdown-item" href="{% querystring %}&sep=comma">"," separated</a></li>
+                    <li><a class="dropdown-item" href="{% querystring %}&sep=semicolon">";" separated</a></li>
+                    <li><a class="dropdown-item" href="{% querystring %}&sep=tab">"tab" separated</a></li>
                 </ul>
             </div>
         {% endif %}

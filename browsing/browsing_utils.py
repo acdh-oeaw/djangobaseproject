@@ -1,8 +1,18 @@
+import datetime
+import time
+import pandas as pd
 import django_filters
+from django.conf import settings
+from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div, MultiField, HTML
 from django_tables2 import SingleTableView, RequestConfig
+from . models import BrowsConf
+
+if 'bib' in settings.INSTALLED_APPS:
+    from charts.models import ChartConfig
+    from charts.views import create_payload
 
 
 class GenericFilterFormHelper(FormHelper):
@@ -56,10 +66,13 @@ class GenericListView(SingleTableView):
         context = super(GenericListView, self).get_context_data()
         context[self.context_filter_name] = self.filter
         context['docstring'] = "{}".format(self.model.__doc__)
-        if self.model.__name__.endswith('s'):
-            context['class_name'] = "{}".format(self.model.__name__)
+        if self.model._meta.verbose_name_plural:
+            context['class_name'] = "{}".format(self.model._meta.verbose_name.title())
         else:
-            context['class_name'] = "{}s".format(self.model.__name__)
+            if self.model.__name__.endswith('s'):
+                context['class_name'] = "{}".format(self.model.__name__)
+            else:
+                context['class_name'] = "{}s".format(self.model.__name__)
         try:
             context['get_arche_dump'] = self.model.get_arche_dump()
         except AttributeError:
@@ -69,10 +82,66 @@ class GenericListView(SingleTableView):
         except AttributeError:
             context['create_view_link'] = None
         try:
-            context['dl_csv_link'] = self.model.dl_csv_link()
+            context['download'] = self.model.get_dl_url()
         except AttributeError:
-            context['dl_csv_link'] = None
+            context['download'] = None
+        model_name = self.model.__name__.lower()
+        context['entity'] = model_name
+        context['conf_items'] = list(
+            BrowsConf.objects.filter(model_name=model_name)
+            .values_list('field_path', 'label')
+        )
+        print(context['conf_items'])
+        if 'bib' in settings.INSTALLED_APPS:
+            context['vis_list'] = ChartConfig.objects.filter(model_name=model_name)
+            context['property_name'] = self.request.GET.get('property')
+            context['charttype'] = self.request.GET.get('charttype')
+            if context['charttype'] and context['property_name']:
+                qs = self.get_queryset()
+                chartdata = create_payload(
+                    context['entity'],
+                    context['property_name'],
+                    context['charttype'],
+                    qs
+                )
+                context = dict(context, **chartdata)
         return context
+
+    def render_to_response(self, context, **kwargs):
+        download = self.request.GET.get('sep', None)
+        if download:
+            sep = self.request.GET.get('sep', ',')
+            timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+            filename = "export_{}".format(timestamp)
+            response = HttpResponse(content_type='text/csv')
+            if context['conf_items']:
+                conf_items = context['conf_items']
+                try:
+                    df = pd.DataFrame(
+                        list(
+                            self.model.objects.all().values_list(*[x[0] for x in conf_items])
+                        ),
+                        columns=[x[1] for x in conf_items]
+                    )
+                except AssertionError:
+                    response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(filename)
+                    return response
+            else:
+                response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(filename)
+                return response
+            if sep == "comma":
+                df.to_csv(response, sep=',', index=False)
+            elif sep == "semicolon":
+                df.to_csv(response, sep=';', index=False)
+            elif sep == "tab":
+                df.to_csv(response, sep='\t', index=False)
+            else:
+                df.to_csv(response, sep=',', index=False)
+            response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(filename)
+            return response
+        else:
+            response = super(GenericListView, self).render_to_response(context)
+            return response
 
 
 class BaseCreateView(CreateView):
