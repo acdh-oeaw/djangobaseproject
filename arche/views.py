@@ -15,7 +15,7 @@ from .forms import *
 from .filters import *
 from .tables import *
 from .serializer_arche import *
-from webpage.utils import GenericListView, BaseCreateView, BaseUpdateView
+from browsing.browsing_utils import GenericListView, BaseCreateView, BaseUpdateView
 
 
 def copy_view(request):

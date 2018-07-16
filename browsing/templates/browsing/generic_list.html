@@ -25,25 +25,27 @@ $("#goto option").each(function() {
 </style>
 <div class="container-fluid">
 
-        <h1 style="margin-bottom:15px; margin-top:15px;"><i class="fas fa-search" style="padding-left:10px; padding-right: 10px;"></i>Browse {% class_definition %} {% block list_title %}{% endblock %}</h1>
-        {% if get_arche_dump %}
-            <a class ="btn btn-outline-secondary"  href="{{ get_arche_dump}}{% querystring %}">Dump as RDF</a>
-        {% endif %}
-        {% if dl_csv_link %}
-            <a class ="btn btn-outline-secondary"  href="{{ dl_csv_link}}{% querystring %}">Dump as CSV</a>
-        {% endif %}
-        {% if user.is_authenticated %}
-            {% if create_view_link  %}
-                <a class ="btn btn-outline-secondary"  href="{{ create_view_link }}">Create new {{class_name}}</a>
-            {% endif %}
-        {% endif %}
-    {% block customView %}{% endblock %}
-    {% block create_button %}{% endblock %}
 
         <div class="row">
             <div class="col-md-4">
             <div class="card">
             <div class="card-body">
+              <!--Title of search and buttons-->
+             <h3 style="margin-bottom:15px;">
+             <!-- <i class="fas fa-search" style="padding-left:10px; padding-right: 10px;"></i> -->
+             Browse {% class_definition %} {% block list_title %}{% endblock %}
+             </h3>
+              {% if get_arche_dump %}
+                <a class ="btn btn-outline-secondary"  href="{{ get_arche_dump}}{% querystring %}">Dump as RDF</a>
+              {% endif %}
+              {% if user.is_authenticated %}
+              {% if create_view_link  %}
+                <a class ="btn btn-outline-secondary"  href="{{ create_view_link }}">Create new {{class_name}}</a>
+              {% endif %}
+              {% endif %}
+              {% block customView %}{% endblock %}
+              {% block create_button %}{% endblock %}
+              <!--Search mask-->
                 {% load django_tables2 crispy_forms_tags %}
             <form action="." class="uniForm" method="get">
                 {% if togglable_colums %}
@@ -54,8 +56,9 @@ $("#goto option").each(function() {
                 {% crispy filter.form filter.form.helper %}
             </form>
           {% block reset_button %}
-          <a class ="btn btn-outline-secondary"  href=".">Reset search</a>
+            <a class ="btn btn-outline-secondary"  href=".">Reset search</a>
           {% endblock %}
+
             </div>
             </div>
             </div>
@@ -63,7 +66,21 @@ $("#goto option").each(function() {
             <div class="card">
             <div class="card-body">
     {% with table.paginator.count as total %}
-    <legend>Total results: {{ total }}</legend>
+        <legend>Total results: {{ total }}</legend>
+        {% if download %}
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle dropdown-custom" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="glyphicon glyphicon-download-alt"></span>
+                    Download
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a class="dropdown-item" href="{{ download }}{% querystring %}&sep=comma">"," separated</a></li>
+                    <li><a class="dropdown-item" href="{{ download }}{% querystring %}&sep=semicolon">";" separated</a></li>
+                    <li><a class="dropdown-item" href="{{ download }}{% querystring %}&sep=tab">"tab" separated</a></li>
+                </ul>
+            </div>
+        {% endif %}
     {% endwith %}
 
 
@@ -129,7 +146,7 @@ $("#goto option").each(function() {
       <ul class="pagination">
 
 
-<!--if more than 15 pages switches to select page form -->
+<!--if more than 10 pages switches to select page form -->
 
         {% if table.paginator.page_range|length > 10 %}
 
@@ -138,25 +155,10 @@ $("#goto option").each(function() {
         {% if table.page.has_previous %}
         {% block pagination.previous.goto %}
         <li class="previous">
-          <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">{% trans "Previous" %}</a>
+          <a style="margin-right: 10px;"  href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">{% trans "Previous" %}</a>
         </li>
         {% endblock pagination.previous.goto %}
         {% endif %}
-
-
-<!--select form if more than 15 pages -->
-
-<div class="form-group">
-  <label for="goto">Go to page</label>
-    <select class="form-control" id="goto" onchange="javascript:location.href = this.value;">
-        {% for p in table.paginator.page_range %}
-            <option value="{% querystring table.prefixed_page_field=p %}">{{ p }}</option>
-        {% endfor %}
-    </select>
-
-
-
-</div>
 
 
 <!--Page # of total -->
@@ -173,13 +175,24 @@ $("#goto option").each(function() {
 {% if table.page.has_next %}
 {% block pagination.next.goto %}
   <li class="next">
-  <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}" style="border-radius: 0px;">{% trans "Next" %}</a>
+  <a style="margin-left: 10px;" href="{% querystring table.prefixed_page_field=table.page.next_page_number %}" style="border-radius: 0px;">{% trans "Next" %}</a>
   </li>
 {% endblock pagination.next.goto %}
 {% endif %}
+</ul>
+<!--select form if more than 10 pages -->
+
+<div class="form-group" style="width: 20%;">
+  <label for="goto">Go to page</label>
+    <select class="form-control" id="goto" onchange="javascript:location.href = this.value;">
+        {% for p in table.paginator.page_range %}
+            <option value="{% querystring table.prefixed_page_field=p %}">{{ p }}</option>
+        {% endfor %}
+    </select>
+</div>
 
 
-<!--else condition  - if less than 15 pages  - shows page number buttons-->
+<!--else condition  - if less than 10 pages  - shows page number buttons-->
 
         {% else %}
 
@@ -187,7 +200,7 @@ $("#goto option").each(function() {
         {% if table.page.has_previous %}
         {% block pagination.previous %}
         <li class="previous">
-          <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">{% trans "Previous" %}</a>
+          <a style="margin-right: 10px;"  href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}">{% trans "Previous" %}</a>
         </li>
         {% endblock pagination.previous %}
         {% endif %}
@@ -198,7 +211,7 @@ $("#goto option").each(function() {
         </li>
          {% else %}
         <li>
-          <a href="{% querystring table.prefixed_page_field=p %}"> {{ p }}</a>
+          <a href="{% querystring table.prefixed_page_field=p %}" style="padding: 5px 10px 5px 10px;"> {{ p }}</a>
         </li>
         {% endif %}
         {% endfor %}
@@ -207,16 +220,16 @@ $("#goto option").each(function() {
         {% if table.page.has_next %}
         {% block pagination.next %}
           <li class="next">
-          <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}">{% trans "Next" %}</a>
+          <a style="margin-left: 10px;"  href="{% querystring table.prefixed_page_field=table.page.next_page_number %}">{% trans "Next" %}</a>
           </li>
         {% endblock pagination.next %}
         {% endif %}
 
-
+</ul>
         {% endif %}
 
 
-      </ul>
+      <!-- </ul> -->
       {% endblock pagination.allpages %}
 
   </div>
@@ -224,5 +237,4 @@ $("#goto option").each(function() {
         </div>
         </div>
 </div>
-
 {% endblock %}

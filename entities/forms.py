@@ -166,7 +166,6 @@ class PlaceFilterFormHelper(FormHelper):
             Fieldset(
                 'Basic search options',
                 'name',
-                'alternative_name',
                 css_id="basic_search_fields"
                 ),
             Accordion(
@@ -193,7 +192,9 @@ class PlaceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PlaceForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False
+        self.helper.form_tag = True
+        self.helper.form_class = 'form-horizontal'
+        self.helper.add_input(Submit('submit', 'save'),)
 
 
 class PlaceFormCreate(forms.ModelForm):

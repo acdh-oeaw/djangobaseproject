@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'idprovider',
     'webpage',
+    'browsing',
     'vocabs',
     'entities',
     'sparql',
