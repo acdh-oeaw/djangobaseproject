@@ -58,7 +58,7 @@ def path2cols(path, separator="_"):
 
 def create_acdhid(resource, trim=0, base_url='https://id.acdh.oeaw.ac.at', preserve=False):
     """
-    Endpoint to process text from the ACDH internal json standard
+    Function to process text from the ACDH internal json standard
 
     param *resource*: a Collection or Resource object:
     param *trim*: a interger value providing an index for cutting the beginning of string
