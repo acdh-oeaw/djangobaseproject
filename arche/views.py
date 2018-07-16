@@ -1,7 +1,8 @@
 import time
 import datetime
-from django.http import HttpResponse
 import rdflib
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.decorators import login_required
@@ -35,12 +36,12 @@ def copy_view(request):
             return HttpResponse(html)
         try:
             cont_type = ContentType.objects.get(app_label=app_name, model=class_name)
-        except:
+        except ObjectDoesNotExist:
             html = "<html><body>Wrong format of class_name-param</body></html>"
             return HttpResponse(html)
         try:
             current_object = cont_type.get_object_for_this_type(id=object_id)
-        except:
+        except ObjectDoesNotExist:
             html = "<html><body>Resource matching query does not exist.</body></html>"
             return HttpResponse(html)
         new_object = current_object.copy_instance()
@@ -65,32 +66,10 @@ class ProjectListView(GenericListView):
     table_class = ProjectTable
     filter_class = ProjectListFilter
     formhelper_class = ProjectFilterFormHelper
-    init_columns = [
+    init_columns = [[
         'id',
         'has_title',
-    ]
-
-    def get_all_cols(self):
-        all_cols = list(self.table_class.base_columns.keys())
-        return all_cols
-
-    def get_context_data(self, **kwargs):
-        context = super(ProjectListView, self).get_context_data()
-        context[self.context_filter_name] = self.filter
-        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
-        context['togglable_colums'] = togglable_colums
-        return context
-
-    def get_table(self, **kwargs):
-        table = super(GenericListView, self).get_table()
-        RequestConfig(self.request, paginate={
-            'page': 1, 'per_page': self.paginate_by}).configure(table)
-        default_cols = self.init_columns
-        all_cols = self.get_all_cols()
-        selected_cols = self.request.GET.getlist("columns") + default_cols
-        exclude_vals = [x for x in all_cols if x not in selected_cols]
-        table.exclude = exclude_vals
-        return table
+    ]]
 
 
 class ProjectRDFView(GenericListView):
@@ -156,28 +135,6 @@ class CollectionListView(GenericListView):
         'has_title'
     ]
 
-    def get_all_cols(self):
-        all_cols = list(self.table_class.base_columns.keys())
-        return all_cols
-
-    def get_context_data(self, **kwargs):
-        context = super(CollectionListView, self).get_context_data()
-        context[self.context_filter_name] = self.filter
-        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
-        context['togglable_colums'] = togglable_colums
-        return context
-
-    def get_table(self, **kwargs):
-        table = super(GenericListView, self).get_table()
-        RequestConfig(self.request, paginate={
-            'page': 1, 'per_page': self.paginate_by}).configure(table)
-        default_cols = self.init_columns
-        all_cols = self.get_all_cols()
-        selected_cols = self.request.GET.getlist("columns") + default_cols
-        exclude_vals = [x for x in all_cols if x not in selected_cols]
-        table.exclude = exclude_vals
-        return table
-
 
 class CollectionRDFView(GenericListView):
     model = Collection
@@ -242,28 +199,6 @@ class ResourceListView(GenericListView):
         'id',
         'has_title',
     ]
-
-    def get_all_cols(self):
-        all_cols = list(self.table_class.base_columns.keys())
-        return all_cols
-
-    def get_context_data(self, **kwargs):
-        context = super(ResourceListView, self).get_context_data()
-        context[self.context_filter_name] = self.filter
-        togglable_colums = [x for x in self.get_all_cols() if x not in self.init_columns]
-        context['togglable_colums'] = togglable_colums
-        return context
-
-    def get_table(self, **kwargs):
-        table = super(GenericListView, self).get_table()
-        RequestConfig(self.request, paginate={
-            'page': 1, 'per_page': self.paginate_by}).configure(table)
-        default_cols = self.init_columns
-        all_cols = self.get_all_cols()
-        selected_cols = self.request.GET.getlist("columns") + default_cols
-        exclude_vals = [x for x in all_cols if x not in selected_cols]
-        table.exclude = exclude_vals
-        return table
 
 
 class ResourceDetailView(DetailView):
