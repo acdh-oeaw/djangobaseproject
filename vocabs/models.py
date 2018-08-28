@@ -128,7 +128,7 @@ class SkosConcept(models.Model):
     )
     definition = models.TextField(blank=True)
     definition_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    label = models.ManyToManyField(SkosLabel, blank=True)
+    other_label = models.ManyToManyField(SkosLabel, blank=True)
     notation = models.CharField(max_length=300, blank=True)
     namespace = models.ForeignKey(
         SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
@@ -149,7 +149,7 @@ class SkosConcept(models.Model):
         'SkosConcept', blank=True, related_name="related"
     )
     skos_broadmatch = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="broadmatch"
+        'SkosConcept', blank=True, related_name="narrowmatch"
     )
     skos_exactmatch = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="exactmatch"
@@ -177,6 +177,9 @@ class SkosConcept(models.Model):
         narrower_reverse = SkosConcept.objects.filter(skos_broader=self)
         all_narrower = set(list(narrower)+list(narrower_reverse))
         return all_narrower
+
+    def get_vocabs_uri(self):
+        return "{}{}".format("https://whatever", self.get_absolute_url)
 
     @property
     def all_schemes(self):

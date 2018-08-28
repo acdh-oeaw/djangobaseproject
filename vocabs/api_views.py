@@ -6,7 +6,7 @@ from .serializers import (
     SkosLabelSerializer, SkosNamespaceSerializer, SkosConceptSchemeSerializer, SkosConceptSerializer
 )
 from .filters import SkosConceptFilter
-from .api_renderers import RDFRenderer
+from .api_renderers import RDFRenderer, SKOSRenderer
 from rest_framework.settings import api_settings
 
 
@@ -42,4 +42,4 @@ class SkosConceptViewSet(viewsets.ModelViewSet):
     filter_class = SkosConceptFilter
     pagination_class = LargeResultsSetPagination
 
-    renderer_classes = tuple(api_settings.DEFAULT_RENDERER_CLASSES) + (RDFRenderer,)
+    renderer_classes = tuple(api_settings.DEFAULT_RENDERER_CLASSES) + (RDFRenderer, SKOSRenderer, )
