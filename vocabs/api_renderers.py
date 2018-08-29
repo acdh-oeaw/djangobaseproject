@@ -36,18 +36,24 @@ class SKOSRenderer(renderers.BaseRenderer):
 			g.add((concept, RDF.type, SKOS.Concept))
 			g.add((concept, SKOS.prefLabel, Literal(obj['pref_label'], lang=obj['pref_label_lang'])))
 			g.add((concept, SKOS.notation, Literal(obj['notation'])))
+			# test modelling fake main Schema relations
+			mainConceptScheme = URIRef('http://127.0.0.1:8000/api/skosnamespaces/1/')
+			g.add((mainConceptScheme, RDF.type, SKOS.ConceptScheme))
+			g.add((mainConceptScheme, DC.title, Literal('Test Thesaurus')))
+			g.add((concept, SKOS.inScheme, mainConceptScheme))
+
 			# remodelling ConceptScheme into Skos Collection
 			if obj['scheme']:
 				for x in obj['scheme']:
-					collection = URIRef(str(x['namespace'][:-12]))
+					collection = URIRef(str(x['namespace'][:-12]) +str(x['legacy_id']))
 					g.add((collection, RDF.type, SKOS.Collection))
 					if x['dc_title']:
-						g.add((collection, DC.title, Literal(x['dc_title'])))
+						g.add((collection, SKOS.prefLabel, Literal(x['dc_title'], lang='en')))
 					if x['dct_creator']:
 						g.add((collection, DC.creator, Literal(x['dct_creator'])))
 					if x['has_concepts']:
 						for y in x['has_concepts']:
-							g.add((collection, SKOS.member, Literal(y[:-12])))
+							g.add((collection, SKOS.member, URIRef(y[:-12])))
 			if obj['definition']:
 				g.add((concept, SKOS.definition, Literal(obj['definition'], lang=obj['definition_lang'])))
 			# modelling labels
@@ -70,6 +76,9 @@ class SKOSRenderer(renderers.BaseRenderer):
 			if obj['narrower']:
 				for x in obj['narrower']:
 					g.add((concept, SKOS.narrower, URIRef(str(x[:-12]))))
+					# declaring top concepts of main scheme
+					g.add((concept, SKOS.topConceptOf, URIRef(mainConceptScheme)))
+					g.add((mainConceptScheme, SKOS.hasTopConcept, URIRef(concept)))
 			if obj['skos_narrower']:
 				for x in obj['skos_narrower']:
 					g.add((concept, SKOS.narrower, URIRef(str(x[:-12]))))

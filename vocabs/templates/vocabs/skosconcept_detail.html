@@ -101,6 +101,16 @@
                                     <td>skos:prefLabel| @{{ object.pref_label_lang }}</td>
                                     <td>{{ object.pref_label }} </td>
                                 </tr>
+                                {% if object.other_label.all %}
+                                <tr>
+                                    <td>Other labels</td>
+                                    <td>
+                                    {% for x in object.other_label.all %}
+                                    {{ x.label }}  @{{x.isoCode}} ({{x.label_type}})
+                                    {% endfor %}
+                                    </td>
+                                </tr>
+                                {% endif %}
                                 {% if object.definition %}
                                     <tr>
                                         <td>skos:definition | @{{ object.definition_lang }}</td>
