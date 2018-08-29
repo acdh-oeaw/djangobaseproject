@@ -16,9 +16,11 @@ class SkosNamespaceSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SkosConceptSchemeSerializer(serializers.HyperlinkedModelSerializer):
+    has_concepts = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='skosconcept-detail')
+
     class Meta:
         model = SkosConceptScheme
-        fields = ('dc_title', 'namespace', 'dct_creator', 'legacy_id')
+        fields = ('dc_title', 'namespace', 'dct_creator', 'legacy_id', 'has_concepts')
 
 
 class SkosConceptSerializer(serializers.HyperlinkedModelSerializer):

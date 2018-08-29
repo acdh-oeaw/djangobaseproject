@@ -36,7 +36,19 @@ class SKOSRenderer(renderers.BaseRenderer):
 			g.add((concept, RDF.type, SKOS.Concept))
 			g.add((concept, SKOS.prefLabel, Literal(obj['pref_label'], lang=obj['pref_label_lang'])))
 			g.add((concept, SKOS.notation, Literal(obj['notation'])))
-			if obj['definition'] != '':
+			# remodelling ConceptScheme into Skos Collection
+			if obj['scheme']:
+				for x in obj['scheme']:
+					collection = URIRef(str(x['namespace'][:-12]))
+					g.add((collection, RDF.type, SKOS.Collection))
+					if x['dc_title']:
+						g.add((collection, DC.title, Literal(x['dc_title'])))
+					if x['dct_creator']:
+						g.add((collection, DC.creator, Literal(x['dct_creator'])))
+					if x['has_concepts']:
+						for y in x['has_concepts']:
+							g.add((collection, SKOS.member, Literal(y[:-12])))
+			if obj['definition']:
 				g.add((concept, SKOS.definition, Literal(obj['definition'], lang=obj['definition_lang'])))
 			# modelling labels
 			if obj['other_label']:
@@ -50,7 +62,6 @@ class SKOSRenderer(renderers.BaseRenderer):
 					# if x['label_type'] is not set then we make it altLabel
 					else:
 						g.add((concept, SKOS.altLabel, Literal(x['label'], lang=x['isoCode'])))
-
 			# modelling broader/narrower relationships
 			if obj['skos_broader']:
 				for x in obj['skos_broader']:
