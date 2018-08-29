@@ -3,9 +3,10 @@ from .models import SkosConcept, SkosConceptScheme, SkosLabel, SkosNamespace
 
 
 class SkosLabelSerializer(serializers.HyperlinkedModelSerializer):
+    #url = serializers.HyperlinkedIdentityField(view_name='skoslabel-detail')
     class Meta:
         model = SkosLabel
-        fields = ('label', 'label_type', 'isoCode')
+        fields = ('url', 'label', 'label_type', 'isoCode')
 
 
 class SkosNamespaceSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,12 +22,15 @@ class SkosConceptSchemeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SkosConceptSerializer(serializers.HyperlinkedModelSerializer):
+    scheme = SkosConceptSchemeSerializer(many=True, read_only=True)
+    other_label = SkosLabelSerializer(many=True, read_only=True)
 
     class Meta:
         model = SkosConcept
         fields = (
-            'id', 'url', 'scheme',
+            'id', 'url',
             'pref_label', 'pref_label_lang',
+            'scheme',
             'definition', 'definition_lang',
             'other_label',
             'notation',
@@ -35,6 +39,5 @@ class SkosConceptSerializer(serializers.HyperlinkedModelSerializer):
             'skos_related', 'related',
             'skos_broadmatch', 'narrowmatch',
             'skos_exactmatch', 'exactmatch', 'skos_closematch', 'closematch',
-
             'legacy_id'
         )

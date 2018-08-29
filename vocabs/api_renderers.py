@@ -39,6 +39,18 @@ class SKOSRenderer(renderers.BaseRenderer):
 			if obj['definition'] != '':
 				g.add((concept, SKOS.definition, Literal(obj['definition'], lang=obj['definition_lang'])))
 			# modelling labels
+			if obj['other_label']:
+				for x in obj['other_label']:
+					if x['label_type'] == 'prefLabel':
+						g.add((concept, SKOS.prefLabel, Literal(x['label'], lang=x['isoCode'])))
+					elif x['label_type'] == 'altLabel':
+						g.add((concept, SKOS.altLabel, Literal(x['label'], lang=x['isoCode'])))
+					elif x['label_type'] == 'hiddenLabel':
+						g.add((concept, SKOS.hiddenLabel, Literal(x['label'], lang=x['isoCode'])))
+					# if x['label_type'] is not set then we make it altLabel
+					else:
+						g.add((concept, SKOS.altLabel, Literal(x['label'], lang=x['isoCode'])))
+
 			# modelling broader/narrower relationships
 			if obj['skos_broader']:
 				for x in obj['skos_broader']:
