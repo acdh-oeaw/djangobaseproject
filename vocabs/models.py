@@ -31,7 +31,7 @@ LABEL_TYPES = (
 
 
 class Metadata(models.Model):
-    """Class to collect a metadata for Main Concept Scheme"""
+    """Class to collect metadata for Main Concept Scheme"""
 
     title = models.CharField(max_length=300, blank=True)
     indentifier = models.URLField(blank=True, default=DEFAULT_NAMESPACE)
@@ -53,15 +53,29 @@ class Metadata(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.created = timezone.now()
-        self.modified = timezone.now()
+            self.date_created = timezone.now()
+        self.date_modified = timezone.now()
         return super(Metadata, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{}".format(self.title)
 
-    # def get_absolute_url(self):
-    #     return reverse('vocabs:metadata_detail', kwargs={'pk': self.id})
+    def get_absolute_url(self):
+        return reverse('vocabs:metadata_list')
+
+    def subject_as_list(self):
+        return self.subject.split(';')
+
+    def language_as_list(self):
+        return self.language.split(';')
+
+
+    # def field_as_list(self):
+    #     fields = self._meta.get_fields()
+    #     for x in fields:
+    #         if x.get_internal_type() == 'TextField':               
+    #             value = getattr(self, x.name, None)
+    #     return self.value.split(';')
 
 
 class SkosNamespace(models.Model):

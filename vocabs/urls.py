@@ -47,6 +47,9 @@ urlpatterns = [
         name='skoslabel_delete',
     ),
     url(
+        r'^metadata/list/$', views.MetadataListView.as_view(),
+        name='metadata_list'),
+    url(
         r'^metadata/(?P<pk>[0-9]+)$', views.MetadataDetailView.as_view(),
         name='metadata_detail'),
     url(

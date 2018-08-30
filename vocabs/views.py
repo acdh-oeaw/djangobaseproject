@@ -17,6 +17,12 @@ from browsing.browsing_utils import GenericListView, BaseCreateView, BaseUpdateV
 #####################################################
 
 
+class MetadataListView(ListView):
+
+    model = Metadata
+    template_name = 'vocabs/metadata_list.html'
+
+
 class MetadataDetailView(DetailView):
 
     model = Metadata

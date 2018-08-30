@@ -146,7 +146,7 @@
                                     {% for x in links %}
                                         <a class="dropdown-item" href="{{ x.link }}">{{ x.name }}</a>
                                     {% endfor %}
-                                    <a class="dropdown-item" href="{% url 'vocabs:metadata_create' %}">Metadata</a>
+                                    <a class="dropdown-item" href="{% url 'vocabs:metadata_list' %}">Metadata</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{% url 'api-root' %}">Export SKOS (API)</a>
                                 </div>

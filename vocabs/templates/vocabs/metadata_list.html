@@ -1,17 +1,19 @@
 {% extends "webpage/base.html" %}
 {% block content %}
 <div class="container">
-    
-        <h3>Metadata {{ object.title }}
+{% if object_list %}
+{% for x in object_list %}
+
+ <h3>Metadata {{ x.title }}
         {% if user.is_authenticated %}
             <small>
-                <a href="{% url 'vocabs:metadata_update' pk=object.id %}">
+                <a href="{% url 'vocabs:metadata_update' pk=x.id %}">
                     <i class="far fa-edit" title="edit"></i>
                 </a>
             </small>
                 |
             <small>
-                <a href="{% url 'vocabs:metadata_delete' pk=object.id %}">
+                <a href="{% url 'vocabs:metadata_delete' pk=x.id %}">
                     <i class="far fa-trash-alt" title="delete"></i>
                 </a>
             </small>
@@ -21,73 +23,83 @@
         <table class="table">
         <tr>
         	<th>Title</th>
-        	<td>{{object.title}}</td>
+        	<td>{{x.title}}</td>
         </tr>
         <tr>
         	<th>Indentifier</th>
-        	<td>{{object.indentifier}}</td>
+        	<td>{{x.indentifier}}</td>
         </tr>
         <tr>
         	<th>Description</th>
-        	<td>{{object.description}}</td>
+        	<td>{{x.description}}</td>
         </tr>
         <tr>
         	<th>Description language</th>
-        	<td>{{object.description_lang}}</td>
+        	<td>{{x.description_lang}}</td>
         </tr>
         <tr>
         	<th>Language</th>
         	<td>
-        	{% for language in object.language_as_list %}
-    		<li>{{ language }}</li>
+        	{% if x.language_as_list %}
+        	{% for language in x.language_as_list %}
+    		{{ language }}<br>
 			{% endfor %}
+			{% endif %}
 			</td>
         </tr>
         <tr>
         	<th>Version</th>
-        	<td>{{object.version}}</td>
+        	<td>{{x.version}}</td>
         </tr>
         <tr>
         	<th>Creator</th>
-        	<td>{{object.creator}}</td>
+        	<td>{{x.creator}}</td>
         </tr>
         <tr>
         	<th>Contributor</th>
-        	<td>{{object.contributor}}</td>
+        	<td>{{x.contributor}}</td>
         </tr>
         <tr>
         	<th>Subject</th>
         	<td>
-        	{% for subject in object.subject_as_list %}
-    		<li>{{ subject }}</li>
+        	{% if x.subject_as_list %}
+        	{% for subject in x.subject_as_list %}
+    		{{ subject }}<br>
 			{% endfor %}
+			{% endif %}
 			</td>
         </tr>
         <tr>
         	<th>Owner</th>
-        	<td>{{object.owner}}</td>
+        	<td>{{x.owner}}</td>
         </tr>
         <tr>
         	<th>License</th>
-        	<td>{{object.license}}</td>
+        	<td>{{x.license}}</td>
         </tr>
         <tr>
         	<th>Date created</th>
-        	<td>{{object.date_created}}</td>
+        	<td>{{x.date_created}}</td>
         </tr>
         <tr>
         	<th>Date modified</th>
-        	<td>{{object.date_modified}}</td>
+        	<td>{{x.date_modified}}</td>
         </tr>
         <tr>
         	<th>Date issued</th>
-        	<td>{{object.date_issued}}</td>
+        	<td>{{x.date_issued}}</td>
         </tr>
         <tr>
         	<th>Relation</th>
-        	<td>{{object.relation}}</td>
+        	<td>{{x.relation}}</td>
         </tr>
         </table>
-   	
+
+
+
+{% endfor %}
+{% else %}
+<a class="btn btn-outline-primary" href="{% url 'vocabs:metadata_create' %}">create Metadata</a>
+{% endif %}
 </div>
 {% endblock %}
