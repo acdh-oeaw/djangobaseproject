@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 import rdflib
 from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef, RDFS, ConjunctiveGraph
 from rdflib.namespace import DC, FOAF, RDFS, SKOS
+from .models import *
 
 
 class RDFRenderer(renderers.BaseRenderer):
@@ -21,14 +22,19 @@ class SKOSRenderer(renderers.BaseRenderer):
 	format = 'rdf'
 
 	def render(self, data, media_type=None, renderer_context=None):
+		metadata = Metadata.objects.all()
 		g = rdflib.Graph()
 		SKOS = Namespace("http://www.w3.org/2004/02/skos/core#")
 		DC = Namespace("http://purl.org/dc/elements/1.1/")
+		DCT = Namespace("http://purl.org/dc/terms/")
 		RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
+		OWL = Namespace("http://www.w3.org/2002/07/owl#")
 		VOCABS = Namespace("https://vocabs.acdh.oeaw.ac.at/testthesaurus/")
 		g.bind('skos', SKOS)
 		g.bind('dc', DC)
+		g.bind('dct', DCT)
 		g.bind('rdfs', RDFS)
+		g.bind('owl', OWL)
 		for obj in data['results']:
 			# to force different base URI, e.g. VOCABS
 			# concept = URIRef(VOCABS + str(obj['id']))
@@ -37,10 +43,19 @@ class SKOSRenderer(renderers.BaseRenderer):
 			g.add((concept, SKOS.prefLabel, Literal(obj['pref_label'], lang=obj['pref_label_lang'])))
 			g.add((concept, SKOS.notation, Literal(obj['notation'])))
 			# test modelling fake main Schema relations
-			mainConceptScheme = URIRef('http://127.0.0.1:8000/api/skosnamespaces/1/')
-			g.add((mainConceptScheme, RDF.type, SKOS.ConceptScheme))
-			g.add((mainConceptScheme, DC.title, Literal('Test Thesaurus')))
-			g.add((concept, SKOS.inScheme, mainConceptScheme))
+			for x in metadata[:1]:
+				mainConceptScheme = URIRef(x.indentifier)
+				g.add((mainConceptScheme, RDF.type, SKOS.ConceptScheme))
+				g.add((mainConceptScheme, DC.title, Literal(x.title)))
+				g.add((mainConceptScheme, RDFS.label, Literal(x.title)))
+				g.add((mainConceptScheme, DC.description, Literal(x.description, lang=x.description_lang)))
+				g.add((mainConceptScheme, OWL.versionInfo, Literal(x.version)))
+				g.add((mainConceptScheme, DC.rights, Literal(x.license)))
+				g.add((mainConceptScheme, DCT.created, Literal(x.date_created)))
+				g.add((mainConceptScheme, DCT.modified, Literal(x.date_modified)))
+				g.add((mainConceptScheme, DCT.issued, Literal(x.date_issued)))
+				g.add((concept, SKOS.inScheme, mainConceptScheme))
+				# accessing lists todo
 
 			# remodelling ConceptScheme into Skos Collection
 			if obj['scheme']:
