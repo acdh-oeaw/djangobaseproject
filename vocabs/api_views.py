@@ -1,9 +1,10 @@
 from rest_framework import viewsets
 from rest_framework import pagination
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import SkosConcept, SkosConceptScheme, SkosLabel, SkosNamespace
+from .models import SkosConcept, SkosConceptScheme, SkosLabel, SkosNamespace, Metadata
 from .serializers import (
-    SkosLabelSerializer, SkosNamespaceSerializer, SkosConceptSchemeSerializer, SkosConceptSerializer
+    SkosLabelSerializer, SkosNamespaceSerializer, SkosConceptSchemeSerializer, SkosConceptSerializer,
+    MetadataSerializer
 )
 from .filters import SkosConceptFilter
 from .api_renderers import RDFRenderer, SKOSRenderer
@@ -14,6 +15,12 @@ class LargeResultsSetPagination(pagination.PageNumberPagination):
     page_size = 25
     page_size_query_param = 'page_size'
     max_page_size = 10000
+
+
+class MetadataViewSet(viewsets.ReadOnlyModelViewSet):
+
+    queryset = Metadata.objects.all()
+    serializer_class = MetadataSerializer
 
 
 class SkosLabelViewSet(viewsets.ModelViewSet):

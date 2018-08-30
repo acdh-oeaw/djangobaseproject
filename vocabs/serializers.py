@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from .models import SkosConcept, SkosConceptScheme, SkosLabel, SkosNamespace
+from .models import SkosConcept, SkosConceptScheme, SkosLabel, SkosNamespace, Metadata
+
+
+class MetadataSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Metadata
+        fields = '__all__'
 
 
 class SkosLabelSerializer(serializers.HyperlinkedModelSerializer):

@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.functional import cached_property
+from django.core.exceptions import ValidationError
 
 
 try:
@@ -28,6 +29,13 @@ LABEL_TYPES = (
     ('altLabel', 'altLabel'),
     ('hiddenLabel', 'hiddenLabel'),
 )
+
+# limit number of created instances https://stackoverflow.com/a/6436008/7101197
+def validate_only_one_instance(obj):
+    model = obj.__class__
+    if (model.objects.count() > 0 and
+            obj.id != model.objects.get().id):
+        raise ValidationError("Can only create 1 %s instance" % model.__name__)
 
 
 class Metadata(models.Model):
@@ -76,6 +84,9 @@ class Metadata(models.Model):
     #         if x.get_internal_type() == 'TextField':               
     #             value = getattr(self, x.name, None)
     #     return self.value.split(';')
+
+    def clean(self):
+        validate_only_one_instance(self)
 
 
 class SkosNamespace(models.Model):
