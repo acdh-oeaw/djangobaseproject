@@ -3,7 +3,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div, MultiField, HTML
 from crispy_forms.bootstrap import *
-from .models import SkosConcept, SkosConceptScheme, SkosLabel
+from .models import SkosConcept, SkosConceptScheme, SkosLabel, Metadata
 
 
 class GenericFilterFormHelper(FormHelper):
@@ -52,10 +52,27 @@ class SkosConceptFormHelper(FormHelper):
             )
 
 
+class MetadataForm(forms.ModelForm):
+    class Meta:
+        model = Metadata
+        #fields = "__all__"
+        exclude = ('date_created', 'date_modified', )
+
+    def __init__(self, *args, **kwargs):
+        super(MetadataForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = True
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-md-3'
+        self.helper.field_class = 'col-md-9'
+        self.helper.add_input(Submit('submit', 'save'),)
+
+
 class SkosConceptForm(forms.ModelForm):
     class Meta:
         model = SkosConcept
         fields = "__all__"
+        # exclude = ('broader_concept', )
         widgets = {
             'label': autocomplete.ModelSelect2Multiple(url='vocabs-ac:skoslabel-autocomplete'),
             'skos_broader': autocomplete.ModelSelect2Multiple(

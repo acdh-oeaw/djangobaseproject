@@ -5,11 +5,57 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django_tables2 import SingleTableView, RequestConfig
-from .models import SkosConcept, SkosConceptScheme, SkosLabel
+from .models import SkosConcept, SkosConceptScheme, SkosLabel, Metadata
 from .forms import *
 from .tables import SkosConceptTable, SkosConceptSchemeTable, SkosLabelTable
 from .filters import SkosConceptListFilter, SkosConceptSchemeListFilter, SkosLabelListFilter
 from browsing.browsing_utils import GenericListView, BaseCreateView, BaseUpdateView
+
+
+#####################################################
+#   Metadata
+#####################################################
+
+
+class MetadataDetailView(DetailView):
+
+    model = Metadata
+    template_name = 'vocabs/metadata_detail.html'
+
+
+class MetadataCreate(BaseCreateView):
+
+    model = Metadata
+    form_class = MetadataForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(MetadataCreate, self).dispatch(*args, **kwargs)
+
+
+class MetadataUpdate(BaseUpdateView):
+
+    model = Metadata
+    form_class = MetadataForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(MetadataUpdate, self).dispatch(*args, **kwargs)
+
+
+class MetadataDelete(DeleteView):
+    model = Metadata
+    template_name = 'webpage/confirm_delete.html'
+    success_url = reverse_lazy('vocabs:browse_vocabs')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(MetadataDelete, self).dispatch(*args, **kwargs)
+
+
+#####################################################
+#   Concept
+#####################################################
 
 
 class SkosConceptListView(GenericListView):

@@ -2,7 +2,7 @@ import os
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-
+from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.functional import cached_property
 
@@ -28,6 +28,40 @@ LABEL_TYPES = (
     ('altLabel', 'altLabel'),
     ('hiddenLabel', 'hiddenLabel'),
 )
+
+
+class Metadata(models.Model):
+    """Class to collect a metadata for Main Concept Scheme"""
+
+    title = models.CharField(max_length=300, blank=True)
+    indentifier = models.URLField(blank=True, default=DEFAULT_NAMESPACE)
+    description = models.TextField(blank=True)
+    description_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    language = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
+    version = models.CharField(max_length=300, blank=True)
+    creator = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
+    contributor = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
+    subject = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
+    owner = models.CharField(max_length=300, blank=True, help_text="Organisation or Person")
+    license = models.CharField(max_length=300, blank=True)
+    date_created = models.DateTimeField(editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(editable=False, default=timezone.now)
+    date_issued = models.DateField(blank=True, null=True, help_text="YYYY-MM-DD")
+    relation = models.URLField(blank=True,
+        help_text="e.g. in case of relation to a project, add link to a project website")
+
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.created = timezone.now()
+        self.modified = timezone.now()
+        return super(Metadata, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "{}".format(self.title)
+
+    # def get_absolute_url(self):
+    #     return reverse('vocabs:metadata_detail', kwargs={'pk': self.id})
 
 
 class SkosNamespace(models.Model):
@@ -154,6 +188,9 @@ class SkosConcept(models.Model):
     skos_exactmatch = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="exactmatch"
     )
+    skos_relatedmatch = models.ManyToManyField(
+        'SkosConcept', blank=True, related_name="relatedmatch"
+    )
     skos_closematch = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="closematch"
     )
@@ -165,6 +202,15 @@ class SkosConcept(models.Model):
         "is sub-class of" vs. "is super-class of".',
         blank=True
     )
+    # documentation properties
+    skos_note = models.CharField(max_length=500, blank=True)
+    skos_note_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    skos_scopenote = models.TextField(blank=True)
+    skos_scopenote_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    skos_changenote = models.CharField(max_length=500, blank=True)
+    skos_editorialnote = models.CharField(max_length=500, blank=True)
+    skos_example = models.CharField(max_length=500, blank=True)
+    skos_historynote = models.CharField(max_length=500, blank=True)
 
     def get_broader(self):
         broader = self.skos_broader.all()
