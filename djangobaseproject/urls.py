@@ -16,6 +16,7 @@ router.register(r'metadata', api_views.MetadataViewSet)
 router.register(r'skoslabels', api_views.SkosLabelViewSet)
 router.register(r'skosnamespaces', api_views.SkosNamespaceViewSet)
 router.register(r'skosconceptschemes', api_views.SkosConceptSchemeViewSet)
+router.register(r'skoscollections', api_views.SkosCollectionViewSet)
 router.register(r'skosconcepts', api_views.SkosConceptViewSet)
 router.register(r'places', PlaceViewSet)
 if 'bib' in settings.INSTALLED_APPS:

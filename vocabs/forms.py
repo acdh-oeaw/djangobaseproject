@@ -89,7 +89,8 @@ class SkosConceptForm(forms.ModelForm):
         fields = "__all__"
         # exclude = ('broader_concept', )
         widgets = {
-            'label': autocomplete.ModelSelect2Multiple(url='vocabs-ac:skoslabel-autocomplete'),
+            'other_label': autocomplete.ModelSelect2Multiple(
+                url='vocabs-ac:skoslabel-autocomplete'),
             'skos_broader': autocomplete.ModelSelect2Multiple(
                 url='vocabs-ac:skosconcept-autocomplete'),
             'skos_narrower': autocomplete.ModelSelect2Multiple(

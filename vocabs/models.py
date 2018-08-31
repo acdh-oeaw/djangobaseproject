@@ -45,11 +45,11 @@ class Metadata(models.Model):
     indentifier = models.URLField(blank=True, default=DEFAULT_NAMESPACE)
     description = models.TextField(blank=True)
     description_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    language = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
+    language = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
     version = models.CharField(max_length=300, blank=True)
-    creator = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
-    contributor = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
-    subject = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
+    creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    contributor = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    subject = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
     owner = models.CharField(max_length=300, blank=True, help_text="Organisation or Person")
     license = models.CharField(max_length=300, blank=True)
     date_created = models.DateTimeField(editable=False, default=timezone.now)
@@ -149,7 +149,7 @@ class SkosConceptScheme(models.Model):
 class SkosCollection(models.Model):
     label = models.CharField(max_length=300, blank=True)
     label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    creator = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
+    creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
     legacy_id = models.CharField(max_length=200, blank=True)
     # documentation properties
     skos_note = models.CharField(max_length=500, blank=True)
@@ -243,10 +243,20 @@ class SkosConcept(models.Model):
         SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
     )
     broader_concept = models.ForeignKey(
-        'SkosConcept', help_text="Broader Term.",
+        'SkosConcept',
         verbose_name="Broader Term",
         blank=True, null=True, on_delete=models.SET_NULL,
         related_name="narrower_concepts"
+    )
+    same_as_external = models.TextField(
+        blank=True,
+        verbose_name="URL of external Concept with the same meaning",
+        help_text="If more than one list all using a semicolon ;",
+    )
+    source_description = models.TextField(
+        blank=True,
+        verbose_name="Source",
+        help_text="A verbose description of the concept's source"
     )
     skos_broader = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="narrower"
@@ -286,6 +296,7 @@ class SkosConcept(models.Model):
     skos_editorialnote = models.CharField(max_length=500, blank=True)
     skos_example = models.CharField(max_length=500, blank=True)
     skos_historynote = models.CharField(max_length=500, blank=True)
+    dc_creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
 
     def get_broader(self):
         broader = self.skos_broader.all()
