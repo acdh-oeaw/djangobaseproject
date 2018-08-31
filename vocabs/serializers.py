@@ -31,6 +31,7 @@ class SkosConceptSchemeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SkosCollectionSerializer(serializers.HyperlinkedModelSerializer):
+    has_members = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='skosconcept-detail')
 
     class Meta:
         model = SkosCollection
@@ -52,7 +53,7 @@ class SkosConceptSerializer(serializers.HyperlinkedModelSerializer):
             'definition', 'definition_lang',
             'other_label',
             'notation',
-            'broader_concept',
+            'broader_concept', 'narrower_concepts',
             'same_as_external',
             'source_description',
             'skos_broader', 'broader', 'skos_narrower', 'narrower',

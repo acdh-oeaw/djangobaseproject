@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-8">
                     <h1 style="text-align: center;">
-                        <small>SkosConceptScheme:</small> {{ object }}
+                        <small>SkosCollection:</small> {{ object }}
                         {% if user.is_authenticated %}
                             <small>
                                 <a href="{% url 'vocabs:skoscollection_update' pk=object.id %}">
@@ -43,8 +43,11 @@
         </div>
     </div>
         <div class="card-body">
+            {% if object.skos_scopenote %}
+            <p>{{object.skos_scopenote}}</p>
+            {% endif %}
             <legend>
-                related concepts
+                concepts members of this skos:Collection
             </legend>
                 {% for x in object.has_members.all %}
                     <li>

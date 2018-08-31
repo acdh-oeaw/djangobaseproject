@@ -59,16 +59,20 @@ class SKOSRenderer(renderers.BaseRenderer):
 				# accessing lists todo
 
 			# remodelling ConceptScheme into Skos Collection
-			if obj['scheme']:
-				for x in obj['scheme']:
-					collection = URIRef(str(x['namespace'][:-12]) +str(x['legacy_id']))
+			if obj['collection']:
+				for x in obj['collection']:
+					collection = URIRef(str(x['url'][:-12]))
 					g.add((collection, RDF.type, SKOS.Collection))
-					if x['dc_title']:
-						g.add((collection, SKOS.prefLabel, Literal(x['dc_title'], lang='en')))
-					if x['dct_creator']:
-						g.add((collection, DC.creator, Literal(x['dct_creator'])))
-					if x['has_concepts']:
-						for y in x['has_concepts']:
+					g.add((collection, DCT.created, Literal(x['date_created'])))
+					g.add((collection, DCT.modified, Literal(x['date_modified'])))
+					if x['label']:
+						g.add((collection, SKOS.prefLabel, Literal(x['label'], lang=x['label_lang'])))
+					if x['skos_scopenote']:
+						g.add((collection, SKOS.scopeNote, Literal(x['skos_scopenote'], lang=x['skos_scopenote_lang'])))
+					if x['creator']:
+						g.add((collection, DC.creator, Literal(x['creator'])))
+					if x['has_members']:
+						for y in x['has_members']:
 							g.add((collection, SKOS.member, URIRef(y[:-12])))
 			if obj['definition']:
 				g.add((concept, SKOS.definition, Literal(obj['definition'], lang=obj['definition_lang'])))
@@ -85,6 +89,14 @@ class SKOSRenderer(renderers.BaseRenderer):
 					else:
 						g.add((concept, SKOS.altLabel, Literal(x['label'], lang=x['isoCode'])))
 			# modelling broader/narrower relationships
+			if obj['broader_concept']:
+				g.add((concept, SKOS.broader, URIRef(obj['broader_concept'][:-12])))
+			if obj['narrower_concepts']:
+				g.add((mainConceptScheme, SKOS.hasTopConcept, URIRef(concept)))
+				g.add((concept, SKOS.topConceptOf, mainConceptScheme ))
+				for x in obj['narrower_concepts']:
+					g.add((concept, SKOS.narrower, URIRef(str(x[:-12]))))
+
 			if obj['skos_broader']:
 				for x in obj['skos_broader']:
 					g.add((concept, SKOS.broader, URIRef(str(x[:-12]))))
@@ -117,7 +129,3 @@ class SKOSRenderer(renderers.BaseRenderer):
 					g.add((concept, SKOS.narrowMatch, URIRef(str(x[:-12]))))
 		result = g.serialize(format="pretty-xml")
 		return result
-
-
-
-

@@ -21,7 +21,7 @@ except KeyError:
 try:
     DEFAULT_LANG = settings.VOCABS_SETTINGS['default_lang']
 except KeyError:
-    DEFAULT_LANG = "eng"
+    DEFAULT_LANG = "en"
 
 
 LABEL_TYPES = (
@@ -177,7 +177,7 @@ class SkosCollection(models.Model):
         if not self.id:
             self.date_created = timezone.now()
         self.date_modified = timezone.now()
-        return super(Metadata, self).save(*args, **kwargs)
+        return super(SkosCollection, self).save(*args, **kwargs)
 
     @classmethod
     def get_listview_url(self):
