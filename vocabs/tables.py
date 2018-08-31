@@ -21,6 +21,15 @@ class SkosConceptSchemeTable(tables.Table):
         attrs = {"class": "table table-hover table-striped table-condensed"}
 
 
+class SkosCollectionTable(tables.Table):
+    label = tables.LinkColumn('vocabs:skoscollection_detail', args=[A('pk')])
+
+    class Meta:
+        model = SkosCollection
+        sequence = ['id', 'label']
+        attrs = {"class": "table table-hover table-striped table-condensed"}
+
+
 class SkosConceptTable(tables.Table):
     broader_concept = tables.Column(verbose_name='Broader Term')
     pref_label = tables.LinkColumn('vocabs:skosconcept_detail', args=[A('pk')])

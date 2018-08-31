@@ -65,6 +65,10 @@ class Metadata(models.Model):
         self.date_modified = timezone.now()
         return super(Metadata, self).save(*args, **kwargs)
 
+    @classmethod
+    def get_listview_url(self):
+        return reverse('vocabs:metadata')
+
     def __str__(self):
         return "{}".format(self.title)
 
@@ -140,6 +144,49 @@ class SkosConceptScheme(models.Model):
 
     def __str__(self):
         return "{}:{}".format(self.namespace, self.dc_title)
+
+
+class SkosCollection(models.Model):
+    label = models.CharField(max_length=300, blank=True)
+    label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    creator = models.TextField(blank=True, help_text="If more than one list all using semicolon ;")
+    legacy_id = models.CharField(max_length=200, blank=True)
+    # documentation properties
+    skos_note = models.CharField(max_length=500, blank=True)
+    skos_note_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    skos_scopenote = models.TextField(blank=True)
+    skos_scopenote_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    skos_changenote = models.CharField(max_length=500, blank=True)
+    skos_editorialnote = models.CharField(max_length=500, blank=True)
+    skos_example = models.CharField(max_length=500, blank=True)
+    skos_historynote = models.CharField(max_length=500, blank=True)
+
+
+    @classmethod
+    def get_listview_url(self):
+        return reverse('vocabs:browse_skoscollections')
+
+    @classmethod
+    def get_createview_url(self):
+        return reverse('vocabs:skoscollection_create')
+
+    def get_absolute_url(self):
+        return reverse('vocabs:skoscollection_detail', kwargs={'pk': self.id})
+
+    def get_next(self):
+        next = SkosCollection.objects.filter(id__gt=self.id)
+        if next:
+            return next.first().id
+        return False
+
+    def get_prev(self):
+        prev = SkosCollection.objects.filter(id__lt=self.id).order_by('-id')
+        if prev:
+            return prev.first().id
+        return False
+
+    def __str__(self):
+        return "{}".format(self.label)
 
 
 class SkosLabel(models.Model):

@@ -54,6 +54,7 @@ class SKOSRenderer(renderers.BaseRenderer):
 				g.add((mainConceptScheme, DCT.created, Literal(x.date_created)))
 				g.add((mainConceptScheme, DCT.modified, Literal(x.date_modified)))
 				g.add((mainConceptScheme, DCT.issued, Literal(x.date_issued)))
+				# each concept must have skos:inScheme mainConceptScheme
 				g.add((concept, SKOS.inScheme, mainConceptScheme))
 				# accessing lists todo
 
