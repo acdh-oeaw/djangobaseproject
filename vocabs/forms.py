@@ -104,6 +104,9 @@ class SkosConceptForm(forms.ModelForm):
                 url='vocabs-ac:skosconcept-autocomplete'),
             'scheme': autocomplete.ModelSelect2Multiple(
                 url='vocabs-ac:skosconceptscheme-autocomplete'
+            ),
+            'collection': autocomplete.ModelSelect2Multiple(
+                url='vocabs-ac:skoscollection-autocomplete'
             )
         }
 
