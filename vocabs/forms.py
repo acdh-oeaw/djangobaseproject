@@ -151,7 +151,7 @@ class SkosConceptSchemeFormHelper(FormHelper):
                 ),
                 AccordionGroup(
                     'Advanced search',
-                    'dct_creator',
+                    'dc_creator',
                     css_id="more"
                     ),
                 )

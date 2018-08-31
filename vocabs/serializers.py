@@ -27,7 +27,7 @@ class SkosConceptSchemeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = SkosConceptScheme
-        fields = ('dc_title', 'namespace', 'dct_creator', 'legacy_id', 'has_concepts')
+        fields = '__all__'
 
 
 class SkosCollectionSerializer(serializers.HyperlinkedModelSerializer):

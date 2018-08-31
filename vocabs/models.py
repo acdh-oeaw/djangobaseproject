@@ -103,11 +103,16 @@ class SkosNamespace(models.Model):
 
 class SkosConceptScheme(models.Model):
     dc_title = models.CharField(max_length=300, blank=True)
+    dc_title_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
     namespace = models.ForeignKey(
         SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
     )
-    dct_creator = models.URLField(blank=True)
+    dc_creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    dc_description = models.TextField(blank=True)
+    dc_description_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
     legacy_id = models.CharField(max_length=200, blank=True)
+    date_created = models.DateTimeField(editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(editable=False, default=timezone.now)
 
     def save(self, *args, **kwargs):
         if self.namespace is None:
@@ -117,6 +122,11 @@ class SkosConceptScheme(models.Model):
             self.namespace = temp_namespace
         else:
             pass
+
+        if not self.id:
+            self.date_created = timezone.now()
+        self.date_modified = timezone.now()
+
         super(SkosConceptScheme, self).save(*args, **kwargs)
 
     @classmethod
@@ -160,7 +170,14 @@ class SkosCollection(models.Model):
     skos_editorialnote = models.CharField(max_length=500, blank=True)
     skos_example = models.CharField(max_length=500, blank=True)
     skos_historynote = models.CharField(max_length=500, blank=True)
+    date_created = models.DateTimeField(editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(editable=False, default=timezone.now)
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.date_created = timezone.now()
+        self.date_modified = timezone.now()
+        return super(Metadata, self).save(*args, **kwargs)
 
     @classmethod
     def get_listview_url(self):
@@ -297,6 +314,9 @@ class SkosConcept(models.Model):
     skos_example = models.CharField(max_length=500, blank=True)
     skos_historynote = models.CharField(max_length=500, blank=True)
     dc_creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    date_created = models.DateTimeField(editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(editable=False, default=timezone.now)
+
 
     def get_broader(self):
         broader = self.skos_broader.all()
@@ -335,6 +355,11 @@ class SkosConcept(models.Model):
             self.namespace = temp_namespace
         else:
             pass
+
+        if not self.id:
+            self.date_created = timezone.now()
+        self.date_modified = timezone.now()
+
         super(SkosConcept, self).save(*args, **kwargs)
 
     @cached_property
