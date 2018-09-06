@@ -176,6 +176,9 @@
     </nav>
 </header>
 <section class="main-content">
+    {% if DEV_VERSION %}
+        <small>dev</small>
+    {% endif %}
     <div id="content">
       <!--   <div class="alert alert-warning alert-dismissible">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
