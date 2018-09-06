@@ -3,6 +3,7 @@ import time
 import pandas as pd
 import django_filters
 from django.conf import settings
+from django.db.models.fields.related import ManyToManyField
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
 from crispy_forms.helper import FormHelper
@@ -13,6 +14,25 @@ from . models import BrowsConf
 if 'bib' in settings.INSTALLED_APPS:
     from charts.models import ChartConfig
     from charts.views import create_payload
+
+
+def model_to_dict(instance):
+    """
+    serializes a model.object to dict, including non editable fields as well as
+    ManyToManyField fields
+    Taken from https://stackoverflow.com/questions/21925671/
+    """
+    opts = instance._meta
+    data = {}
+    for f in opts.concrete_fields + opts.many_to_many:
+        if isinstance(f, ManyToManyField):
+            if instance.pk is None:
+                data[f.name] = []
+            else:
+                data[f.name] = list(f.value_from_object(instance).values_list('pk', flat=True))
+        else:
+            data[f.name] = f.value_from_object(instance)
+    return data
 
 
 class GenericFilterFormHelper(FormHelper):
