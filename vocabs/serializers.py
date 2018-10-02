@@ -42,6 +42,7 @@ class SkosConceptSerializer(serializers.HyperlinkedModelSerializer):
     scheme = SkosConceptSchemeSerializer(many=True, read_only=True)
     other_label = SkosLabelSerializer(many=True, read_only=True)
     collection = SkosCollectionSerializer(many=True, read_only=True)
+    #language = MetadataSerializer
 
     class Meta:
         model = SkosConcept

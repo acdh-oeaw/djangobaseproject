@@ -56,8 +56,19 @@ class SKOSRenderer(renderers.BaseRenderer):
 				g.add((mainConceptScheme, DCT.issued, Literal(x.date_issued)))
 				# each concept must have skos:inScheme mainConceptScheme
 				g.add((concept, SKOS.inScheme, mainConceptScheme))
-				# accessing lists todo
-
+				# accessing lists with ; in TextField
+				if x.language:
+					for i in x.language.split(';'):				
+						g.add((mainConceptScheme, DC.language, Literal(i.strip())))
+				if x.creator:
+					for i in x.creator.split(';'):				
+						g.add((mainConceptScheme, DC.creator, Literal(i.strip())))
+				if x.contributor:
+					for i in x.contributor.split(';'):				
+						g.add((mainConceptScheme, DC.contributor, Literal(i.strip())))
+				if x.subject:
+					for i in x.subject.split(';'):				
+						g.add((mainConceptScheme, DC.subject, Literal(i.strip())))					
 			# remodelling ConceptScheme into Skos Collection
 			if obj['collection']:
 				for x in obj['collection']:
