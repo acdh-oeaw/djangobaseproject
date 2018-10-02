@@ -65,15 +65,12 @@ class Metadata(models.Model):
         self.date_modified = timezone.now()
         return super(Metadata, self).save(*args, **kwargs)
 
-    @classmethod
-    def get_listview_url(self):
-        return reverse('vocabs:metadata')
 
     def __str__(self):
         return "{}".format(self.title)
 
     def get_absolute_url(self):
-        return reverse('vocabs:metadata_list')
+        return reverse('vocabs:metadata_detail', kwargs={'pk': self.id})
 
     def subject_as_list(self):
         return self.subject.split(';')
