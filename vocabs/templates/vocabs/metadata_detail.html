@@ -49,11 +49,19 @@
         </tr>
         <tr>
         	<th>Creator</th>
-        	<td>{{object.creator}}</td>
+        	<td>
+            {% for creator in object.creator_as_list %}
+            <li>{{ creator }}</li>
+            {% endfor %}   
+            </td>
         </tr>
         <tr>
         	<th>Contributor</th>
-        	<td>{{object.contributor}}</td>
+        	<td>
+             {% for contributor in object.contributor_as_list %}
+            <li>{{ contributor }}</li>
+            {% endfor %}    
+            </td>
         </tr>
         <tr>
         	<th>Subject</th>

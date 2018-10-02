@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <div class="card">
-        <div class="card-header procustom-panel-heading">
+        <div class="card-header">
             <div class="row">
                 <div class="col-md-2">
                     {% if object.get_prev %}
@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-md-8">
                     <h1 style="text-align: center;">
-                        <small>SkosConcept:</small> {{ object }}
+                        <small>skos:Concept</small> {{ object }}
                         {% if user.is_authenticated %}
                             <small>
                                 <a href="{% url 'vocabs:skosconcept_update' pk=object.id %}">

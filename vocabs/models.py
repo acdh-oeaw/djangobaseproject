@@ -65,6 +65,9 @@ class Metadata(models.Model):
         self.date_modified = timezone.now()
         return super(Metadata, self).save(*args, **kwargs)
 
+    @classmethod
+    def get_listview_url(self):
+        return reverse('vocabs:metadata')
 
     def __str__(self):
         return "{}".format(self.title)
@@ -78,13 +81,11 @@ class Metadata(models.Model):
     def language_as_list(self):
         return self.language.split(';')
 
+    def creator_as_list(self):
+        return self.creator.split(';')
 
-    # def field_as_list(self):
-    #     fields = self._meta.get_fields()
-    #     for x in fields:
-    #         if x.get_internal_type() == 'TextField':               
-    #             value = getattr(self, x.name, None)
-    #     return self.value.split(';')
+    def contributor_as_list(self):
+        return self.contributor.split(';')
 
     def clean(self):
         validate_only_one_instance(self)
@@ -201,6 +202,9 @@ class SkosCollection(models.Model):
 
     def __str__(self):
         return "{}".format(self.label)
+
+    def creator_as_list(self):
+        return self.creator.split(';')
 
 
 class SkosLabel(models.Model):
