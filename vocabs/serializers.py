@@ -65,4 +65,5 @@ class SkosConceptSerializer(serializers.HyperlinkedModelSerializer):
             'skos_note', 'skos_note_lang', 'skos_scopenote', 'skos_scopenote_lang',
             'skos_changenote', 'skos_editorialnote', 'skos_example',
             'skos_historynote', 'dc_creator',
+            'date_created', 'date_modified',
         )

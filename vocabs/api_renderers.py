@@ -1,7 +1,7 @@
 from rest_framework import renderers
 from django.template.loader import render_to_string
 import rdflib
-from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef, RDFS, ConjunctiveGraph
+from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef, RDFS, ConjunctiveGraph, XSD
 from rdflib.namespace import DC, FOAF, RDFS, SKOS
 from .models import *
 
@@ -52,8 +52,8 @@ class SKOSRenderer(renderers.BaseRenderer):
 				g.add((mainConceptScheme, OWL.versionInfo, Literal(x.version)))
 				g.add((mainConceptScheme, DC.rights, Literal(x.license)))
 				g.add((mainConceptScheme, DCT.created, Literal(x.date_created)))
-				g.add((mainConceptScheme, DCT.modified, Literal(x.date_modified)))
-				g.add((mainConceptScheme, DCT.issued, Literal(x.date_issued)))
+				g.add((mainConceptScheme, DCT.modified, Literal(x.date_modified, datatype=XSD.dateTime)))
+				g.add((mainConceptScheme, DCT.issued, Literal(x.date_issued, datatype=XSD.dateTime)))
 				# each concept must have skos:inScheme mainConceptScheme
 				g.add((concept, SKOS.inScheme, mainConceptScheme))
 				# accessing lists with ; in TextField
@@ -74,8 +74,8 @@ class SKOSRenderer(renderers.BaseRenderer):
 				for x in obj['collection']:
 					collection = URIRef(str(x['url'][:-12]))
 					g.add((collection, RDF.type, SKOS.Collection))
-					g.add((collection, DCT.created, Literal(x['date_created'])))
-					g.add((collection, DCT.modified, Literal(x['date_modified'])))
+					g.add((collection, DCT.created, Literal(x['date_created'], datatype=XSD.dateTime)))
+					g.add((collection, DCT.modified, Literal(x['date_modified'], datatype=XSD.dateTime)))
 					if x['label']:
 						g.add((collection, SKOS.prefLabel, Literal(x['label'], lang=x['label_lang'])))
 					if x['skos_scopenote']:
@@ -138,5 +138,30 @@ class SKOSRenderer(renderers.BaseRenderer):
 			if obj['narrowmatch']:
 				for x in obj['narrowmatch']:
 					g.add((concept, SKOS.narrowMatch, URIRef(str(x[:-12]))))
+			if obj['same_as_external']:
+				for i in obj['same_as_external'].split(';'):
+					g.add((concept, OWL.sameAs, URIRef(i.strip())))
+			if obj['source_description']:
+				g.add((concept, DC.source, Literal(obj['source_description'])))
+			# documentation properties for a concept
+			if obj['skos_note']:
+				g.add((concept, SKOS.note, Literal(obj['skos_note'], lang=obj['skos_note_lang'])))
+			if obj['skos_scopenote']:
+				g.add((concept, SKOS.scopeNote, Literal(obj['skos_scopenote'], lang=obj['skos_scopenote_lang'])))
+			if obj['skos_changenote']:
+				g.add((concept, SKOS.changeNote, Literal(obj['skos_changenote'])))
+			if obj['skos_editorialnote']:
+				g.add((concept, SKOS.editorialNote, Literal(obj['skos_editorialnote'])))
+			if obj['skos_example']:
+				g.add((concept, SKOS.example, Literal(obj['skos_example'])))
+			if obj['skos_historynote']:
+				g.add((concept, SKOS.historyNote, Literal(obj['skos_historynote'])))
+			if obj['dc_creator']:
+				for i in obj['dc_creator'].split(';'):
+					g.add((concept, DC.creator, Literal(i.strip())))
+			if obj['date_created']:
+				g.add((concept, DCT.created, Literal(obj['date_created'], datatype=XSD.dateTime)))
+			if obj['date_modified']:
+				g.add((concept, DCT.modified, Literal(obj['date_modified'], datatype=XSD.dateTime)))
 		result = g.serialize(format="pretty-xml")
 		return result
