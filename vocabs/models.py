@@ -363,6 +363,10 @@ class SkosConcept(models.Model):
 
         super(SkosConcept, self).save(*args, **kwargs)
 
+    def dc_creator_as_list(self):
+        return self.dc_creator.split(';')
+
+
     @cached_property
     def label(self):
         # 'borrowed from https://github.com/sennierer'

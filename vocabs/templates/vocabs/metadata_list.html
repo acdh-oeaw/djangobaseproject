@@ -42,7 +42,7 @@
         	<td>
         	{% if x.language_as_list %}
         	{% for language in x.language_as_list %}
-    		{{ language }}<br>
+    		<li>{{ language }}</li>
 			{% endfor %}
 			{% endif %}
 			</td>
@@ -53,18 +53,26 @@
         </tr>
         <tr>
         	<th>Creator</th>
-        	<td>{{x.creator}}</td>
+        	<td>
+              {% for creator in x.creator_as_list %}
+            <li>{{ creator }}</li>
+            {% endfor %}    
+            </td>
         </tr>
         <tr>
         	<th>Contributor</th>
-        	<td>{{x.contributor}}</td>
+        	<td>
+            {% for contributor in x.contributor_as_list %}
+            <li>{{ contributor }}</li>
+            {% endfor %}  
+            </td>
         </tr>
         <tr>
         	<th>Subject</th>
         	<td>
         	{% if x.subject_as_list %}
         	{% for subject in x.subject_as_list %}
-    		{{ subject }}<br>
+    		<li>{{ subject }}</li>
 			{% endfor %}
 			{% endif %}
 			</td>
@@ -94,8 +102,6 @@
         	<td>{{x.relation}}</td>
         </tr>
         </table>
-
-
 
 {% endfor %}
 {% else %}
