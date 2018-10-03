@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <div class="card">
-        <div class="card-header procustom-panel-heading">
+        <div class="card-header">
             <div class="row">
                 <div class="col-md-2">
                     {% if object.get_prev %}
@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-8">
                     <h1 style="text-align: center;">
-                        <small>SkosLabel:</small> {{ object }}
+                        <small>Label</small> {{ object }}
                         {% if user.is_authenticated %}
                             <small>
                                 <a href="{% url 'vocabs:skoslabel_update' pk=object.id %}">
@@ -42,8 +42,7 @@
             </div>
         </div>
     </div>
-        <div class="card-body">
-            <table class="table table-bordered table-hover">
+            <table class="table">
                 <tr>
                     <th>Label</th>
                     <td>{{ object.label }}</td>
@@ -57,7 +56,6 @@
                     <td>{{ object.isoCode }}</td>
                 </tr>
             </table>
-        </div>
     </div>
 </div>
 {% endblock %}

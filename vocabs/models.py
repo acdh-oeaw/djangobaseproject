@@ -127,6 +127,9 @@ class SkosConceptScheme(models.Model):
 
         super(SkosConceptScheme, self).save(*args, **kwargs)
 
+    def dc_creator_as_list(self):
+        return self.dc_creator.split(';')
+
     @classmethod
     def get_listview_url(self):
         return reverse('vocabs:browse_schemes')

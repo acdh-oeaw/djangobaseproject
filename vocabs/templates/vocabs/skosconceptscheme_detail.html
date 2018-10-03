@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <div class="card">
-        <div class="card-header procustom-panel-heading">
+        <div class="card-header">
             <div class="row">
                 <div class="col-md-2">
                     {% if object.get_prev %}
@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-8">
                     <h1 style="text-align: center;">
-                        <small>SkosConceptScheme:</small> {{ object }}
+                        <small>skos:ConceptScheme</small> {{ object }}
                         {% if user.is_authenticated %}
                             <small>
                                 <a href="{% url 'vocabs:skosconceptscheme_update' pk=object.id %}">
@@ -42,16 +42,60 @@
             </div>
         </div>
     </div>
-        <div class="card-body">
-            <legend>
-                related concepts
-            </legend>
-                {% for x in object.has_concepts.all %}
-                    <li>
-                        <a href="{{ x.get_absolute_url }}">{{ x }}</a>
-                    </li>
-                {% endfor %}
-        </div>
+        <table class="table">
+        {% if object.dc_title %}
+        <tr>
+            <th>dc:title</th>
+            <td>{{object.dc_title}} {% if object.dc_title_lang %}@{{object.dc_title_lang}}{% endif %}</td>
+        </tr>
+        {% endif %}
+        {% if object.dc_creator %}
+        <tr>
+        <th>dc:creator</th>
+        <td>
+        {% for creator in object.dc_creator_as_list %}
+        <li>{{creator}}</li>
+        {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+        {% if object.dc_description %}
+        <tr>
+            <th>dc:description</th>
+            <td>{{object.dc_description}} {% if object.dc_description_lang %}@{{object.dc_description_lang}}{% endif %}</td>
+        </tr>
+        {% endif %}
+        {% if object.legacy_id %}
+        <tr>
+            <th>legacy ID</th>
+            <td>{{object.legacy_id}}</td>
+        </tr>
+        {% endif %}
+        {% if object.date_created %}
+         <tr>
+            <th>dct:created</th>
+            <td>{{object.date_created}}</td>
+        </tr>
+        {% endif %}
+        {% if object.date_modified %}
+         <tr>
+            <th>dct:modified</th>
+            <td>{{object.date_modified}}</td>
+        </tr>
+        {% endif %}
+        {% if object.has_concepts.all %}
+        <tr>
+        <th>concepts skos:inScheme</th>
+        <td>
+        {% for x in object.has_concepts.all %}
+            <li>
+                <a href="{{ x.get_absolute_url }}">{{ x }}</a>
+            </li>
+        {% endfor %}
+        </td>
+        <tr>
+        {% endif %}
+        </table>       
     </div>
 </div>
 {% endblock %}
