@@ -21,8 +21,14 @@ class SKOSRenderer(renderers.BaseRenderer):
 	media_type = 'text/xml'
 	format = 'rdf'
 
-	def render(self, data, media_type=None, renderer_context=None):
-		metadata = Metadata.objects.all()
+	def render(self, data, media_type=None, renderer_context=None):		
+		metadata = Metadata.objects.all().first()
+		if metadata:
+			pass
+		else:
+			metadata = Metadata.objects.create(
+				title="Provide some title"
+			)
 		g = rdflib.Graph()
 		SKOS = Namespace("http://www.w3.org/2004/02/skos/core#")
 		DC = Namespace("http://purl.org/dc/elements/1.1/")
@@ -43,7 +49,7 @@ class SKOSRenderer(renderers.BaseRenderer):
 			g.add((concept, SKOS.prefLabel, Literal(obj['pref_label'], lang=obj['pref_label_lang'])))
 			g.add((concept, SKOS.notation, Literal(obj['notation'])))
 			# test modelling fake main Schema relations
-			for x in metadata[:1]:
+			for x in [metadata]:
 				mainConceptScheme = URIRef(x.indentifier)
 				g.add((mainConceptScheme, RDF.type, SKOS.ConceptScheme))
 				g.add((mainConceptScheme, DC.title, Literal(x.title)))

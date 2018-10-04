@@ -3,8 +3,9 @@
 <div class="container">
 {% if object_list %}
 {% for x in object_list %}
-
- <h3>Metadata {{ x.title }}
+<div class="card">
+    <div class="card-header">
+        <h1 style="text-align: center;">Metadata {{ x.title }}
         {% if user.is_authenticated %}
             <small>
                 <a href="{% url 'vocabs:metadata_update' pk=x.id %}">
@@ -18,8 +19,8 @@
                 </a>
             </small>
          {% endif %}
-        </h3>
-
+        </h1>
+    </div>
         <table class="table">
         <tr>
         	<th>Title</th>
@@ -40,7 +41,7 @@
         <tr>
         	<th>Language</th>
         	<td>
-        	{% if x.language_as_list %}
+        	{% if x.language %}
         	{% for language in x.language_as_list %}
     		<li>{{ language }}</li>
 			{% endfor %}
@@ -54,23 +55,27 @@
         <tr>
         	<th>Creator</th>
         	<td>
-              {% for creator in x.creator_as_list %}
+            {% if x.creator %}
+            {% for creator in x.creator_as_list %}
             <li>{{ creator }}</li>
-            {% endfor %}    
+            {% endfor %}
+            {% endif %}    
             </td>
         </tr>
         <tr>
         	<th>Contributor</th>
         	<td>
+            {% if x.contributor %}
             {% for contributor in x.contributor_as_list %}
             <li>{{ contributor }}</li>
-            {% endfor %}  
+            {% endfor %}
+            {% endif %} 
             </td>
         </tr>
         <tr>
         	<th>Subject</th>
         	<td>
-        	{% if x.subject_as_list %}
+        	{% if x.subject %}
         	{% for subject in x.subject_as_list %}
     		<li>{{ subject }}</li>
 			{% endfor %}
@@ -102,7 +107,7 @@
         	<td>{{x.relation}}</td>
         </tr>
         </table>
-
+</div>
 {% endfor %}
 {% else %}
 <a class="btn btn-outline-primary" href="{% url 'vocabs:metadata_create' %}">create Metadata</a>

@@ -52,7 +52,7 @@ class MetadataUpdate(BaseUpdateView):
 class MetadataDelete(DeleteView):
     model = Metadata
     template_name = 'webpage/confirm_delete.html'
-    success_url = reverse_lazy('vocabs:metadata_list')
+    success_url = reverse_lazy('vocabs:metadata')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
