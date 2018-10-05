@@ -9,7 +9,7 @@ app_name = 'vocabs'
 urlpatterns = [
     url(
         r'^skoslabel-autocomplete/$', dal_views.SkosLabelAC.as_view(
-            model=SkosLabel, create_field='label',),
+            model=SkosLabel, create_field='name',),
         name='skoslabel-autocomplete',
     ),
     url(
@@ -21,7 +21,7 @@ urlpatterns = [
     url(
         r'^skoscollection-autocomplete/$', dal_views.SkosCollectionAC.as_view(
             model=SkosCollection,
-            create_field='label',),
+            create_field='name',),
         name='skoscollection-autocomplete',
     ),
     url(

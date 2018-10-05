@@ -98,9 +98,9 @@ class SkosConceptSchemeListFilter(django_filters.FilterSet):
 
 class SkosCollectionListFilter(django_filters.FilterSet):
 
-    label = django_filters.CharFilter(
+    name = django_filters.CharFilter(
         lookup_expr='icontains',
-        label=SkosCollection._meta.get_field('label').verbose_name
+        label=SkosCollection._meta.get_field('name').verbose_name
         )
     creator = django_filters.CharFilter(
         lookup_expr='icontains',
@@ -114,10 +114,10 @@ class SkosCollectionListFilter(django_filters.FilterSet):
 
 class SkosLabelListFilter(django_filters.FilterSet):
 
-    label = django_filters.CharFilter(
+    name = django_filters.CharFilter(
         lookup_expr='icontains',
-        help_text=SkosLabel._meta.get_field('label').help_text,
-        label=SkosLabel._meta.get_field('label').verbose_name
+        help_text=SkosLabel._meta.get_field('name').help_text,
+        label=SkosLabel._meta.get_field('name').verbose_name
         )
 
     class Meta:

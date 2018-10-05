@@ -73,7 +73,7 @@ class SkosLabelAC(autocomplete.Select2QuerySetView):
         qs = SkosLabel.objects.all()
 
         if self.q:
-            qs = qs.filter(label__icontains=self.q)
+            qs = qs.filter(name__icontains=self.q)
         return qs
 
 
@@ -115,6 +115,6 @@ class SkosCollectionAC(autocomplete.Select2QuerySetView):
         qs = SkosCollection.objects.all()
 
         if self.q:
-            qs = qs.filter(label__icontains=self.q)
+            qs = qs.filter(name__icontains=self.q)
 
         return qs

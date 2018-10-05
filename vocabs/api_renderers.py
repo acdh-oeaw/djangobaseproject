@@ -4,6 +4,7 @@ import rdflib
 from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef, RDFS, ConjunctiveGraph, XSD
 from rdflib.namespace import DC, FOAF, RDFS, SKOS
 from .models import *
+from django.core.exceptions import ValidationError
 
 
 class RDFRenderer(renderers.BaseRenderer):
@@ -82,8 +83,8 @@ class SKOSRenderer(renderers.BaseRenderer):
 					g.add((collection, RDF.type, SKOS.Collection))
 					g.add((collection, DCT.created, Literal(x['date_created'], datatype=XSD.dateTime)))
 					g.add((collection, DCT.modified, Literal(x['date_modified'], datatype=XSD.dateTime)))
-					if x['label']:
-						g.add((collection, SKOS.prefLabel, Literal(x['label'], lang=x['label_lang'])))
+					if x['name']:
+						g.add((collection, SKOS.prefLabel, Literal(x['name'], lang=x['label_lang'])))
 					if x['skos_scopenote']:
 						g.add((collection, SKOS.scopeNote, Literal(x['skos_scopenote'], lang=x['skos_scopenote_lang'])))
 					if x['creator']:
@@ -97,14 +98,14 @@ class SKOSRenderer(renderers.BaseRenderer):
 			if obj['other_label']:
 				for x in obj['other_label']:
 					if x['label_type'] == 'prefLabel':
-						g.add((concept, SKOS.prefLabel, Literal(x['label'], lang=x['isoCode'])))
+						g.add((concept, SKOS.prefLabel, Literal(x['name'], lang=x['isoCode'])))
 					elif x['label_type'] == 'altLabel':
-						g.add((concept, SKOS.altLabel, Literal(x['label'], lang=x['isoCode'])))
+						g.add((concept, SKOS.altLabel, Literal(x['name'], lang=x['isoCode'])))
 					elif x['label_type'] == 'hiddenLabel':
-						g.add((concept, SKOS.hiddenLabel, Literal(x['label'], lang=x['isoCode'])))
+						g.add((concept, SKOS.hiddenLabel, Literal(x['name'], lang=x['isoCode'])))
 					# if x['label_type'] is not set then we make it altLabel
 					else:
-						g.add((concept, SKOS.altLabel, Literal(x['label'], lang=x['isoCode'])))
+						g.add((concept, SKOS.altLabel, Literal(x['name'], lang=x['isoCode'])))
 			# modelling broader/narrower relationships
 			if obj['broader_concept']:
 				g.add((concept, SKOS.broader, URIRef(obj['broader_concept'][:-12])))

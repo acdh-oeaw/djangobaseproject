@@ -195,7 +195,7 @@ class SkosCollectionFormHelper(FormHelper):
         self.layout = Layout(
             Fieldset(
                 'Basic search options',
-                'label',
+                'name',
                 'creator',
                 css_id="basic_search_fields"
                 ),

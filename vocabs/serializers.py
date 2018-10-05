@@ -13,7 +13,7 @@ class SkosLabelSerializer(serializers.HyperlinkedModelSerializer):
     #url = serializers.HyperlinkedIdentityField(view_name='skoslabel-detail')
     class Meta:
         model = SkosLabel
-        fields = ('url', 'label', 'label_type', 'isoCode')
+        fields = ('url', 'name', 'label_type', 'isoCode')
 
 
 class SkosNamespaceSerializer(serializers.HyperlinkedModelSerializer):

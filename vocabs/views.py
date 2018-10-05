@@ -71,7 +71,7 @@ class SkosCollectionListView(GenericListView):
     formhelper_class = SkosCollectionFormHelper
     init_columns = [
         'id',
-        'label',
+        'name',
     ]
 
     def get_all_cols(self):
@@ -279,7 +279,7 @@ class SkosLabelListView(GenericListView):
     formhelper_class = SkosLabelFormHelper
     init_columns = [
         'id',
-        'label',
+        'name',
     ]
 
     def get_all_cols(self):

@@ -4,11 +4,11 @@ from vocabs.models import *
 
 
 class SkosLabelTable(tables.Table):
-    label = tables.LinkColumn('vocabs:skoslabel_detail', args=[A('pk')])
+    name = tables.LinkColumn('vocabs:skoslabel_detail', args=[A('pk')])
 
     class Meta:
         model = SkosLabel
-        sequence = ['id', 'label']
+        sequence = ['id', 'name']
         attrs = {"class": "table table-hover table-striped table-condensed"}
 
 
@@ -22,11 +22,11 @@ class SkosConceptSchemeTable(tables.Table):
 
 
 class SkosCollectionTable(tables.Table):
-    label = tables.LinkColumn('vocabs:skoscollection_detail', args=[A('pk')])
+    name = tables.LinkColumn('vocabs:skoscollection_detail', args=[A('pk')])
 
     class Meta:
         model = SkosCollection
-        sequence = ['id', 'label']
+        sequence = ['id', 'name']
         attrs = {"class": "table table-hover table-striped table-condensed"}
 
 

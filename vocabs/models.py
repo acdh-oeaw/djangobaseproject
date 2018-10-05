@@ -158,7 +158,7 @@ class SkosConceptScheme(models.Model):
 
 
 class SkosCollection(models.Model):
-    label = models.CharField(max_length=300, blank=True)
+    name = models.CharField(max_length=300, blank=True, verbose_name="Label")
     label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
     creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
     legacy_id = models.CharField(max_length=200, blank=True)
@@ -204,14 +204,15 @@ class SkosCollection(models.Model):
         return False
 
     def __str__(self):
-        return "{}".format(self.label)
+        return "{}".format(self.name)
 
     def creator_as_list(self):
         return self.creator.split(';')
 
 
 class SkosLabel(models.Model):
-    label = models.CharField(max_length=100, blank=True, help_text="The entities label or name.")
+    name = models.CharField(max_length=100, blank=True, help_text="The entities label or name.",
+        verbose_name="Label")
     label_type = models.CharField(
         max_length=30, blank=True, choices=LABEL_TYPES, help_text="The type of the label.")
     isoCode = models.CharField(
@@ -242,9 +243,9 @@ class SkosLabel(models.Model):
 
     def __str__(self):
         if self.label_type != "":
-            return "{} @{} ({})".format(self.label, self.isoCode, self.label_type)
+            return "{} @{} ({})".format(self.name, self.isoCode, self.label_type)
         else:
-            return "{} @{}".format(self.label, self.isoCode)
+            return "{} @{}".format(self.name, self.isoCode)
 
 
 class SkosConcept(models.Model):
