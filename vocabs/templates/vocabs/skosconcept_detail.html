@@ -228,6 +228,28 @@
         </td>
         </tr>
         {% endif %}
+<!-- skos:narrowMatch & skos:broadMatch -->
+        {% if object.skos_narrowmatch.all %}
+        <tr>
+        <th>skos:narrowMatch</th>
+        <td>
+            {% for x in object.skos_narrowmatch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+
+        {% if object.broadmatch.all %}
+        <tr>
+        <th>skos:broadMatch</th>
+        <td>
+            {% for x in object.broadmatch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
 <!-- skos:exactMatch & reverse -->
         {% if object.skos_exactmatch.all %}
         <tr>

@@ -295,6 +295,9 @@ class SkosConcept(models.Model):
     skos_broadmatch = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="narrowmatch"
     )
+    skos_narrowmatch = models.ManyToManyField(
+        'SkosConcept', blank=True, related_name="broadmatch"
+    )
     skos_exactmatch = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="exactmatch"
     )
