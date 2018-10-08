@@ -330,20 +330,49 @@ class SkosLabel(models.Model):
 
 
 class SkosConcept(models.Model):
-    pref_label = models.CharField(max_length=300, blank=True)
-    pref_label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    """
+    A SKOS concept can be viewed as an idea or notion; a unit of thought.
+    However, what constitutes a unit of thought is subjective,
+    and this definition is meant to be suggestive, rather than restrictive.
+
+    Miles, Alistair, and Sean Bechhofer. "SKOS simple knowledge
+    organization system reference. W3C recommendation (2009)."
+    """
+    pref_label = models.CharField(
+        max_length=300, blank=True,
+        verbose_name="skos:prefLabel",
+        help_text="Preferred label for a concept")
+    pref_label_lang = models.CharField(
+        max_length=3, blank=True,
+        verbose_name="skos:prefLabel language",
+        help_text="Language code of preferred label according to ISO 639-3",
+        default=DEFAULT_LANG)
     collection = models.ManyToManyField(
-        SkosCollection, blank=True, related_name="has_members"
+        SkosCollection, blank=True,
+        verbose_name="member of skos:Collection",
+        related_name="has_members"
     )
     scheme = models.ManyToManyField(
-        SkosConceptScheme, blank=True, related_name="has_concepts"
+        SkosConceptScheme, blank=True,
+        verbose_name="skos:ConceptScheme",
+        related_name="has_concepts"
     )
-    definition = models.TextField(blank=True)
-    definition_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    other_label = models.ManyToManyField(SkosLabel, blank=True)
-    notation = models.CharField(max_length=300, blank=True)
+    definition = models.TextField(
+        blank=True, verbose_name="skos:definition")
+    definition_lang = models.CharField(
+        max_length=3, blank=True,
+        verbose_name="skos:definition language",
+        default=DEFAULT_LANG)
+    other_label = models.ManyToManyField(
+        SkosLabel, blank=True,
+        help_text="select other labels that represent this concept")
+    notation = models.CharField(
+        max_length=300, blank=True,
+        verbose_name="skos:notation",
+        help_text="A notation is a unique string used to identify the concept in current vocabulary")
     namespace = models.ForeignKey(
-        SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
+        SkosNamespace, blank=True, null=True,
+        on_delete=models.SET_NULL
     )
     broader_concept = models.ForeignKey(
         'SkosConcept',
@@ -352,7 +381,8 @@ class SkosConcept(models.Model):
         related_name="narrower_concepts"
     )
     top_concept = models.BooleanField(
-        default=False, help_text="Is this concept a top concept of main concept scheme?"
+        default=False,
+        help_text="Is this concept a top concept of main concept scheme?"
         )
     same_as_external = models.TextField(
         blank=True,
