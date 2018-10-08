@@ -133,7 +133,7 @@ class SkosConceptSchemeForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = True
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-3'
+        self.helper.label_class = 'col-md-3 create-label'
         self.helper.field_class = 'col-md-9'
         self.helper.add_input(Submit('submit', 'save'),)
 

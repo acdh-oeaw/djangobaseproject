@@ -127,17 +127,38 @@ class SkosNamespace(models.Model):
 
 
 class SkosConceptScheme(models.Model):
-    dc_title = models.CharField(max_length=300, blank=True)
-    dc_title_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    """
+    A SKOS concept scheme can be viewed as an aggregation of one or more SKOS concepts.
+    Semantic relationships (links) between those concepts may also be viewed as part of a concept scheme.
+
+    Miles, Alistair, and Sean Bechhofer. "SKOS simple knowledge
+    organization system reference. W3C recommendation (2009)."
+    """
+    dc_title = models.CharField(
+        max_length=300, blank=True,
+        verbose_name="dc:title")
+    dc_title_lang = models.CharField(
+        max_length=3, blank=True,
+        verbose_name="dc:title language", default=DEFAULT_LANG)
     namespace = models.ForeignKey(
-        SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
+        SkosNamespace,
+        blank=True, null=True,
+        on_delete=models.SET_NULL
     )
-    dc_creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
-    dc_description = models.TextField(blank=True)
-    dc_description_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    legacy_id = models.CharField(max_length=200, blank=True)
-    date_created = models.DateTimeField(editable=False, default=timezone.now)
-    date_modified = models.DateTimeField(editable=False, default=timezone.now)
+    dc_creator = models.TextField(
+        blank=True, verbose_name="dc:creator",
+        help_text="If more than one list all using a semicolon ;")
+    dc_description = models.TextField(
+        blank=True, verbose_name="dc:description")
+    dc_description_lang = models.CharField(
+        max_length=3, blank=True,
+        verbose_name="dc:description language", default=DEFAULT_LANG)
+    legacy_id = models.CharField(
+        max_length=200, blank=True)
+    date_created = models.DateTimeField(
+        editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(
+        editable=False, default=timezone.now)
 
     def save(self, *args, **kwargs):
         if self.namespace is None:
