@@ -59,7 +59,7 @@ class SkosConceptSerializer(serializers.HyperlinkedModelSerializer):
             'source_description',
             'skos_broader', 'broader', 'skos_narrower', 'narrower',
             'skos_related', 'related',
-            'skos_broadmatch', 'narrowmatch',
+            'skos_broadmatch', 'narrowmatch', 'skos_narrowmatch', 'broadmatch',
             'skos_exactmatch', 'exactmatch', 'skos_closematch', 'closematch',
             'legacy_id',
             'skos_note', 'skos_note_lang', 'skos_scopenote', 'skos_scopenote_lang',

@@ -127,6 +127,12 @@ def graph_construct(results):
 		if obj['narrowmatch']:
 			for x in obj['narrowmatch']:
 				g.add((concept, SKOS.narrowMatch, URIRef(str(x[:-12]))))
+		if obj['skos_narrowmatch']:
+			for x in obj['skos_narrowmatch']:
+				g.add((concept, SKOS.narrowMatch, URIRef(str(x[:-12]))))
+		if obj['broadmatch']:
+			for x in obj['broadmatch']:
+				g.add((concept, SKOS.broadMatch, URIRef(str(x[:-12]))))
 		if obj['same_as_external']:
 			for i in obj['same_as_external'].split(';'):
 				g.add((concept, OWL.sameAs, URIRef(i.strip())))
