@@ -2,9 +2,10 @@ import os
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-
+from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.functional import cached_property
+from django.core.exceptions import ValidationError
 
 
 try:
@@ -20,7 +21,7 @@ except KeyError:
 try:
     DEFAULT_LANG = settings.VOCABS_SETTINGS['default_lang']
 except KeyError:
-    DEFAULT_LANG = "eng"
+    DEFAULT_LANG = "en"
 
 
 LABEL_TYPES = (
@@ -28,6 +29,66 @@ LABEL_TYPES = (
     ('altLabel', 'altLabel'),
     ('hiddenLabel', 'hiddenLabel'),
 )
+
+# limit number of created instances https://stackoverflow.com/a/6436008/7101197
+def validate_only_one_instance(obj):
+    model = obj.__class__
+    if (model.objects.count() > 0 and
+            obj.id != model.objects.get().id):
+        raise ValidationError("Can only create 1 %s instance" % model.__name__)
+
+
+class Metadata(models.Model):
+    """Class to collect metadata for Main Concept Scheme"""
+
+    title = models.CharField(max_length=300, blank=True)
+    indentifier = models.URLField(blank=True, default=DEFAULT_NAMESPACE)
+    description = models.TextField(blank=True)
+    description_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    language = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    version = models.CharField(max_length=300, blank=True)
+    creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    contributor = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    subject = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    owner = models.CharField(max_length=300, blank=True, help_text="Organisation or Person")
+    license = models.CharField(max_length=300, blank=True)
+    date_created = models.DateTimeField(editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(editable=False, default=timezone.now)
+    date_issued = models.DateField(blank=True, null=True, help_text="YYYY-MM-DD")
+    relation = models.URLField(blank=True,
+        help_text="e.g. in case of relation to a project, add link to a project website")
+
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.date_created = timezone.now()
+        self.date_modified = timezone.now()
+        return super(Metadata, self).save(*args, **kwargs)
+
+    @classmethod
+    def get_listview_url(self):
+        return reverse('vocabs:metadata')
+
+    def __str__(self):
+        return "{}".format(self.title)
+
+    def get_absolute_url(self):
+        return reverse('vocabs:metadata_detail', kwargs={'pk': self.id})
+
+    def subject_as_list(self):
+        return self.subject.split(';')
+
+    def language_as_list(self):
+        return self.language.split(';')
+
+    def creator_as_list(self):
+        return self.creator.split(';')
+
+    def contributor_as_list(self):
+        return self.contributor.split(';')
+
+    def clean(self):
+        validate_only_one_instance(self)
 
 
 class SkosNamespace(models.Model):
@@ -40,11 +101,16 @@ class SkosNamespace(models.Model):
 
 class SkosConceptScheme(models.Model):
     dc_title = models.CharField(max_length=300, blank=True)
+    dc_title_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
     namespace = models.ForeignKey(
         SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
     )
-    dct_creator = models.URLField(blank=True)
+    dc_creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    dc_description = models.TextField(blank=True)
+    dc_description_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
     legacy_id = models.CharField(max_length=200, blank=True)
+    date_created = models.DateTimeField(editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(editable=False, default=timezone.now)
 
     def save(self, *args, **kwargs):
         if self.namespace is None:
@@ -54,7 +120,15 @@ class SkosConceptScheme(models.Model):
             self.namespace = temp_namespace
         else:
             pass
+
+        if not self.id:
+            self.date_created = timezone.now()
+        self.date_modified = timezone.now()
+
         super(SkosConceptScheme, self).save(*args, **kwargs)
+
+    def dc_creator_as_list(self):
+        return self.dc_creator.split(';')
 
     @classmethod
     def get_listview_url(self):
@@ -83,8 +157,62 @@ class SkosConceptScheme(models.Model):
         return "{}:{}".format(self.namespace, self.dc_title)
 
 
+class SkosCollection(models.Model):
+    name = models.CharField(max_length=300, blank=True, verbose_name="Label")
+    label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    legacy_id = models.CharField(max_length=200, blank=True)
+    # documentation properties
+    skos_note = models.CharField(max_length=500, blank=True)
+    skos_note_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    skos_scopenote = models.TextField(blank=True)
+    skos_scopenote_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    skos_changenote = models.CharField(max_length=500, blank=True)
+    skos_editorialnote = models.CharField(max_length=500, blank=True)
+    skos_example = models.CharField(max_length=500, blank=True)
+    skos_historynote = models.CharField(max_length=500, blank=True)
+    date_created = models.DateTimeField(editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(editable=False, default=timezone.now)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.date_created = timezone.now()
+        self.date_modified = timezone.now()
+        return super(SkosCollection, self).save(*args, **kwargs)
+
+    @classmethod
+    def get_listview_url(self):
+        return reverse('vocabs:browse_skoscollections')
+
+    @classmethod
+    def get_createview_url(self):
+        return reverse('vocabs:skoscollection_create')
+
+    def get_absolute_url(self):
+        return reverse('vocabs:skoscollection_detail', kwargs={'pk': self.id})
+
+    def get_next(self):
+        next = SkosCollection.objects.filter(id__gt=self.id)
+        if next:
+            return next.first().id
+        return False
+
+    def get_prev(self):
+        prev = SkosCollection.objects.filter(id__lt=self.id).order_by('-id')
+        if prev:
+            return prev.first().id
+        return False
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+    def creator_as_list(self):
+        return self.creator.split(';')
+
+
 class SkosLabel(models.Model):
-    label = models.CharField(max_length=100, blank=True, help_text="The entities label or name.")
+    name = models.CharField(max_length=100, blank=True, help_text="The entities label or name.",
+        verbose_name="Label")
     label_type = models.CharField(
         max_length=30, blank=True, choices=LABEL_TYPES, help_text="The type of the label.")
     isoCode = models.CharField(
@@ -115,29 +243,45 @@ class SkosLabel(models.Model):
 
     def __str__(self):
         if self.label_type != "":
-            return "{} @{} ({})".format(self.label, self.isoCode, self.label_type)
+            return "{} @{} ({})".format(self.name, self.isoCode, self.label_type)
         else:
-            return "{} @{}".format(self.label, self.isoCode)
+            return "{} @{}".format(self.name, self.isoCode)
 
 
 class SkosConcept(models.Model):
     pref_label = models.CharField(max_length=300, blank=True)
     pref_label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    collection = models.ManyToManyField(
+        SkosCollection, blank=True, related_name="has_members"
+    )
     scheme = models.ManyToManyField(
         SkosConceptScheme, blank=True, related_name="has_concepts"
     )
     definition = models.TextField(blank=True)
     definition_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    label = models.ManyToManyField(SkosLabel, blank=True)
+    other_label = models.ManyToManyField(SkosLabel, blank=True)
     notation = models.CharField(max_length=300, blank=True)
     namespace = models.ForeignKey(
         SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
     )
     broader_concept = models.ForeignKey(
-        'SkosConcept', help_text="Broader Term.",
+        'SkosConcept',
         verbose_name="Broader Term",
         blank=True, null=True, on_delete=models.SET_NULL,
         related_name="narrower_concepts"
+    )
+    top_concept = models.BooleanField(
+        default=False, help_text="Is this concept a top concept of main concept scheme?"
+        )
+    same_as_external = models.TextField(
+        blank=True,
+        verbose_name="URL of external Concept with the same meaning",
+        help_text="If more than one list all using a semicolon ;",
+    )
+    source_description = models.TextField(
+        blank=True,
+        verbose_name="Source",
+        help_text="A verbose description of the concept's source"
     )
     skos_broader = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="narrower"
@@ -149,10 +293,13 @@ class SkosConcept(models.Model):
         'SkosConcept', blank=True, related_name="related"
     )
     skos_broadmatch = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="broadmatch"
+        'SkosConcept', blank=True, related_name="narrowmatch"
     )
     skos_exactmatch = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="exactmatch"
+    )
+    skos_relatedmatch = models.ManyToManyField(
+        'SkosConcept', blank=True, related_name="relatedmatch"
     )
     skos_closematch = models.ManyToManyField(
         'SkosConcept', blank=True, related_name="closematch"
@@ -165,6 +312,19 @@ class SkosConcept(models.Model):
         "is sub-class of" vs. "is super-class of".',
         blank=True
     )
+    # documentation properties
+    skos_note = models.CharField(max_length=500, blank=True)
+    skos_note_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    skos_scopenote = models.TextField(blank=True)
+    skos_scopenote_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
+    skos_changenote = models.CharField(max_length=500, blank=True)
+    skos_editorialnote = models.CharField(max_length=500, blank=True)
+    skos_example = models.CharField(max_length=500, blank=True)
+    skos_historynote = models.CharField(max_length=500, blank=True)
+    dc_creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    date_created = models.DateTimeField(editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(editable=False, default=timezone.now)
+
 
     def get_broader(self):
         broader = self.skos_broader.all()
@@ -177,6 +337,9 @@ class SkosConcept(models.Model):
         narrower_reverse = SkosConcept.objects.filter(skos_broader=self)
         all_narrower = set(list(narrower)+list(narrower_reverse))
         return all_narrower
+
+    def get_vocabs_uri(self):
+        return "{}{}".format("https://whatever", self.get_absolute_url)
 
     @property
     def all_schemes(self):
@@ -200,7 +363,16 @@ class SkosConcept(models.Model):
             self.namespace = temp_namespace
         else:
             pass
+
+        if not self.id:
+            self.date_created = timezone.now()
+        self.date_modified = timezone.now()
+
         super(SkosConcept, self).save(*args, **kwargs)
+
+    def dc_creator_as_list(self):
+        return self.dc_creator.split(';')
+
 
     @cached_property
     def label(self):

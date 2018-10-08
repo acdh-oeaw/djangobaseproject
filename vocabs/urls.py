@@ -2,7 +2,7 @@ from django.conf.urls import url
 from . import views
 from . import import_views
 from . import dal_views
-from .models import SkosLabel, SkosConcept, SkosConceptScheme
+from .models import SkosLabel, SkosConcept, SkosConceptScheme, Metadata
 
 app_name = 'vocabs'
 
@@ -45,5 +45,37 @@ urlpatterns = [
         r'^skoslabel/delete/(?P<pk>[0-9]+)$',
         views.SkosLabelDelete.as_view(),
         name='skoslabel_delete',
+    ),
+    url(
+        r'^metadata/$', views.MetadataListView.as_view(),
+        name='metadata'),
+    url(
+        r'^metadata/(?P<pk>[0-9]+)$', views.MetadataDetailView.as_view(),
+        name='metadata_detail'),
+    url(
+        r'^metadata/create/$', views.MetadataCreate.as_view(),
+        name='metadata_create'),
+    url(
+        r'^metadata/update/(?P<pk>[0-9]+)$', views.MetadataUpdate.as_view(),
+        name='metadata_update'),
+    url(
+        r'^metadata/delete/(?P<pk>[0-9]+)$', views.MetadataDelete.as_view(),
+        name='metadata_delete',
+    ),
+     url(
+        r'^collection/$', views.SkosCollectionListView.as_view(),
+        name='browse_skoscollections'),
+    url(
+        r'^collection/(?P<pk>[0-9]+)$', views.SkosCollectionDetailView.as_view(),
+        name='skoscollection_detail'),
+    url(
+        r'^collection/create/$', views.SkosCollectionCreate.as_view(),
+        name='skoscollection_create'),
+    url(
+        r'^collection/update/(?P<pk>[0-9]+)$', views.SkosCollectionUpdate.as_view(),
+        name='skoscollection_update'),
+    url(
+        r'^collection/delete/(?P<pk>[0-9]+)$',views.SkosCollectionDelete.as_view(),
+        name='skoscollection_delete',
     ),
 ]

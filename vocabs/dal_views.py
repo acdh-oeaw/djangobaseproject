@@ -1,5 +1,5 @@
 from dal import autocomplete
-from .models import SkosLabel, SkosConcept, SkosConceptScheme
+from .models import SkosLabel, SkosConcept, SkosConceptScheme, SkosCollection
 from django.db.models import Q
 
 
@@ -73,7 +73,7 @@ class SkosLabelAC(autocomplete.Select2QuerySetView):
         qs = SkosLabel.objects.all()
 
         if self.q:
-            qs = qs.filter(label__icontains=self.q)
+            qs = qs.filter(name__icontains=self.q)
         return qs
 
 
@@ -106,5 +106,15 @@ class SkosConceptSchemeAC(autocomplete.Select2QuerySetView):
 
         if self.q:
             qs = qs.filter(dc_title__icontains=self.q)
+
+        return qs
+
+
+class SkosCollectionAC(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = SkosCollection.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
 
         return qs

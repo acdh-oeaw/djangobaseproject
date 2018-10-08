@@ -102,7 +102,7 @@ class Csv2SkosImporter(Csv2SkosReader):
             # crete 1st order
             try:
                 temp_label, _ = SkosLabel.objects.get_or_create(
-                    label=x['concept']['alt_label'],
+                    name=x['concept']['alt_label'],
                     label_type='altLabel',
                     isoCode=x['concept']['alt_label_lang']
                 )
@@ -120,7 +120,7 @@ class Csv2SkosImporter(Csv2SkosReader):
                 # crete 2st order
                 try:
                     temp_label, _ = SkosLabel.objects.get_or_create(
-                        label=second['alt_label'],
+                        name=second['alt_label'],
                         label_type='altLabel',
                         isoCode=second['alt_label_lang']
                     )
@@ -289,7 +289,7 @@ class SkosImporter(SkosReader):
 
                 for y in x['pref_labels'][1:]:
                     temp_label, _ = SkosLabel.objects.get_or_create(
-                        label=y["text"],
+                        name=y["text"],
                         isoCode=y["lang"],
                         label_type="prefLabel"
                     )
@@ -298,7 +298,7 @@ class SkosImporter(SkosReader):
 
                 for y in x['alt_labels'][1:]:
                     temp_label, _ = SkosLabel.objects.get_or_create(
-                        label=y["text"],
+                        name=y["text"],
                         isoCode=y["lang"],
                         label_type="altLabel"
                     )

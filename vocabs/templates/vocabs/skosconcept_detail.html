@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <div class="card">
-        <div class="card-header procustom-panel-heading">
+        <div class="card-header">
             <div class="row">
                 <div class="col-md-2">
                     {% if object.get_prev %}
@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-md-8">
                     <h1 style="text-align: center;">
-                        <small>SkosConcept:</small> {{ object }}
+                        <small>skos:Concept</small> {{ object }}
                         {% if user.is_authenticated %}
                             <small>
                                 <a href="{% url 'vocabs:skosconcept_update' pk=object.id %}">
@@ -43,130 +43,301 @@
             </div>
         </div>
     </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="card">
-                        <div class="card-header">skos:broader</div>
-                        <div class="card-body">
-                            <h3>{{ object.broader_concept }}</h3>
-                            {% for x in object.get_broader %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">skos:related</div>
-                        <div class="card-body">
-                            {% for x in object.skos_related.all %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">skos:broadMatch</div>
-                        <div class="card-body">
-                            {% for x in object.skos_broadmatch.all %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">skos:closeMatch</div>
-                        <div class="card-body">
-                            {% for x in object.skos_closematch.all %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
-                            {% endfor %}
-                            {% for x in object.closematch.all %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">skos:exactMatch</div>
-                        <div class="card-body">
-                            {% for x in object.skos_exactmatch.all %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-8">
-                    <div class="card">
+        
+        <table class="table">
+        <tr>
+            <th>skos:prefLabel</th>
+            <td>{{ object.pref_label }} @{{ object.pref_label_lang }}</td>
+        </tr>
+        {% if object.other_label.all %}
+        {% for x in object.other_label.all %}
+            <tr>
+                <th>skos:{{x.label_type}}</th>
+                <td>                  
+                {{ x.name }}  @{{x.isoCode}}                 
+                </td>
+            </tr>
+        {% endfor %}
+        {% endif %}
+        {% if object.definition %}
+        <tr>
+            <th>skos:definition</th>
+            <td>{{ object.definition }} {% if object.definition_lang %}@{{object.definition_lang}}{% endif %}</td>
+        </tr>
+        {% endif %}
+        {% if object.notation %}
+        <tr>
+        <th>skos:notation</th>
+        <td>{{object.notation}}</td>
+        </tr>
+        {% endif %}
+        {% if object.collection.all %}
+        <tr>
+        <th>member of skos:Collection</th>
+        <td>
+            {% for x in object.collection.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+        {% if object.scheme.all %}
+        <tr>
+        <th>skos:inScheme</th>
+        <td>
+            {% for x in object.scheme.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+        {% if object.dc_creator %}
+        <tr>
+        <th>dc:creator</th>
+        <td>
+        {% for creator in object.dc_creator_as_list %}
+        <li>{{creator}}</li>
+        {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+        {% if object.date_created %}
+         <tr>
+            <th>dct:created</th>
+            <td>{{object.date_created}}</td>
+        </tr>
+        {% endif %}
+        {% if object.date_modified %}
+         <tr>
+            <th>dct:modified</th>
+            <td>{{object.date_modified}}</td>
+        </tr>
+        {% endif %}
+        {% if object.top_concept == True %}
+        <tr>
+            <th>top Concept</th>
+            <td>Yes</td>
+        </tr>
+        {% endif %}
+<!-- Mapping relationships -->
+        {% if object.broader_concept %}
+        <tr>
+        <th>skos:broader</th>
+        <td>
+        <a href="{{ object.broader_concept.get_absolute_url }}">
+        {{object.broader_concept}}
+        </a>
+        </td>
+        </tr>
+        {% endif %}
+        {% if object.narrower_concepts.all %}
+        <tr>
+        <th>skos:narrower</th>
+        <td>
+            {% for x in object.narrower_concepts.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+<!-- skos:broader & skos:narrower -->
+        {% if object.skos_broader.all %}
+        <tr>
+        <th>skos:broader</th>
+        <td>
+            {% for x in object.skos_broader.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
 
-                        <div class="card-body">
-                            <legend>about</legend>
-                            <table class="table table-bordered table-striped table-hover">
-                                <tr>
-                                    <td>skos:prefLabel| @{{ object.pref_label_lang }}</td>
-                                    <td>{{ object.pref_label }} </td>
-                                </tr>
-                                {% if object.definition %}
-                                    <tr>
-                                        <td>skos:definition | @{{ object.definition_lang }}</td>
-                                        <td>{{ object.definition }}</td>
-                                    </tr>
-                                {% endif %}
-                                {% if object.scheme.all %}
-                                    <tr>
-                                        <td>skos:inScheme</td>
-                                        <td>
-                                            {% for x in object.scheme.all %}
-                                                <a href="{{ x.get_absolute_url }}">{{ x }}</a>
-                                                {% if user.is_authenticated %}
-                                                    <a href="{% url 'vocabs:skosconceptscheme_update' pk=x.id %}">
-                                                        <i class="far fa-edit" title="edit"></i>
-                                                    </a>
-                                                {% endif %}<br/>
-                                            {% endfor %}
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                                {% if object.name_reverse %}
-                                    <tr>
-                                        <tr>
-                                            <td>Reverse Name</td>
-                                            <td>
-                                                {{ object.name_reverse }}
-                                            </td>
-                                        </tr>
-                                        <td>Labels</td>
-                                        <td>
-                                            {% for x in object.label.all %} {{ x }}
-                                                {% if user.is_authenticated %}
-                                                    <a href="{% url 'vocabs:skoslabel_update' pk=x.id %}">
-                                                        <i class="far fa-edit" title="edit"></i>
-                                                    </a>
-                                                {% endif %}<br />
-                                            {% endfor %}
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                                {% if object.legacy_id %}
-                                    <tr>
-                                        <td>legacy id</td>
-                                        <td>{{ object.legacy_id }}</td>
-                                    </tr>
-                                {% endif %}
-                            </table>
-                            <legend>
-                                related concepts
-                            </legend>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="card">
-                        <div class="card-header">skos:narrower</div>
-                        <div class="card-body">
-                            {% for x in object.narrower_concepts.all %}
-                                <a href="{% url 'vocabs:skosconcept_detail' pk=x.id %}">{{ x }}</a> <br/>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% if object.narrower.all %}
+        <tr>
+        <th>skos:narrower</th>
+        <td>
+            {% for x in object.narrower.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+<!-- skos:narrower & skos:broader -->
+        {% if object.skos_narrower.all %}
+        <tr>
+        <th>skos:narrower</th>
+        <td>
+            {% for x in object.skos_narrower.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+
+        {% if object.broader.all %}
+        <tr>
+        <th>skos:broader</th>
+        <td>
+            {% for x in object.broader.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+<!-- skos:related & reverse -->
+        {% if object.skos_related.all %}
+        <tr>
+        <th>skos:related</th>
+        <td>
+            {% for x in object.skos_related.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+
+        {% if object.related.all %}
+        <tr>
+        <th>skos:related</th>
+        <td>
+            {% for x in object.related.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+<!-- skos:broadMatch & skos:narrowMatch -->
+        {% if object.skos_broadmatch.all %}
+        <tr>
+        <th>skos:broadMatch</th>
+        <td>
+            {% for x in object.skos_broadmatch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+
+        {% if object.narrowmatch.all %}
+        <tr>
+        <th>skos:narrowMatch</th>
+        <td>
+            {% for x in object.narrowmatch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+<!-- skos:exactMatch & reverse -->
+        {% if object.skos_exactmatch.all %}
+        <tr>
+        <th>skos:exactMatch</th>
+        <td>
+            {% for x in object.skos_exactmatch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+
+        {% if object.exactmatch.all %}
+        <tr>
+        <th>skos:exactMatch</th>
+        <td>
+            {% for x in object.exactmatch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+<!-- skos:relatedMatch & reverse -->
+        {% if object.skos_relatedmatch.all %}
+        <tr>
+        <th>skos:relatedMatch</th>
+        <td>
+            {% for x in object.skos_relatedmatch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+
+        {% if object.relatedmatch.all %}
+        <tr>
+        <th>skos:relatedMatch</th>
+        <td>
+            {% for x in object.relatedmatch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+<!-- skos:closeMatch & reverse -->
+        {% if object.skos_closematch.all %}
+        <tr>
+        <th>skos:closeMatch</th>
+        <td>
+            {% for x in object.skos_closematch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+
+        {% if object.closematch.all %}
+        <tr>
+        <th>skos:closeMatch</th>
+        <td>
+            {% for x in object.closematch.all %}
+            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+<!-- skos documentation properties -->
+        {% if object.skos_note %}
+        <tr>
+            <th>skos:note</th>
+            <td>{{object.skos_note}} {% if object.skos_note_lang %}@{{object.skos_note_lang}}{% endif %}</td>
+        </tr>
+        {% endif %}
+<!-- skos:scopeNote -->
+        {% if object.skos_scopenote %}
+        <tr>
+            <th>skos:scopeNote</th>
+            <td>{{object.skos_scopenote}} {% if object.skos_note_lang %}@{{object.skos_scopenote_lang}}{% endif %}</td>
+        </tr>
+        {% endif %}
+<!-- skos:changeNote -->
+        {% if object.skos_changenote %}
+        <tr>
+            <th>skos:changeNote</th>
+            <td>{{object.skos_changenote}}</td>
+        </tr>
+        {% endif %}
+<!-- skos:editorialNote -->
+        {% if object.skos_editorialnote %}
+        <tr>
+            <th>skos:editorialNote</th>
+            <td>{{object.skos_editorialnote}}</td>
+        </tr>
+        {% endif %}
+<!-- skos:historyNote -->
+        {% if object.skos_historynote %}
+        <tr>
+            <th>skos:historyNote</th>
+            <td>{{object.skos_historynote}}</td>
+        </tr>
+        {% endif %}
+<!-- skos:example -->
+        {% if object.skos_example %}
+        <tr>
+            <th>skos:example</th>
+            <td>{{object.skos_example}}</td>
+        </tr>
+        {% endif %} 
+        </table>    
+        
     </div>
 </div>
 {% endblock content %}

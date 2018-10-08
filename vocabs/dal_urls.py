@@ -2,14 +2,14 @@ from django.conf.urls import url
 from django.urls import path
 from . import views
 from . import dal_views
-from .models import SkosLabel, SkosConcept, SkosConceptScheme
+from .models import SkosLabel, SkosConcept, SkosConceptScheme, SkosCollection
 
 app_name = 'vocabs'
 
 urlpatterns = [
     url(
         r'^skoslabel-autocomplete/$', dal_views.SkosLabelAC.as_view(
-            model=SkosLabel, create_field='label',),
+            model=SkosLabel, create_field='name',),
         name='skoslabel-autocomplete',
     ),
     url(
@@ -17,6 +17,12 @@ urlpatterns = [
             model=SkosConceptScheme,
             create_field='dc_title',),
         name='skosconceptscheme-autocomplete',
+    ),
+    url(
+        r'^skoscollection-autocomplete/$', dal_views.SkosCollectionAC.as_view(
+            model=SkosCollection,
+            create_field='name',),
+        name='skoscollection-autocomplete',
     ),
     url(
         r'^skosconcept-autocomplete/$', dal_views.SpecificConcepts.as_view(
