@@ -42,20 +42,47 @@ class Metadata(models.Model):
     """Class to collect metadata for Main Concept Scheme"""
 
     title = models.CharField(max_length=300, blank=True)
-    indentifier = models.URLField(blank=True, default=DEFAULT_NAMESPACE)
-    description = models.TextField(blank=True)
-    description_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    language = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
-    version = models.CharField(max_length=300, blank=True)
-    creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
-    contributor = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
-    subject = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
-    owner = models.CharField(max_length=300, blank=True, help_text="Organisation or Person")
-    license = models.CharField(max_length=300, blank=True)
-    date_created = models.DateTimeField(editable=False, default=timezone.now)
-    date_modified = models.DateTimeField(editable=False, default=timezone.now)
-    date_issued = models.DateField(blank=True, null=True, help_text="YYYY-MM-DD")
-    relation = models.URLField(blank=True,
+    indentifier = models.URLField(
+        blank=True, default=DEFAULT_NAMESPACE, help_text="URI")
+    description = models.TextField(
+        blank=True, help_text="Description of current vocabulary")
+    description_lang = models.CharField(
+        max_length=3, blank=True, default=DEFAULT_LANG,
+        verbose_name="Description language")
+    language = models.TextField(
+        blank=True,
+        help_text="If more than one list all using a semicolon ;")
+    version = models.CharField(
+        max_length=300, blank=True,
+        help_text="Current version")
+    creator = models.TextField(
+        blank=True,
+        help_text="A Person or Organisation responsible for making the vocabulary<br>"
+        "If more than one list all using a semicolon ;")
+    contributor = models.TextField(
+        blank=True,
+        help_text="A Person or Organisation that made contributions to the vocabulary<br>"
+        "If more than one list all using a semicolon ;")
+    subject = models.TextField(
+        blank=True,
+        help_text="The subject of the vocabulary<br>"
+        "If more than one list all using a semicolon ;")
+    owner = models.CharField(
+        max_length=300, blank=True,
+        help_text="A Person or Organisation that own rights for the vocabulary")
+    license = models.CharField(
+        max_length=300, blank=True,
+        help_text="A license applied to the vocabulary"
+        )
+    date_created = models.DateTimeField(
+        editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(
+        editable=False, default=timezone.now)
+    date_issued = models.DateField(
+        blank=True, null=True,
+        help_text="Date of official resource publication<br>YYYY-MM-DD")
+    relation = models.URLField(
+        blank=True,
         help_text="e.g. in case of relation to a project, add link to a project website")
 
 
