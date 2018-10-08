@@ -21,8 +21,7 @@ def nav_menu(app=None):
                 item = {
                     'name': modelname.title(),
                 }
-            except Exception as e:
-                print(error)
+            except:
                 item = {
                     'name': None
                 }
@@ -34,22 +33,20 @@ def nav_menu(app=None):
         return result
 
 
-@register.inclusion_tag('browsing/tags/class_definition.html', takes_context=True)
+@register.inclusion_tag('webpage/tags/class_definition.html', takes_context=True)
 def class_definition(context):
     values = {}
     try:
         values['class_name'] = context['class_name']
         values['docstring'] = context['docstring']
-    except Exception as e:
-        print(error)
+    except:
         pass
     return values
 
 
-@register.inclusion_tag('browsing/tags/column_selector.html', takes_context=True)
+@register.inclusion_tag('webpage/tags/column_selector.html', takes_context=True)
 def column_selector(context):
     try:
         return {'columns': context['togglable_colums']}
-    except Exception as e:
-        print(error)
+    except:
         return {'columns': None}

@@ -19,8 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(os.path.join(__file__
 
 INSTALLED_APPS = [
     'dal',
-    'dal_select2',
     'django.contrib.admin',
+    'dal_select2',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'arche',
 ]
 
-CRISPY_TEMPLATE_PACK = "bootstrap3"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'webpage.webpage_content_processors.installed_apps',
                 'webpage.webpage_content_processors.is_dev_version',
+                'webpage.webpage_content_processors.get_db_name',
             ],
         },
     },
@@ -102,7 +103,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 

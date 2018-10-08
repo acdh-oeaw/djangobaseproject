@@ -1,38 +1,33 @@
 import datetime
+import django_tables2
 import time
 import pandas as pd
 import django_filters
+
+from django.apps import apps
 from django.conf import settings
 from django.db.models.fields.related import ManyToManyField
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div, MultiField, HTML
-from django_tables2 import SingleTableView, RequestConfig
+
 from . models import BrowsConf
 
-if 'bib' in settings.INSTALLED_APPS:
+if 'charts' in settings.INSTALLED_APPS:
     from charts.models import ChartConfig
     from charts.views import create_payload
 
 
-def model_to_dict(instance):
-    """
-    serializes a model.object to dict, including non editable fields as well as
-    ManyToManyField fields
-    Taken from https://stackoverflow.com/questions/21925671/
-    """
-    opts = instance._meta
-    data = {}
-    for f in opts.concrete_fields + opts.many_to_many:
-        if isinstance(f, ManyToManyField):
-            if instance.pk is None:
-                data[f.name] = []
-            else:
-                data[f.name] = list(f.value_from_object(instance).values_list('pk', flat=True))
-        else:
-            data[f.name] = f.value_from_object(instance)
-    return data
+def get_entities_table(model_class):
+
+    class GenericEntitiesTable(django_tables2.Table):
+        id = django_tables2.LinkColumn()
+
+        class Meta:
+            model = model_class
+            attrs = {"class": "table table-hover table-striped table-condensed"}
+    return GenericEntitiesTable
 
 
 class GenericFilterFormHelper(FormHelper):
@@ -63,7 +58,7 @@ django_filters.filters.LOOKUP_TYPES = [
 ]
 
 
-class GenericListView(SingleTableView):
+class GenericListView(django_tables2.SingleTableView):
     filter_class = None
     formhelper_class = None
     context_filter_name = 'filter'
@@ -71,8 +66,20 @@ class GenericListView(SingleTableView):
     template_name = 'browsing/generic_list.html'
     init_columns = []
 
+    def get_table_class(self):
+        if self.table_class:
+            return self.table_class
+        else:
+            return get_entities_table(self.model)
+
+        raise ImproperlyConfigured(
+            "You must either specify {0}.table_class or {0}.model".format(type(self).__name__)
+        )
+
     def get_all_cols(self):
-        all_cols = list(self.table_class.base_columns.keys())
+        print('get_table')
+        print(self.get_table().base_columns.keys())
+        all_cols = list(self.get_table().base_columns.keys())
         return all_cols
 
     def get_queryset(self, **kwargs):
@@ -83,10 +90,8 @@ class GenericListView(SingleTableView):
 
     def get_table(self, **kwargs):
         table = super(GenericListView, self).get_table()
-        RequestConfig(self.request, paginate={
-            'page': 1, 'per_page': self.paginate_by}).configure(table)
         default_cols = self.init_columns
-        all_cols = self.get_all_cols()
+        all_cols = table.base_columns.keys()
         selected_cols = self.request.GET.getlist("columns") + default_cols
         exclude_vals = [x for x in all_cols if x not in selected_cols]
         table.exclude = exclude_vals
@@ -124,7 +129,7 @@ class GenericListView(SingleTableView):
             .values_list('field_path', 'label')
         )
         print(context['conf_items'])
-        if 'bib' in settings.INSTALLED_APPS:
+        if 'charts' in settings.INSTALLED_APPS:
             context['vis_list'] = ChartConfig.objects.filter(model_name=model_name)
             context['property_name'] = self.request.GET.get('property')
             context['charttype'] = self.request.GET.get('charttype')
@@ -156,7 +161,9 @@ class GenericListView(SingleTableView):
                         columns=[x[1] for x in conf_items]
                     )
                 except AssertionError:
-                    response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(filename)
+                    response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(
+                        filename
+                    )
                     return response
             else:
                 response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(filename)
@@ -204,3 +211,61 @@ class BaseUpdateView(UpdateView):
         else:
             context['class_name'] = "{}s".format(self.model.__name__)
         return context
+
+
+def model_to_dict(instance):
+    """
+    serializes a model.object to dict, including non editable fields as well as
+    ManyToManyField fields
+    Taken from https://stackoverflow.com/questions/21925671/
+    """
+    opts = instance._meta
+    data = {}
+    for f in opts.concrete_fields + opts.many_to_many:
+        if isinstance(f, ManyToManyField):
+            if instance.pk is None:
+                data[f.name] = []
+            else:
+                try:
+                    data[f.name] = list(f.value_from_object(instance).values_list('pk', flat=True))
+                except Exception as e:
+                    print(e)
+                    data[f.name] = []
+        else:
+            data[f.name] = f.value_from_object(instance)
+    return data
+
+
+def create_brows_config_obj(app_name, exclude_fields=[]):
+    """
+    Creates BrowsConf objects for all models defined in chosen app
+    """
+    exclude = exclude_fields
+    try:
+        models = [x for x in apps.get_app_config(app_name).get_models()]
+    except LookupError:
+        print("The app '{}' does not exist".format(app_name))
+        return False
+
+    for x in models:
+        model_name = "{}".format(x.__name__.lower())
+        print("Model: {}".format(model_name))
+        for f in x._meta.get_fields(include_parents=False):
+            if f.name not in exclude:
+                field_name = f.name
+                verbose_name = getattr(f, 'verbose_name', f.name)
+                help_text = getattr(f, 'help_text', 'no helptext')
+                print("{}: {} ({})".format(
+                    model_name,
+                    field_name,
+                    help_text
+                    )
+                )
+                brc, _ = BrowsConf.objects.get_or_create(
+                    model_name=model_name,
+                    field_path=field_name,
+                )
+                brc.label = verbose_name
+                brc.save()
+            else:
+                print("skipped: {}".format(f.name))
