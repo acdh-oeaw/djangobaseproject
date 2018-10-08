@@ -185,21 +185,54 @@ class SkosConceptScheme(models.Model):
 
 
 class SkosCollection(models.Model):
-    name = models.CharField(max_length=300, blank=True, verbose_name="Label")
-    label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
-    legacy_id = models.CharField(max_length=200, blank=True)
+    """
+    SKOS concept collections are labeled and/or ordered groups of SKOS concepts.
+    Collections are useful where a group of concepts shares something in common,
+    and it is convenient to group them under a common label, or
+    where some concepts can be placed in a meaningful order.
+
+    Miles, Alistair, and Sean Bechhofer. "SKOS simple knowledge
+    organization system reference. W3C recommendation (2009)."
+
+    """
+    name = models.CharField(
+        max_length=300, blank=True, verbose_name="Label")
+    label_lang = models.CharField(
+        max_length=3, blank=True,
+        default=DEFAULT_LANG, verbose_name="Label language")
+    creator = models.TextField(
+        blank=True, verbose_name="dc:creator",
+        help_text="If more than one list all using a semicolon ;")
+    legacy_id = models.CharField(
+        max_length=200, blank=True)
     # documentation properties
-    skos_note = models.CharField(max_length=500, blank=True)
-    skos_note_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    skos_scopenote = models.TextField(blank=True)
-    skos_scopenote_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    skos_changenote = models.CharField(max_length=500, blank=True)
-    skos_editorialnote = models.CharField(max_length=500, blank=True)
-    skos_example = models.CharField(max_length=500, blank=True)
-    skos_historynote = models.CharField(max_length=500, blank=True)
-    date_created = models.DateTimeField(editable=False, default=timezone.now)
-    date_modified = models.DateTimeField(editable=False, default=timezone.now)
+    skos_note = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:note")
+    skos_note_lang = models.CharField(
+        max_length=3, blank=True, default=DEFAULT_LANG,
+        verbose_name="skos:note language")
+    skos_scopenote = models.TextField(
+        blank=True, verbose_name="skos:scopeNote")
+    skos_scopenote_lang = models.CharField(
+        max_length=3, blank=True,
+        verbose_name="skos:scopeNote language", default=DEFAULT_LANG)
+    skos_changenote = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:changeNote")
+    skos_editorialnote = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:editorialNote")
+    skos_example = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:example")
+    skos_historynote = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:historyNote")
+    date_created = models.DateTimeField(
+        editable=False, default=timezone.now)
+    date_modified = models.DateTimeField(
+        editable=False, default=timezone.now)
 
     def save(self, *args, **kwargs):
         if not self.id:
