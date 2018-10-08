@@ -23,7 +23,7 @@
     </div>
         <table class="table">
         <tr>
-        	<th>Title</th>
+        	<th class="w-25">Title</th>
         	<td>{{x.title}}</td>
         </tr>
         <tr>
@@ -106,6 +106,16 @@
         	<th>Relation</th>
         	<td>{{x.relation}}</td>
         </tr>
+        {% if topConcepts %}
+        <tr>
+            <th>has Top Concepts</th>
+            <td>
+                {% for x in topConcepts %}
+                <li><a href="{{ x.get_absolute_url }}">{{x}}</a></li>
+                {% endfor %}
+            </td> 
+        </tr>
+        {% endif %}
         </table>
 </div>
 {% endfor %}

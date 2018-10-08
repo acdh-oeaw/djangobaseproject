@@ -22,11 +22,21 @@ class MetadataListView(ListView):
     model = Metadata
     template_name = 'vocabs/metadata_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(MetadataListView, self).get_context_data(**kwargs)
+        context["topConcepts"] = SkosConcept.objects.filter(top_concept=True)
+        return context
+
 
 class MetadataDetailView(DetailView):
 
     model = Metadata
     template_name = 'vocabs/metadata_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MetadataDetailView, self).get_context_data(**kwargs)
+        context["topConcepts"] = SkosConcept.objects.filter(top_concept=True)
+        return context
 
 
 class MetadataCreate(BaseCreateView):
