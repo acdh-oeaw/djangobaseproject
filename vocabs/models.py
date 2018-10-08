@@ -270,6 +270,9 @@ class SkosConcept(models.Model):
         blank=True, null=True, on_delete=models.SET_NULL,
         related_name="narrower_concepts"
     )
+    top_concept = models.BooleanField(
+        default=False, help_text="Is this concept a top concept of main concept scheme?"
+        )
     same_as_external = models.TextField(
         blank=True,
         verbose_name="URL of external Concept with the same meaning",

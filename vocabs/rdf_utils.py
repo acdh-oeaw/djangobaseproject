@@ -85,12 +85,16 @@ def graph_construct(results):
 				# if x['label_type'] is not set then we make it altLabel
 				else:
 					g.add((concept, SKOS.altLabel, Literal(x['name'], lang=x['isoCode'])))
+		#top concepts
+		if obj['top_concept'] == True:
+			g.add((mainConceptScheme, SKOS.hasTopConcept, URIRef(concept)))
+			g.add((concept, SKOS.topConceptOf, mainConceptScheme ))
 		# modelling broader/narrower relationships
 		if obj['broader_concept']:
 			g.add((concept, SKOS.broader, URIRef(obj['broader_concept'][:-12])))
 		if obj['narrower_concepts']:
-			g.add((mainConceptScheme, SKOS.hasTopConcept, URIRef(concept)))
-			g.add((concept, SKOS.topConceptOf, mainConceptScheme ))
+			#g.add((mainConceptScheme, SKOS.hasTopConcept, URIRef(concept)))
+			#g.add((concept, SKOS.topConceptOf, mainConceptScheme ))
 			for x in obj['narrower_concepts']:
 				g.add((concept, SKOS.narrower, URIRef(str(x[:-12]))))
 		if obj['skos_broader']:
@@ -101,8 +105,8 @@ def graph_construct(results):
 			for x in obj['narrower']:
 				g.add((concept, SKOS.narrower, URIRef(str(x[:-12]))))
 				# declaring top concepts of main scheme
-				g.add((concept, SKOS.topConceptOf, URIRef(mainConceptScheme)))
-				g.add((mainConceptScheme, SKOS.hasTopConcept, URIRef(concept)))
+				#g.add((concept, SKOS.topConceptOf, URIRef(mainConceptScheme)))
+				#g.add((mainConceptScheme, SKOS.hasTopConcept, URIRef(concept)))
 		if obj['skos_narrower']:
 			for x in obj['skos_narrower']:
 				g.add((concept, SKOS.narrower, URIRef(str(x[:-12]))))

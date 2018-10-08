@@ -53,7 +53,7 @@ class SkosConceptSerializer(serializers.HyperlinkedModelSerializer):
             'scheme',
             'definition', 'definition_lang',
             'other_label',
-            'notation',
+            'notation', 'top_concept',
             'broader_concept', 'narrower_concepts',
             'same_as_external',
             'source_description',
