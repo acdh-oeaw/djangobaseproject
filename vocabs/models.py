@@ -30,8 +30,9 @@ LABEL_TYPES = (
     ('hiddenLabel', 'hiddenLabel'),
 )
 
-# limit number of created instances https://stackoverflow.com/a/6436008/7101197
+
 def validate_only_one_instance(obj):
+    # limit number of created instances https://stackoverflow.com/a/6436008/7101197
     model = obj.__class__
     if (model.objects.count() > 0 and
             obj.id != model.objects.get().id):
@@ -45,19 +46,28 @@ class Metadata(models.Model):
     indentifier = models.URLField(blank=True, default=DEFAULT_NAMESPACE)
     description = models.TextField(blank=True)
     description_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    language = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    language = models.TextField(
+        blank=True, help_text="If more than one list all using a semicolon ;"
+    )
     version = models.CharField(max_length=300, blank=True)
-    creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
-    contributor = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
-    subject = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    creator = models.TextField(
+        blank=True, help_text="If more than one list all using a semicolon ;"
+    )
+    contributor = models.TextField(
+        blank=True, help_text="If more than one list all using a semicolon ;"
+    )
+    subject = models.TextField(
+        blank=True, help_text="If more than one list all using a semicolon ;"
+    )
     owner = models.CharField(max_length=300, blank=True, help_text="Organisation or Person")
     license = models.CharField(max_length=300, blank=True)
     date_created = models.DateTimeField(editable=False, default=timezone.now)
     date_modified = models.DateTimeField(editable=False, default=timezone.now)
     date_issued = models.DateField(blank=True, null=True, help_text="YYYY-MM-DD")
-    relation = models.URLField(blank=True,
-        help_text="e.g. in case of relation to a project, add link to a project website")
-
+    relation = models.URLField(
+        blank=True,
+        help_text="e.g. in case of relation to a project, add link to a project website"
+    )
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -105,7 +115,9 @@ class SkosConceptScheme(models.Model):
     namespace = models.ForeignKey(
         SkosNamespace, blank=True, null=True, on_delete=models.SET_NULL
     )
-    dc_creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    dc_creator = models.TextField(
+        blank=True, help_text="If more than one list all using a semicolon ;"
+    )
     dc_description = models.TextField(blank=True)
     dc_description_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
     legacy_id = models.CharField(max_length=200, blank=True)
@@ -160,7 +172,9 @@ class SkosConceptScheme(models.Model):
 class SkosCollection(models.Model):
     name = models.CharField(max_length=300, blank=True, verbose_name="Label")
     label_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    creator = models.TextField(
+        blank=True, help_text="If more than one list all using a semicolon ;"
+    )
     legacy_id = models.CharField(max_length=200, blank=True)
     # documentation properties
     skos_note = models.CharField(max_length=500, blank=True)
@@ -211,8 +225,10 @@ class SkosCollection(models.Model):
 
 
 class SkosLabel(models.Model):
-    name = models.CharField(max_length=100, blank=True, help_text="The entities label or name.",
-        verbose_name="Label")
+    name = models.CharField(
+        max_length=100, blank=True, help_text="The entities label or name.",
+        verbose_name="Label"
+    )
     label_type = models.CharField(
         max_length=30, blank=True, choices=LABEL_TYPES, help_text="The type of the label.")
     isoCode = models.CharField(
@@ -324,10 +340,11 @@ class SkosConcept(models.Model):
     skos_editorialnote = models.CharField(max_length=500, blank=True)
     skos_example = models.CharField(max_length=500, blank=True)
     skos_historynote = models.CharField(max_length=500, blank=True)
-    dc_creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    dc_creator = models.TextField(
+        blank=True, help_text="If more than one list all using a semicolon ;"
+    )
     date_created = models.DateTimeField(editable=False, default=timezone.now)
     date_modified = models.DateTimeField(editable=False, default=timezone.now)
-
 
     def get_broader(self):
         broader = self.skos_broader.all()
@@ -375,7 +392,6 @@ class SkosConcept(models.Model):
 
     def dc_creator_as_list(self):
         return self.dc_creator.split(';')
-
 
     @cached_property
     def label(self):
