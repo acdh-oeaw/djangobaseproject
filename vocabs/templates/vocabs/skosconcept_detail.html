@@ -42,8 +42,7 @@
                 {% endif %}
             </div>
         </div>
-    </div>
-        
+    </div>      
         <table class="table">
         <tr>
             <th class="w-25">skos:prefLabel</th>
@@ -117,6 +116,23 @@
         <tr>
             <th>top Concept</th>
             <td>Yes</td>
+        </tr>
+        {% endif %}
+<!-- owl:sameAS relationships -->
+        {% if object.same_as_external %}
+        <<tr>
+            <th>owl:sameAs</th>
+            <td>
+            {% for same in object.same_as_external_as_list %}
+            <li>{{same}}</li>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+         {% if object.source_description %}
+         <tr>
+            <th>source</th>
+            <td>{{object.source_description}}</td>
         </tr>
         {% endif %}
 <!-- Mapping relationships -->
@@ -358,8 +374,7 @@
             <td>{{object.skos_example}}</td>
         </tr>
         {% endif %} 
-        </table>    
-        
+        </table>            
     </div>
 </div>
 {% endblock content %}
