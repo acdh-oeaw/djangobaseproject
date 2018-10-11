@@ -45,23 +45,23 @@
     </div>      
         <table class="table">
         <tr>
-            <th class="w-25">skos:prefLabel</th>
-            <td>{{ object.pref_label }} @{{ object.pref_label_lang }}</td>
+            <th class="w-25">skos:prefLabel{% if object.pref_label_lang %} @{{object.pref_label_lang}}{% endif %}</th>
+            <td>{{ object.pref_label }}</td>
         </tr>
         {% if object.other_label.all %}
         {% for x in object.other_label.all %}
             <tr>
-                <th>skos:{{x.label_type}}</th>
+                <th>skos:{{x.label_type}}{% if x.isoCode %} @{{x.isoCode}}{% endif %}</th>
                 <td>                  
-                {{ x.name }}  @{{x.isoCode}}                 
+                {{ x.name }}            
                 </td>
             </tr>
         {% endfor %}
         {% endif %}
         {% if object.definition %}
         <tr>
-            <th>skos:definition</th>
-            <td>{{ object.definition }} {% if object.definition_lang %}@{{object.definition_lang}}{% endif %}</td>
+            <th>skos:definition{% if object.definition_lang %} @{{object.definition_lang}}{% endif %}</th>
+            <td>{{ object.definition }}</td>
         </tr>
         {% endif %}
         {% if object.notation %}
@@ -335,15 +335,15 @@
 <!-- skos documentation properties -->
         {% if object.skos_note %}
         <tr>
-            <th>skos:note</th>
-            <td>{{object.skos_note}} {% if object.skos_note_lang %}@{{object.skos_note_lang}}{% endif %}</td>
+            <th>skos:note{% if object.skos_note_lang %} @{{object.skos_note_lang}}{% endif %}</th>
+            <td>{{object.skos_note}}</td>
         </tr>
         {% endif %}
 <!-- skos:scopeNote -->
         {% if object.skos_scopenote %}
         <tr>
-            <th>skos:scopeNote</th>
-            <td>{{object.skos_scopenote}} {% if object.skos_note_lang %}@{{object.skos_scopenote_lang}}{% endif %}</td>
+            <th>skos:scopeNote{% if object.skos_note_lang %} @{{object.skos_scopenote_lang}}{% endif %}</th>
+            <td>{{object.skos_scopenote}}</td>
         </tr>
         {% endif %}
 <!-- skos:changeNote -->

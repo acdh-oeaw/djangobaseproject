@@ -208,7 +208,7 @@ class SkosConceptScheme(models.Model):
 
 class SkosCollection(models.Model):
     """
-    SKOS concept collections are labeled and/or ordered groups of SKOS concepts.
+    SKOS collections are labeled and/or ordered groups of SKOS concepts.
     Collections are useful where a group of concepts shares something in common,
     and it is convenient to group them under a common label, or
     where some concepts can be placed in a meaningful order.

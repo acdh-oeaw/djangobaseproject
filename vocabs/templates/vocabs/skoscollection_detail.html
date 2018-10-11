@@ -64,14 +64,14 @@
 
         {% if object.skos_note %}
          <tr>
-            <th>skos:note</th>
+            <th>skos:note{% if object.skos_note_lang %} @{{object.skos_note_lang}}{% endif %}</th>
             <td>{{object.skos_note}}</td>
         </tr>
         {% endif %}
 
         {% if object.skos_scopenote %}
          <tr>
-            <th>skos:scopeNote</th>
+            <th>skos:scopeNote{% if object.skos_scopenote_lang %} @{{object.skos_scopenote_lang}}{% endif %}</th>
             <td>{{object.skos_scopenote}}</td>
         </tr>
         {% endif %}
