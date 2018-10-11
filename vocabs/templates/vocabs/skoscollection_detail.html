@@ -43,6 +43,14 @@
         </div>
     </div>
         <table class="table">
+        {% if object.name %}
+        <tr>
+            <th class="w-25">skos:prefLabel {% if object.label_lang %}@{{object.label_lang}}{% endif %}</th>
+            <td>
+           {{ object.name }}
+            </td>
+        </tr>
+        {% endif %}
         {% if object.creator %}
          <tr>
             <th class="w-25">dc:creator</th>

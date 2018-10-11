@@ -218,43 +218,64 @@ class SkosCollection(models.Model):
 
     """
     name = models.CharField(
-        max_length=300, blank=True, verbose_name="Label")
+        max_length=300, blank=True, verbose_name="skos:prefLabel",
+        help_text="Collection title or name"
+    )
     label_lang = models.CharField(
         max_length=3, blank=True,
-        default=DEFAULT_LANG, verbose_name="Label language")
+        default=DEFAULT_LANG,
+        verbose_name="skos:prefLabel language"
+    )
     creator = models.TextField(
         blank=True, verbose_name="dc:creator",
-        help_text="If more than one list all using a semicolon ;")
+        help_text="A Person or Organisation that created a current collection<br>"
+        "If more than one list all using a semicolon ;"
+    )
     legacy_id = models.CharField(
-        max_length=200, blank=True)
+        max_length=200, blank=True
+    )
     # documentation properties
     skos_note = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:note")
+        verbose_name="skos:note",
+        help_text="Provide some information about a collection"
+    )
     skos_note_lang = models.CharField(
         max_length=3, blank=True, default=DEFAULT_LANG,
         verbose_name="skos:note language")
     skos_scopenote = models.TextField(
-        blank=True, verbose_name="skos:scopeNote")
+        blank=True, verbose_name="skos:scopeNote",
+        help_text="Provide detailed description of the collection purpose")
     skos_scopenote_lang = models.CharField(
         max_length=3, blank=True,
         verbose_name="skos:scopeNote language", default=DEFAULT_LANG)
     skos_changenote = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:changeNote")
+        verbose_name="skos:changeNote",
+        help_text="Describe significant changes to a collection"
+    )
     skos_editorialnote = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:editorialNote")
+        verbose_name="skos:editorialNote",
+        help_text="Provide any administrative information, for the "
+        "purposes of administration and maintenance. E.g. comments on "
+        "reviewing this collection"
+    )
     skos_example = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:example")
+        verbose_name="skos:example"
+    )
     skos_historynote = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:historyNote")
+        verbose_name="skos:historyNote",
+        help_text="Describe significant changes to a collection over a time"
+    )
     date_created = models.DateTimeField(
-        editable=False, default=timezone.now)
+        editable=False, default=timezone.now
+    )
     date_modified = models.DateTimeField(
-        editable=False, default=timezone.now)
+        editable=False, default=timezone.now
+    )
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -293,6 +314,12 @@ class SkosCollection(models.Model):
 
 
 class SkosLabel(models.Model):
+    """
+    SKOS lexical labels are the expressions that are used to refer to concepts in natural language.
+
+    Antoine Isaac and Ed Summers. "SKOS Simple Knowledge Organization System Primer.
+    W3C Working Group Note (2009)."
+    """
     name = models.CharField(
         max_length=100, blank=True, help_text="The entities label or name.",
         verbose_name="Label")
@@ -469,7 +496,7 @@ class SkosConcept(models.Model):
     )
     skos_scopenote = models.TextField(
         blank=True, verbose_name="skos:scopeNote",
-        help_text="Provide some information of the intended meaning of a concept"
+        help_text="Provide more detailed information of the intended meaning of a concept"
     )
     skos_scopenote_lang = models.CharField(
         max_length=3, blank=True,
@@ -495,7 +522,7 @@ class SkosConcept(models.Model):
     skos_historynote = models.CharField(
         max_length=500, blank=True,
         verbose_name="skos:historyNote",
-        help_text="Describe significant changes to the meaning of a concept"
+        help_text="Describe significant changes to the meaning of a concept over a time"
     )
     dc_creator = models.TextField(
         blank=True, verbose_name="dc:creator",
