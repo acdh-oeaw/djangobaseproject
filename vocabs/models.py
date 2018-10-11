@@ -30,8 +30,9 @@ LABEL_TYPES = (
     ('hiddenLabel', 'hiddenLabel'),
 )
 
-# limit number of created instances https://stackoverflow.com/a/6436008/7101197
+
 def validate_only_one_instance(obj):
+    # limit number of created instances https://stackoverflow.com/a/6436008/7101197
     model = obj.__class__
     if (model.objects.count() > 0 and
             obj.id != model.objects.get().id):
@@ -85,7 +86,6 @@ class Metadata(models.Model):
         blank=True,
         help_text="e.g. in case of relation to a project, add link to a project website")
 
-
     def save(self, *args, **kwargs):
         if not self.id:
             self.date_created = timezone.now()
@@ -129,7 +129,8 @@ class SkosNamespace(models.Model):
 class SkosConceptScheme(models.Model):
     """
     A SKOS concept scheme can be viewed as an aggregation of one or more SKOS concepts.
-    Semantic relationships (links) between those concepts may also be viewed as part of a concept scheme.
+    Semantic relationships (links) between those concepts
+    may also be viewed as part of a concept scheme.
 
     Miles, Alistair, and Sean Bechhofer. "SKOS simple knowledge
     organization system reference. W3C recommendation (2009)."
@@ -292,7 +293,8 @@ class SkosCollection(models.Model):
 
 
 class SkosLabel(models.Model):
-    name = models.CharField(max_length=100, blank=True, help_text="The entities label or name.",
+    name = models.CharField(
+        max_length=100, blank=True, help_text="The entities label or name.",
         verbose_name="Label")
     label_type = models.CharField(
         max_length=30, blank=True, choices=LABEL_TYPES, help_text="The type of the label.")
@@ -369,7 +371,9 @@ class SkosConcept(models.Model):
     notation = models.CharField(
         max_length=300, blank=True,
         verbose_name="skos:notation",
-        help_text="A notation is a unique string used to identify the concept in current vocabulary")
+        help_text="A notation is a unique string used\
+        to identify the concept in current vocabulary"
+    )
     namespace = models.ForeignKey(
         SkosNamespace, blank=True, null=True,
         on_delete=models.SET_NULL
@@ -435,10 +439,11 @@ class SkosConcept(models.Model):
     skos_editorialnote = models.CharField(max_length=500, blank=True)
     skos_example = models.CharField(max_length=500, blank=True)
     skos_historynote = models.CharField(max_length=500, blank=True)
-    dc_creator = models.TextField(blank=True, help_text="If more than one list all using a semicolon ;")
+    dc_creator = models.TextField(
+        blank=True, help_text="If more than one list all using a semicolon ;"
+    )
     date_created = models.DateTimeField(editable=False, default=timezone.now)
     date_modified = models.DateTimeField(editable=False, default=timezone.now)
-
 
     def get_broader(self):
         broader = self.skos_broader.all()
@@ -487,7 +492,6 @@ class SkosConcept(models.Model):
     def dc_creator_as_list(self):
         return self.dc_creator.split(';')
 
-
     @cached_property
     def label(self):
         # 'borrowed from https://github.com/sennierer'
@@ -535,3 +539,4 @@ def get_all_children(self, include_self=True):
         if 0 < len(_r):
             r.extend(_r)
     return r
+
