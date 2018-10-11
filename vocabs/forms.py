@@ -121,6 +121,50 @@ class SkosConceptForm(forms.ModelForm):
         self.helper.label_class = 'col-md-3 create-label'
         self.helper.field_class = 'col-md-9'
         self.helper.add_input(Submit('submit', 'save'),)
+        self.helper.layout = Layout(
+            Fieldset(
+                '',
+                'pref_label',
+                'pref_label_lang',
+                'collection',
+                'definition',
+                'definition_lang',
+                'broader_concept',
+                'dc_creator',
+                css_id="basic_skos_fields"
+                ),
+            Accordion(
+                AccordionGroup(
+                    'Advanced fields',
+                    'top_concept',
+                    'other_label',
+                    'notation',
+                    'same_as_external',
+                    'source_description',
+                    'skos_broader',
+                    'skos_narrower',
+                    'skos_related',
+                    'skos_broadmatch',
+                    'skos_narrowmatch',
+                    'skos_exactmatch',
+                    'skos_relatedmatch',
+                    'skos_closematch',
+                    'legacy_id',
+                    'name_reverse',
+                    'skos_note',
+                    'skos_note_lang',
+                    'skos_scopenote',
+                    'skos_scopenote_lang',
+                    'skos_changenote',
+                    'skos_editorialnote',
+                    'skos_example',
+                    'skos_historynote',
+                    'namespace',
+                    'scheme',
+                    css_id="advanced_skos_fields"
+                ),
+                )
+            )
 
 
 class SkosConceptSchemeForm(forms.ModelForm):
