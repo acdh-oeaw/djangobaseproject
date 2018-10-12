@@ -45,13 +45,13 @@
         <table class="table">
         {% if object.dc_title %}
         <tr>
-            <th>dc:title{% if object.dc_title_lang %} @{{object.dc_title_lang}}{% endif %}</th>
+            <th class="w-25">dc:title{% if object.dc_title_lang %} @{{object.dc_title_lang}}{% endif %}</th>
             <td>{{object.dc_title}}</td>
         </tr>
         {% endif %}
         {% if object.dc_creator %}
         <tr>
-        <th>dc:creator</th>
+        <th class="w-25">dc:creator</th>
         <td>
         {% for creator in object.dc_creator_as_list %}
         <li>{{creator}}</li>

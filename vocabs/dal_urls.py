@@ -13,6 +13,11 @@ urlpatterns = [
         name='skoslabel-autocomplete',
     ),
     url(
+        r'^skoslabel-filter-autocomplete/$', dal_views.SkosLabelAC.as_view(
+            model=SkosLabel),
+        name='skoslabel-filter-autocomplete',
+    ),
+    url(
         r'^skosconceptscheme-autocomplete/$', dal_views.SkosConceptSchemeAC.as_view(
             model=SkosConceptScheme,
             create_field='dc_title',),
@@ -29,6 +34,11 @@ urlpatterns = [
             model=SkosConcept,
             create_field='pref_label',),
         name='skosconcept-autocomplete',
+    ),
+    url(
+        r'^skosconcept-filter-autocomplete/$', dal_views.SpecificConcepts.as_view(
+            model=SkosConcept),
+        name='skosconcept-filter-autocomplete',
     ),
     url(
         r'^skosconcept-pref-label-autocomplete/$',

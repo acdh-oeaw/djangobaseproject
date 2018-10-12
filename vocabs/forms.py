@@ -37,15 +37,20 @@ class SkosConceptFormHelper(FormHelper):
         self.helper.form_tag = False
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
+            Fieldset(
+                'Basic search options',
+                'pref_label',
+                'collection',
+                'other_label',
+                css_id="basic_search_fields"
+                ),
             Accordion(
                 AccordionGroup(
-                    'Basic search options',
-                    'pref_label',
-                    css_id="basic_search_fields"
-                ),
-                AccordionGroup(
                     'Advanced search',
-                    'scheme',
+                    'broader_concept',
+                    'top_concept',
+                    'pref_label_lang',
+                    'other_label__isoCode',
                     css_id="more"
                     ),
                 )
@@ -191,18 +196,12 @@ class SkosConceptSchemeFormHelper(FormHelper):
         self.helper.form_tag = False
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
-            Accordion(
-                AccordionGroup(
-                    'Basic search options',
-                    'dc_title',
-                    css_id="basic_search_fields"
+            Fieldset(
+                '',
+                'dc_title',
+                'dc_creator',
+                css_id="basic_search_fields"
                 ),
-                AccordionGroup(
-                    'Advanced search',
-                    'dc_creator',
-                    css_id="more"
-                    ),
-                )
             )
 
 
@@ -216,7 +215,7 @@ class SkosLabelForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = True
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-3'
+        self.helper.label_class = 'col-md-3 create-label'
         self.helper.field_class = 'col-md-9'
         self.helper.add_input(Submit('submit', 'save'),)
 
@@ -242,9 +241,10 @@ class SkosCollectionFormHelper(FormHelper):
         self.add_input(Submit('Filter', 'Search'))
         self.layout = Layout(
             Fieldset(
-                'Basic search options',
+                '',
                 'name',
                 'creator',
+                'has_members__pref_label',
                 css_id="basic_search_fields"
                 ),
             )

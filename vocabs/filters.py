@@ -37,19 +37,26 @@ def generous_concept_filter(queryset, name, value):
 class SkosConceptListFilter(django_filters.FilterSet):
 
     pref_label = django_filters.ModelMultipleChoiceFilter(
-        widget=autocomplete.Select2Multiple(url='vocabs-ac:skosconcept-autocomplete'),
+        widget=autocomplete.Select2Multiple(url='vocabs-ac:skosconcept-filter-autocomplete'),
         queryset=SkosConcept.objects.all(),
         lookup_expr='icontains',
-        label='PrefLabel',
+        label='skos:prefLabel',
         help_text=False,
     )
-
-    scheme = django_filters.ModelMultipleChoiceFilter(
-        queryset=SkosConceptScheme.objects.all(),
+    collection = django_filters.ModelChoiceFilter(
+        queryset=SkosCollection.objects.all(),
+        help_text=False,
+    )
+    other_label = django_filters.ModelMultipleChoiceFilter(
+        widget=autocomplete.Select2Multiple(url='vocabs-ac:skoslabel-filter-autocomplete'),
+        queryset=SkosLabel.objects.all(),
         lookup_expr='icontains',
-        label='in SkosConceptScheme',
         help_text=False,
     )
+    other_label__isoCode = django_filters.CharFilter(
+        lookup_expr='icontains',
+        label="Other label iso code",
+        )
 
     class Meta:
         model = SkosConcept
@@ -87,7 +94,7 @@ class SkosConceptSchemeListFilter(django_filters.FilterSet):
         )
     dc_creator = django_filters.CharFilter(
         lookup_expr='icontains',
-        help_text=SkosConceptScheme._meta.get_field('dc_creator').help_text,
+        help_text=False,
         label=SkosConceptScheme._meta.get_field('dc_creator').verbose_name
         )
 
@@ -106,6 +113,12 @@ class SkosCollectionListFilter(django_filters.FilterSet):
         lookup_expr='icontains',
         label=SkosCollection._meta.get_field('creator').verbose_name
         )
+    has_members__pref_label = django_filters.ModelMultipleChoiceFilter(
+        widget=autocomplete.Select2Multiple(url='vocabs-ac:skosconcept-filter-autocomplete'),
+        queryset=SkosConcept.objects.all(),
+        lookup_expr='icontains',
+        help_text=False,
+    )
 
     class Meta:
         model = SkosCollection
