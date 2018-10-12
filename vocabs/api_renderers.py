@@ -21,7 +21,7 @@ class RDFRenderer(renderers.BaseRenderer):
 
 class SKOSRenderer(renderers.BaseRenderer):
 	media_type = 'text/xml'
-	format = 'rdf/xml'
+	format = 'rdf'
 
 	def render(self, data, media_type=None, renderer_context=None):
 		if 'results' in data:
