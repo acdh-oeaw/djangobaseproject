@@ -77,7 +77,7 @@
         <th>member of skos:Collection</th>
         <td>
             {% for x in object.collection.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -87,7 +87,7 @@
         <th>skos:inScheme</th>
         <td>
             {% for x in object.scheme.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -153,7 +153,7 @@
         <th>skos:narrower</th>
         <td>
             {% for x in object.narrower_concepts.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -164,7 +164,7 @@
         <th>skos:broader</th>
         <td>
             {% for x in object.skos_broader.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -175,7 +175,7 @@
         <th>skos:narrower</th>
         <td>
             {% for x in object.narrower.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -186,7 +186,7 @@
         <th>skos:narrower</th>
         <td>
             {% for x in object.skos_narrower.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -197,7 +197,7 @@
         <th>skos:broader</th>
         <td>
             {% for x in object.broader.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -208,7 +208,7 @@
         <th>skos:related</th>
         <td>
             {% for x in object.skos_related.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -219,7 +219,7 @@
         <th>skos:related</th>
         <td>
             {% for x in object.related.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -230,7 +230,7 @@
         <th>skos:broadMatch</th>
         <td>
             {% for x in object.skos_broadmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -241,7 +241,7 @@
         <th>skos:narrowMatch</th>
         <td>
             {% for x in object.narrowmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -252,7 +252,7 @@
         <th>skos:narrowMatch</th>
         <td>
             {% for x in object.skos_narrowmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -263,7 +263,7 @@
         <th>skos:broadMatch</th>
         <td>
             {% for x in object.broadmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -274,7 +274,7 @@
         <th>skos:exactMatch</th>
         <td>
             {% for x in object.skos_exactmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -285,7 +285,7 @@
         <th>skos:exactMatch</th>
         <td>
             {% for x in object.exactmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -296,7 +296,7 @@
         <th>skos:relatedMatch</th>
         <td>
             {% for x in object.skos_relatedmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -307,7 +307,7 @@
         <th>skos:relatedMatch</th>
         <td>
             {% for x in object.relatedmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -318,7 +318,7 @@
         <th>skos:closeMatch</th>
         <td>
             {% for x in object.skos_closematch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -329,7 +329,7 @@
         <th>skos:closeMatch</th>
         <td>
             {% for x in object.closematch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
