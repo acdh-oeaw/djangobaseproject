@@ -21,10 +21,9 @@ class RDFRenderer(renderers.BaseRenderer):
 
 class SKOSRenderer(renderers.BaseRenderer):
 	media_type = 'text/xml'
-	format = 'rdf'
+	format = 'rdf/xml'
 
 	def render(self, data, media_type=None, renderer_context=None):
-		#get_format = self.request.GET.get('format', default='n3')
 		if 'results' in data:
 			g = graph_construct(data['results'])
 		else:
