@@ -175,23 +175,22 @@
                 <div class="footer-sep">
                     <i class="far fa-comment"></i> CONTACT
                 </div>
-            <div class="row">
-                <div class="col-md-2 pl-0">
-                    <a href="https://www.oeaw.ac.at/acdh/acdh-home/" target="_blank" rel="noopener" aria-label="ACDH">
-                        <img src="{% static 'webpage/img/acdh_logo.png' %}" alt="ACDH" title="Austrian Centre for Digital Humanities"/>
-                    </a>
+                <div class="row">
+                    <div class="col-md-2 pl-0">
+                        <a href="https://www.oeaw.ac.at/acdh/acdh-home/" target="_blank" rel="noopener" aria-label="ACDH">
+                            <img src="{% static 'webpage/img/acdh_logo.png' %}" alt="ACDH" title="Austrian Centre for Digital Humanities"/>
+                        </a>
+                    </div>
+                    <div class="col-md-2 ml-auto">
+                        <img src="{% static 'webpage/img/partner_logo.png' %}" alt="Partner Logo" title="Partner Logo"/>
+                    </div>
                 </div>
-                <div class="col-md-2 ml-auto">
-                    <img src="{% static 'webpage/img/partner_logo.png' %}" alt="Partner Logo" title="Partner Logo"/>
-                </div>
-            </div>
-            {% social_media %}
-
             </div>
         </div>
             </div>
             <div class="footer-imprint-bar">
                 <a href="{% projects_metadata 'imprint' %}">Impressum/Imprint</a>
+                {% social_media %}
                 {% if user.is_authenticated %}
                     {% if DB_NAME %}
                         <div class="footer-imprint-bar">
