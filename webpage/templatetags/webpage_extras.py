@@ -18,7 +18,7 @@ def get_verbose_name(instance, field_name):
     """
     try:
         label = instance._meta.get_field(field_name).verbose_name
-    except:
+    except Exception as e:
         label = None
     if label:
         return "{}".format(label)
@@ -35,9 +35,18 @@ def get_help_text(instance, field_name):
     """
     try:
         label = instance._meta.get_field(field_name).help_text
-    except:
+    except Exception as e:
         label = None
     if label:
         return "{}".format(label)
     else:
         return "No helptext for '{}' provided".format(field_name)
+
+
+@register.inclusion_tag('webpage/tags/social_media.html', takes_context=True)
+def social_media(context):
+    """ looks for a 'social_media' key in webpage.py and renders html-tags for each entry """
+    values = {}
+    values['sm_items'] = PM['social_media']
+    values['sm_len'] = len(PM['social_media'])
+    return values
