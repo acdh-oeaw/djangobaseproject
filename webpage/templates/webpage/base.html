@@ -189,8 +189,9 @@
         </div>
             </div>
             <div class="footer-imprint-bar">
-                <a href="{% projects_metadata 'imprint' %}">Impressum/Imprint</a>
                 {% social_media %}
+                <a href="{% projects_metadata 'imprint' %}">Impressum/Imprint</a>
+
                 {% if user.is_authenticated %}
                     {% if DB_NAME %}
                         <div class="footer-imprint-bar">
