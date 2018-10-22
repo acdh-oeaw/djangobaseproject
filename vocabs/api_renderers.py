@@ -24,7 +24,6 @@ class SKOSRenderer(renderers.BaseRenderer):
 	format = 'rdf'
 
 	def render(self, data, media_type=None, renderer_context=None):
-		#get_format = self.request.GET.get('format', default='n3')
 		if 'results' in data:
 			g = graph_construct(data['results'])
 		else:

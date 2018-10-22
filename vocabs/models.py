@@ -208,7 +208,7 @@ class SkosConceptScheme(models.Model):
 
 class SkosCollection(models.Model):
     """
-    SKOS concept collections are labeled and/or ordered groups of SKOS concepts.
+    SKOS collections are labeled and/or ordered groups of SKOS concepts.
     Collections are useful where a group of concepts shares something in common,
     and it is convenient to group them under a common label, or
     where some concepts can be placed in a meaningful order.
@@ -218,43 +218,64 @@ class SkosCollection(models.Model):
 
     """
     name = models.CharField(
-        max_length=300, blank=True, verbose_name="Label")
+        max_length=300, blank=True, verbose_name="skos:prefLabel",
+        help_text="Collection title or name"
+    )
     label_lang = models.CharField(
         max_length=3, blank=True,
-        default=DEFAULT_LANG, verbose_name="Label language")
+        default=DEFAULT_LANG,
+        verbose_name="skos:prefLabel language"
+    )
     creator = models.TextField(
         blank=True, verbose_name="dc:creator",
-        help_text="If more than one list all using a semicolon ;")
+        help_text="A Person or Organisation that created a current collection<br>"
+        "If more than one list all using a semicolon ;"
+    )
     legacy_id = models.CharField(
-        max_length=200, blank=True)
+        max_length=200, blank=True
+    )
     # documentation properties
     skos_note = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:note")
+        verbose_name="skos:note",
+        help_text="Provide some information about a collection"
+    )
     skos_note_lang = models.CharField(
         max_length=3, blank=True, default=DEFAULT_LANG,
         verbose_name="skos:note language")
     skos_scopenote = models.TextField(
-        blank=True, verbose_name="skos:scopeNote")
+        blank=True, verbose_name="skos:scopeNote",
+        help_text="Provide detailed description of the collection purpose")
     skos_scopenote_lang = models.CharField(
         max_length=3, blank=True,
         verbose_name="skos:scopeNote language", default=DEFAULT_LANG)
     skos_changenote = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:changeNote")
+        verbose_name="skos:changeNote",
+        help_text="Describe significant changes to a collection"
+    )
     skos_editorialnote = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:editorialNote")
+        verbose_name="skos:editorialNote",
+        help_text="Provide any administrative information, for the "
+        "purposes of administration and maintenance. E.g. comments on "
+        "reviewing this collection"
+    )
     skos_example = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:example")
+        verbose_name="skos:example"
+    )
     skos_historynote = models.CharField(
         max_length=500, blank=True,
-        verbose_name="skos:historyNote")
+        verbose_name="skos:historyNote",
+        help_text="Describe significant changes to a collection over a time"
+    )
     date_created = models.DateTimeField(
-        editable=False, default=timezone.now)
+        editable=False, default=timezone.now
+    )
     date_modified = models.DateTimeField(
-        editable=False, default=timezone.now)
+        editable=False, default=timezone.now
+    )
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -293,6 +314,12 @@ class SkosCollection(models.Model):
 
 
 class SkosLabel(models.Model):
+    """
+    SKOS lexical labels are the expressions that are used to refer to concepts in natural language.
+
+    Antoine Isaac and Ed Summers. "SKOS Simple Knowledge Organization System Primer.
+    W3C Working Group Note (2009)."
+    """
     name = models.CharField(
         max_length=100, blank=True, help_text="The entities label or name.",
         verbose_name="Label")
@@ -343,16 +370,18 @@ class SkosConcept(models.Model):
     pref_label = models.CharField(
         max_length=300, blank=True,
         verbose_name="skos:prefLabel",
-        help_text="Preferred label for a concept")
+        help_text="Preferred label for a concept"
+    )
     pref_label_lang = models.CharField(
         max_length=3, blank=True,
         verbose_name="skos:prefLabel language",
         help_text="Language code of preferred label according to ISO 639-3",
-        default=DEFAULT_LANG)
+        default=DEFAULT_LANG
+    )
     collection = models.ManyToManyField(
         SkosCollection, blank=True,
         verbose_name="member of skos:Collection",
-        related_name="has_members"
+        related_name="has_members",
     )
     scheme = models.ManyToManyField(
         SkosConceptScheme, blank=True,
@@ -360,14 +389,18 @@ class SkosConcept(models.Model):
         related_name="has_concepts"
     )
     definition = models.TextField(
-        blank=True, verbose_name="skos:definition")
+        blank=True, verbose_name="skos:definition",
+        help_text="Provide a complete explanation of the intended meaning of a concept"
+    )
     definition_lang = models.CharField(
         max_length=3, blank=True,
         verbose_name="skos:definition language",
-        default=DEFAULT_LANG)
+        default=DEFAULT_LANG
+    )
     other_label = models.ManyToManyField(
         SkosLabel, blank=True,
-        help_text="select other labels that represent this concept")
+        help_text="select other labels that represent this concept"
+    )
     notation = models.CharField(
         max_length=300, blank=True,
         verbose_name="skos:notation",
@@ -382,16 +415,18 @@ class SkosConcept(models.Model):
         'SkosConcept',
         verbose_name="Broader Term",
         blank=True, null=True, on_delete=models.SET_NULL,
-        related_name="narrower_concepts"
+        related_name="narrower_concepts",
+        help_text="A concept with a broader meaning that a current concept inherits from"
     )
     top_concept = models.BooleanField(
         default=False,
         help_text="Is this concept a top concept of main concept scheme?"
-        )
+    )
     same_as_external = models.TextField(
         blank=True,
-        verbose_name="URL of external Concept with the same meaning",
-        help_text="If more than one list all using a semicolon ;",
+        verbose_name="owl:sameAs",
+        help_text="URL of an external Concept with the same meaning<br>"
+        "If more than one list all using a semicolon ; ",
     )
     source_description = models.TextField(
         blank=True,
@@ -399,51 +434,110 @@ class SkosConcept(models.Model):
         help_text="A verbose description of the concept's source"
     )
     skos_broader = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="narrower"
+        'SkosConcept', blank=True, related_name="narrower",
+        verbose_name="skos:broader",
+        help_text="A concept with a broader meaning"
     )
     skos_narrower = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="broader"
+        'SkosConcept', blank=True, related_name="broader",
+        verbose_name="skos:narrower",
+        help_text="A concept with a narrower meaning"
     )
     skos_related = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="related"
+        'SkosConcept', blank=True, related_name="related",
+        verbose_name="skos:related",
+        help_text="An associative relationship among two concepts"
     )
     skos_broadmatch = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="narrowmatch"
+        'SkosConcept', blank=True, related_name="narrowmatch",
+        verbose_name="skos:broadMatch",
+        help_text="A concept in an external ConceptSchema with a broader meaning"
     )
     skos_narrowmatch = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="broadmatch"
+        'SkosConcept', blank=True, related_name="broadmatch",
+        verbose_name="skos:narrowMatch",
+        help_text="A concept in an external ConceptSchema with a narrower meaning"
     )
     skos_exactmatch = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="exactmatch"
+        'SkosConcept', blank=True, related_name="exactmatch",
+        verbose_name="skos:exactMatch",
+        help_text="A concept in an external ConceptSchema "
+        "that can be used interchangeably and has an exact same meaning"
     )
     skos_relatedmatch = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="relatedmatch"
+        'SkosConcept', blank=True, related_name="relatedmatch",
+        verbose_name="skos:relatedMatch",
+        help_text="A concept in an external ConceptSchema that has an associative "
+        "relationship with a current concept"
     )
     skos_closematch = models.ManyToManyField(
-        'SkosConcept', blank=True, related_name="closematch"
+        'SkosConcept', blank=True, related_name="closematch",
+        verbose_name="skos:closeMatch",
+        help_text="A concept in an external ConceptSchema that has a similar meaning"
+
     )
     legacy_id = models.CharField(max_length=200, blank=True)
     name_reverse = models.CharField(
         max_length=255,
-        verbose_name='Name reverse',
-        help_text='Inverse relation like: \
-        "is sub-class of" vs. "is super-class of".',
+        verbose_name="name reverse",
+        help_text="Inverse relation like: \
+        'is sub-class of' vs. 'is super-class of'.",
         blank=True
     )
     # documentation properties
-    skos_note = models.CharField(max_length=500, blank=True)
-    skos_note_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    skos_scopenote = models.TextField(blank=True)
-    skos_scopenote_lang = models.CharField(max_length=3, blank=True, default=DEFAULT_LANG)
-    skos_changenote = models.CharField(max_length=500, blank=True)
-    skos_editorialnote = models.CharField(max_length=500, blank=True)
-    skos_example = models.CharField(max_length=500, blank=True)
-    skos_historynote = models.CharField(max_length=500, blank=True)
-    dc_creator = models.TextField(
-        blank=True, help_text="If more than one list all using a semicolon ;"
+    skos_note = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:note",
+        help_text="Provide some partial information about the meaning of a concept"
     )
-    date_created = models.DateTimeField(editable=False, default=timezone.now)
-    date_modified = models.DateTimeField(editable=False, default=timezone.now)
+    skos_note_lang = models.CharField(
+        max_length=3, blank=True,
+        default=DEFAULT_LANG, verbose_name="skos:note language"
+    )
+    skos_scopenote = models.TextField(
+        blank=True, verbose_name="skos:scopeNote",
+        help_text="Provide more detailed information of the intended meaning of a concept"
+    )
+    skos_scopenote_lang = models.CharField(
+        max_length=3, blank=True,
+        default=DEFAULT_LANG, verbose_name="skos:scopeNote language"
+    )
+    skos_changenote = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:changeNote",
+        help_text="Document any changes to a concept"
+    )
+    skos_editorialnote = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:editorialNote",
+        help_text="Provide any administrative information, for the "
+        "purposes of administration and maintenance. E.g. comments on "
+        "reviewing this concept"
+    )
+    skos_example = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:example",
+        help_text="Provide an example of a concept usage"
+    )
+    skos_historynote = models.CharField(
+        max_length=500, blank=True,
+        verbose_name="skos:historyNote",
+        help_text="Describe significant changes to the meaning of a concept over a time"
+    )
+    dc_creator = models.TextField(
+        blank=True, verbose_name="dc:creator",
+        help_text="A Person or Organisation that created a current concept<br>"
+        "If more than one list all using a semicolon ;",
+
+    )
+    date_created = models.DateTimeField(
+        editable=False, default=timezone.now,
+        verbose_name="dct:created"
+    )
+    date_modified = models.DateTimeField(
+        editable=False, default=timezone.now,
+        verbose_name="dct:modified"
+    )
 
     def get_broader(self):
         broader = self.skos_broader.all()
@@ -491,6 +585,9 @@ class SkosConcept(models.Model):
 
     def dc_creator_as_list(self):
         return self.dc_creator.split(';')
+
+    def same_as_external_as_list(self):
+        return self.same_as_external.split(';')
 
     @cached_property
     def label(self):

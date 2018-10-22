@@ -45,13 +45,13 @@
         <table class="table">
         {% if object.dc_title %}
         <tr>
-            <th>dc:title</th>
-            <td>{{object.dc_title}} {% if object.dc_title_lang %}@{{object.dc_title_lang}}{% endif %}</td>
+            <th class="w-25">dc:title{% if object.dc_title_lang %} @{{object.dc_title_lang}}{% endif %}</th>
+            <td>{{object.dc_title}}</td>
         </tr>
         {% endif %}
         {% if object.dc_creator %}
         <tr>
-        <th>dc:creator</th>
+        <th class="w-25">dc:creator</th>
         <td>
         {% for creator in object.dc_creator_as_list %}
         <li>{{creator}}</li>
@@ -61,8 +61,8 @@
         {% endif %}
         {% if object.dc_description %}
         <tr>
-            <th>dc:description</th>
-            <td>{{object.dc_description}} {% if object.dc_description_lang %}@{{object.dc_description_lang}}{% endif %}</td>
+            <th>dc:description{% if object.dc_description_lang %} @{{object.dc_description_lang}}{% endif %}</th>
+            <td>{{object.dc_description}}</td>
         </tr>
         {% endif %}
         {% if object.legacy_id %}

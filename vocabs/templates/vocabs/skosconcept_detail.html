@@ -43,26 +43,27 @@
             </div>
         </div>
     </div>
-        
-        <table class="table">
+    <table class="table">
+        {% if object.pref_label %}
         <tr>
-            <th class="w-25">skos:prefLabel</th>
-            <td>{{ object.pref_label }} @{{ object.pref_label_lang }}</td>
+            <th class="w-25">skos:prefLabel{% if object.pref_label_lang %} @{{object.pref_label_lang}}{% endif %}</th>
+            <td>{{ object.pref_label }}</td>
         </tr>
+        {% endif %}
         {% if object.other_label.all %}
         {% for x in object.other_label.all %}
             <tr>
-                <th>skos:{{x.label_type}}</th>
+                <th>skos:{{x.label_type}}{% if x.isoCode %} @{{x.isoCode}}{% endif %}</th>
                 <td>                  
-                {{ x.name }}  @{{x.isoCode}}                 
+                {{ x.name }}            
                 </td>
             </tr>
         {% endfor %}
         {% endif %}
         {% if object.definition %}
         <tr>
-            <th>skos:definition</th>
-            <td>{{ object.definition }} {% if object.definition_lang %}@{{object.definition_lang}}{% endif %}</td>
+            <th>skos:definition{% if object.definition_lang %} @{{object.definition_lang}}{% endif %}</th>
+            <td>{{ object.definition }}</td>
         </tr>
         {% endif %}
         {% if object.notation %}
@@ -76,7 +77,7 @@
         <th>member of skos:Collection</th>
         <td>
             {% for x in object.collection.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -86,7 +87,7 @@
         <th>skos:inScheme</th>
         <td>
             {% for x in object.scheme.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -119,6 +120,23 @@
             <td>Yes</td>
         </tr>
         {% endif %}
+<!-- owl:sameAS relationships -->
+        {% if object.same_as_external %}
+        <tr>
+            <th>owl:sameAs</th>
+            <td>
+            {% for same in object.same_as_external_as_list %}
+            <li>{{same}}</li>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endif %}
+         {% if object.source_description %}
+         <tr>
+            <th>source</th>
+            <td>{{object.source_description}}</td>
+        </tr>
+        {% endif %}
 <!-- Mapping relationships -->
         {% if object.broader_concept %}
         <tr>
@@ -135,7 +153,7 @@
         <th>skos:narrower</th>
         <td>
             {% for x in object.narrower_concepts.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -146,7 +164,7 @@
         <th>skos:broader</th>
         <td>
             {% for x in object.skos_broader.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -157,7 +175,7 @@
         <th>skos:narrower</th>
         <td>
             {% for x in object.narrower.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -168,7 +186,7 @@
         <th>skos:narrower</th>
         <td>
             {% for x in object.skos_narrower.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -179,7 +197,7 @@
         <th>skos:broader</th>
         <td>
             {% for x in object.broader.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -190,7 +208,7 @@
         <th>skos:related</th>
         <td>
             {% for x in object.skos_related.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -201,7 +219,7 @@
         <th>skos:related</th>
         <td>
             {% for x in object.related.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -212,7 +230,7 @@
         <th>skos:broadMatch</th>
         <td>
             {% for x in object.skos_broadmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -223,7 +241,7 @@
         <th>skos:narrowMatch</th>
         <td>
             {% for x in object.narrowmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -234,7 +252,7 @@
         <th>skos:narrowMatch</th>
         <td>
             {% for x in object.skos_narrowmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -245,7 +263,7 @@
         <th>skos:broadMatch</th>
         <td>
             {% for x in object.broadmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -256,7 +274,7 @@
         <th>skos:exactMatch</th>
         <td>
             {% for x in object.skos_exactmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -267,7 +285,7 @@
         <th>skos:exactMatch</th>
         <td>
             {% for x in object.exactmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -278,7 +296,7 @@
         <th>skos:relatedMatch</th>
         <td>
             {% for x in object.skos_relatedmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -289,7 +307,7 @@
         <th>skos:relatedMatch</th>
         <td>
             {% for x in object.relatedmatch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -300,7 +318,7 @@
         <th>skos:closeMatch</th>
         <td>
             {% for x in object.skos_closematch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -311,7 +329,7 @@
         <th>skos:closeMatch</th>
         <td>
             {% for x in object.closematch.all %}
-            <a href="{{ x.get_absolute_url }}">{{x}}</a>
+            <a href="{{ x.get_absolute_url }}">{{x}}</a><br>
             {% endfor %}
         </td>
         </tr>
@@ -319,15 +337,15 @@
 <!-- skos documentation properties -->
         {% if object.skos_note %}
         <tr>
-            <th>skos:note</th>
-            <td>{{object.skos_note}} {% if object.skos_note_lang %}@{{object.skos_note_lang}}{% endif %}</td>
+            <th>skos:note{% if object.skos_note_lang %} @{{object.skos_note_lang}}{% endif %}</th>
+            <td>{{object.skos_note}}</td>
         </tr>
         {% endif %}
 <!-- skos:scopeNote -->
         {% if object.skos_scopenote %}
         <tr>
-            <th>skos:scopeNote</th>
-            <td>{{object.skos_scopenote}} {% if object.skos_note_lang %}@{{object.skos_scopenote_lang}}{% endif %}</td>
+            <th>skos:scopeNote{% if object.skos_note_lang %} @{{object.skos_scopenote_lang}}{% endif %}</th>
+            <td>{{object.skos_scopenote}}</td>
         </tr>
         {% endif %}
 <!-- skos:changeNote -->
@@ -357,9 +375,14 @@
             <th>skos:example</th>
             <td>{{object.skos_example}}</td>
         </tr>
-        {% endif %} 
-        </table>    
-        
+        {% endif %}
+        <tr>
+            <th>download this concept</th>
+            <td>
+                <a href="/api/skosconcepts/{{object.id}}/?format=rdf">RDF/XML</a>
+            </td>
+        </tr>
+        </table>            
     </div>
 </div>
 {% endblock content %}
