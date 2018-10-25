@@ -16,7 +16,7 @@ PROJECT_METADATA = {
     'matomo_url': '//piwik.apollo.arz.oeaw.ac.at/',
     'imprint': '/imprint',
     'social_media': [
-        ('fab fa-twitter', 'https://twitter.com/ACDH_OeAW'),
-        ('fab fa-youtube', 'https://www.youtube.com/channel/UCgaEMaMbPkULYRI5u6gvG-w'),
+        ('fab fa-twitter fa-2x', 'https://twitter.com/ACDH_OeAW'),
+        ('fab fa-youtube fa-2x', 'https://www.youtube.com/channel/UCgaEMaMbPkULYRI5u6gvG-w'),
     ]
 }
