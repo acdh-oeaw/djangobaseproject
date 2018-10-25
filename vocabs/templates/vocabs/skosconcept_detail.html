@@ -379,7 +379,8 @@
         <tr>
             <th>download this concept</th>
             <td>
-                <a href="/api/skosconcepts/{{object.id}}/?format=rdf">RDF/XML</a>
+                <li><a href="{% url 'vocabs:vocabs-download' %}?pref_label={{object.id}}">RDF/XML</a></li>
+                <li><a href="{% url 'vocabs:vocabs-download' %}?format=turtle&pref_label={{object.id}}">Turtle</a></li>
             </td>
         </tr>
         </table>            

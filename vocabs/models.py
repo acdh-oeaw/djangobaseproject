@@ -11,7 +11,7 @@ from django.core.exceptions import ValidationError
 try:
     DEFAULT_NAMESPACE = settings.VOCABS_SETTINGS['default_nsgg']
 except KeyError:
-    DEFAULT_NAMESPACE = "http://www.vocabs/provide-some-namespace/"
+    DEFAULT_NAMESPACE = "https://vocabs.acdh.oeaw.ac.at/provide-some-namespace"
 
 try:
     DEFAULT_PREFIX = settings.VOCABS_SETTINGS['default_prefix']

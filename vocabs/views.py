@@ -10,6 +10,14 @@ from .forms import *
 from .tables import *
 from .filters import SkosConceptListFilter, SkosConceptSchemeListFilter, SkosLabelListFilter, SkosCollectionListFilter
 from browsing.browsing_utils import GenericListView, BaseCreateView, BaseUpdateView
+from .rdf_utils import *
+from django.shortcuts import render, render_to_response
+from django.http import HttpResponse
+import rdflib
+from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef, RDFS, ConjunctiveGraph
+from rdflib.namespace import DC, FOAF, RDFS, SKOS
+import time
+import datetime
 
 
 #####################################################
@@ -350,3 +358,24 @@ class SkosLabelDelete(DeleteView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(SkosLabelDelete, self).dispatch(*args, **kwargs)
+
+
+###################################################
+# SkosConcepts download as one ConceptScheme
+###################################################
+
+class SkosConceptDL(GenericListView):
+    model = SkosConcept
+    table_class = SkosConceptTable
+    filter_class = SkosConceptListFilter
+    formhelper_class = SkosConceptFormHelper
+
+    def render_to_response(self, context):
+        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
+        response = HttpResponse(content_type='application/xml; charset=utf-8')
+        filename = "download_{}".format(timestamp)
+        response['Content-Disposition'] = 'attachment; filename="{}.rdf"'.format(filename)
+        g = graph_construct_qs(self.get_queryset())
+        get_format = self.request.GET.get('format', default='pretty-xml')
+        result = g.serialize(destination=response, format=get_format)
+        return response

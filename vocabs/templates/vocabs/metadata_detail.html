@@ -116,7 +116,10 @@
         {% endif %}
         <tr>
             <th>Download</th>
-            <td><a href="/api/skosconcepts/?format=rdf">RDF/XML</a></td>
+            <td>
+            <li><a href="{% url 'vocabs:vocabs-download' %}">RDF/XML</a></li>
+            <li><a href="{% url 'vocabs:vocabs-download' %}?format=turtle">Turtle</a></li>
+            </td>
         </tr>
         </table>
    	</div>

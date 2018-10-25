@@ -44,6 +44,9 @@ urlpatterns = [
         name='skoslabel_delete',
     ),
     url(
+        r'^vocabs-download/$', views.SkosConceptDL.as_view(),
+        name='vocabs-download'),
+    url(
         r'^metadata/$', views.MetadataListView.as_view(),
         name='metadata'),
     url(
