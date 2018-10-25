@@ -22,7 +22,7 @@ def nav_menu(app=None):
                     'name': modelname.title(),
                 }
             except Exception as e:
-                print(error)
+                print(e)
                 item = {
                     'name': None
                 }
@@ -41,7 +41,7 @@ def class_definition(context):
         values['class_name'] = context['class_name']
         values['docstring'] = context['docstring']
     except Exception as e:
-        print(error)
+        print(e)
         pass
     return values
 
@@ -51,5 +51,5 @@ def column_selector(context):
     try:
         return {'columns': context['togglable_colums']}
     except Exception as e:
-        print(error)
+        print(e)
         return {'columns': None}
