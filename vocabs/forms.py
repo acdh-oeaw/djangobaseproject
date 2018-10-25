@@ -136,16 +136,16 @@ class SkosConceptForm(forms.ModelForm):
                 'definition_lang',
                 'broader_concept',
                 'dc_creator',
+                'source_description',
+                'top_concept',
+                'same_as_external',
                 css_id="basic_skos_fields"
                 ),
             Accordion(
                 AccordionGroup(
                     'Advanced fields',
-                    'top_concept',
                     'other_label',
                     'notation',
-                    'same_as_external',
-                    'source_description',
                     'skos_broader',
                     'skos_narrower',
                     'skos_related',
