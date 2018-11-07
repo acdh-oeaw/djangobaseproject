@@ -13,7 +13,7 @@ PROJECT_METADATA = {
     'purpose_en': 'The purpose of Django Base Project is to bootstrap web developments.',
     'version': '0.0.1',
     'matomo_id': 'provide some',
-    'matomo_url': '//piwik.apollo.arz.oeaw.ac.at/',
+    'matomo_url': '//matomo.acdh.oeaw.ac.at/',
     'imprint': '/imprint',
     'social_media': [
         ('fab fa-twitter fa-2x', 'https://twitter.com/ACDH_OeAW'),
