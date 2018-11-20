@@ -128,9 +128,15 @@ class GenericListView(django_tables2.SingleTableView):
             BrowsConf.objects.filter(model_name=model_name)
             .values_list('field_path', 'label')
         )
-        print(context['conf_items'])
         if 'charts' in settings.INSTALLED_APPS:
-            context['vis_list'] = ChartConfig.objects.filter(model_name=model_name)
+            model = self.model
+            app_label = model._meta.app_label
+            print(app_label)
+            filtered_objs = ChartConfig.objects.filter(
+                model_name=model.__name__.lower(),
+                app_name=app_label
+            )
+            context['vis_list'] = filtered_objs
             context['property_name'] = self.request.GET.get('property')
             context['charttype'] = self.request.GET.get('charttype')
             if context['charttype'] and context['property_name']:
@@ -139,7 +145,8 @@ class GenericListView(django_tables2.SingleTableView):
                     context['entity'],
                     context['property_name'],
                     context['charttype'],
-                    qs
+                    qs,
+                    app_label=app_label
                 )
                 context = dict(context, **chartdata)
         return context
@@ -156,7 +163,7 @@ class GenericListView(django_tables2.SingleTableView):
                 try:
                     df = pd.DataFrame(
                         list(
-                            self.get_queryset().values_list(*[x[0] for x in conf_items])
+                            self.model.objects.all().values_list(*[x[0] for x in conf_items])
                         ),
                         columns=[x[1] for x in conf_items]
                     )
