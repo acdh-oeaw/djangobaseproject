@@ -3,6 +3,30 @@ from .models import SkosLabel, SkosConcept, SkosConceptScheme, SkosCollection
 from django.db.models import Q
 
 
+class SpecificConceptsByCollection(autocomplete.Select2QuerySetView):
+
+    def get_result_label(self, item):
+        return "{}".format(item.label)
+
+    def get_queryset(self):
+        try:
+            collection = self.kwargs['collection']
+            selected_collection = SkosConceptScheme.objects.filter(name__icontains=collection)
+        except KeyError:
+            selected_collection = None
+        if selected_collection:
+            qs = SkosConcept.objects.filter(collection__in=selected_collection)
+        else:
+            qs = SkosConcept.objects.all()
+
+        if self.q:
+            direct_match = qs.filter(pref_label__icontains=self.q)
+            plus_narrower = direct_match | qs.filter(broader_concept__in=direct_match)
+            return plus_narrower
+
+        return []
+
+
 class SpecificConcepts(autocomplete.Select2QuerySetView):
 
     def get_result_label(self, item):
@@ -34,7 +58,7 @@ class SKOSConstraintACNoHierarchy(autocomplete.Select2QuerySetView):
         try:
             selected_scheme = SkosConceptScheme.objects.get(dc_title=scheme)
             qs = SkosConcept.objects.filter(scheme=selected_scheme)
-        except:
+        except Exception as e:
             qs = SkosConcept.objects.all()
 
         if self.q:
@@ -57,7 +81,7 @@ class SKOSConstraintAC(autocomplete.Select2QuerySetView):
         try:
             selected_scheme = SkosConceptScheme.objects.get(dc_title=scheme)
             qs = SkosConcept.objects.filter(scheme=selected_scheme)
-        except:
+        except Exception as e:
             qs = SkosConcept.objects.all()
 
         if self.q:
