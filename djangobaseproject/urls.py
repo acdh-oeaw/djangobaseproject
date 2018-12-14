@@ -8,8 +8,6 @@ from vocabs import api_views
 if 'bib' in settings.INSTALLED_APPS:
     from bib.api_views import ZotItemViewSet
 
-
-
 router = routers.DefaultRouter()
 router.register(r'geojson', GeoJsonViewSet, base_name='places')
 router.register(r'metadata', api_views.MetadataViewSet)
