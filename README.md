@@ -41,3 +41,10 @@ Run tests
     python manage.py test --settings=djangobaseproject.settings.test
 
 After running the test a HTML coverage report will be available at cover/index.html
+
+
+# install packages
+
+`pip install acdh-django-sparql`
+
+see https://github.com/acdh-oeaw/acdh-django-sparql for further install instructions
