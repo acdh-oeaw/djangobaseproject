@@ -23,7 +23,7 @@ python-dateutil==2.7.3
 pytz==2018.5
 rdflib==4.2.2
 readme-renderer==23.0
-requests==2.19.1
+requests==2.21.0
 requests-toolbelt==0.8.0
 six==1.11.0
 SPARQLWrapper==1.8.2
