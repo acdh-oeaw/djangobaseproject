@@ -2,13 +2,10 @@ from copy import deepcopy
 
 from django.conf import settings
 from django.shortcuts import render, render_to_response
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import RequestContext, loader
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login, logout
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
 from . forms import form_user_login
 from . metadata import PROJECT_METADATA as PM
@@ -60,11 +57,9 @@ def handler404(request, exception):
     return render(request, 'webpage/404-error.html', locals())
 
 
-@api_view()
 def project_info(request):
 
     """
-    get:
     returns a dict providing metadata about the current project
     """
 
@@ -75,4 +70,4 @@ def project_info(request):
     else:
         del info_dict['matomo_id']
         del info_dict['matomo_url']
-    return Response(info_dict)
+    return JsonResponse(info_dict)
