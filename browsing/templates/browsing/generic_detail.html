@@ -18,6 +18,7 @@
                 </div>
                 <div class="col-md-8">
                     <h2 style="text-align: center;">
+                        <small><a href="{{ object.get_listview_url }}"><i class="fas fa-chevron-up" title="back to listview"></i></a></small>
                         {{ object }}
                         {% if user.is_authenticated %}
                             <small>

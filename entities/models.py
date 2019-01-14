@@ -68,8 +68,8 @@ class Place(IdProvider):
         related_name="altname_of_place"
     )
     geonames_id = models.CharField(
-        max_length=50, blank=True,
-        help_text="GND-ID"
+        max_length=500, blank=True,
+        help_text="GeoNames-ID"
     )
     lat = models.DecimalField(
         max_digits=20, decimal_places=12,
@@ -89,7 +89,7 @@ class Place(IdProvider):
     )
 
     def get_geonames_url(self):
-        if self.geonames_id.startswith('ht') and self.geonames_id.endswith('.html'):
+        if self.geonames_id.startswith('ht'):
             return self.geonames_id
         else:
             return "http://www.geonames.org/{}".format(self.geonames_id)
