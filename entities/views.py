@@ -224,6 +224,7 @@ class PlaceListView(GenericListView):
         'name',
         'part_oc'
     ]
+    enable_merge = True
 
 
 class PlaceRDFView(GenericListView):

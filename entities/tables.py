@@ -1,5 +1,7 @@
 import django_tables2 as tables
 from django_tables2.utils import A
+
+from browsing.browsing_utils import MergeColumn
 from entities.models import *
 
 
@@ -43,6 +45,7 @@ class PlaceTable(tables.Table):
         args=[A('pk')], verbose_name='Name'
     )
     part_of = tables.Column()
+    merge = MergeColumn(verbose_name='keep | remove', accessor='pk')
 
     class Meta:
         model = Place
