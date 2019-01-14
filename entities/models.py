@@ -1,8 +1,13 @@
 import re
+
+import reversion
 from django.db import models
 from django.urls import reverse
 from idprovider.models import IdProvider
-import reversion
+
+from browsing.browsing_utils import model_to_dict
+
+from . utils import get_coordinates
 
 
 @reversion.register()
@@ -86,22 +91,25 @@ class Place(IdProvider):
     def get_geonames_url(self):
         if self.geonames_id.startswith('ht') and self.geonames_id.endswith('.html'):
             return self.geonames_id
-        elif self.geonames_id.startswith('ht'):
-            return self.geonames_id
         else:
             return "http://www.geonames.org/{}".format(self.geonames_id)
 
     def get_geonames_rdf(self):
         try:
             number = re.findall(r'\d+', str(self.geonames_id))[0]
-            return None
-        except:
+            return number
+        except Exception as e:
             return None
 
     def save(self, *args, **kwargs):
         if self.geonames_id:
             new_id = self.get_geonames_url()
             self.geonames_id = new_id
+        if self.get_geonames_rdf() and not self.lat:
+            coords = get_coordinates(self.get_geonames_rdf())
+            if coords:
+                self.lat = coords['lat']
+                self.lng = coords['lng']
         super(Place, self).save(*args, **kwargs)
 
     @classmethod
@@ -112,24 +120,35 @@ class Place(IdProvider):
     def get_createview_url(self):
         return reverse('entities:place_create')
 
-    @classmethod
-    def get_arche_dump(self):
-        return reverse('entities:rdf_places')
+    def get_absolute_url(self):
+        return reverse('entities:place_detail', kwargs={'pk': self.id})
+
+    def get_delete_url(self):
+        return reverse('entities:place_delete', kwargs={'pk': self.id})
+
+    def get_edit_url(self):
+        return reverse('entities:place_edit', kwargs={'pk': self.id})
 
     def get_next(self):
-        next = Place.objects.filter(id__gt=self.id)
+        next = self.__class__.objects.filter(id__gt=self.id)
         if next:
-            return next.first().id
+            return reverse(
+                'entities:place_detail',
+                kwargs={'pk': next.first().id}
+            )
         return False
 
     def get_prev(self):
-        prev = Place.objects.filter(id__lt=self.id).order_by('-id')
+        prev = self.__class__.objects.filter(id__lt=self.id).order_by('-id')
         if prev:
-            return prev.first().id
+            return reverse(
+                'entities:place_detail',
+                kwargs={'pk': prev.first().id}
+            )
         return False
 
-    def get_absolute_url(self):
-        return reverse('entities:place_detail', kwargs={'pk': self.id})
+    def field_dict(self):
+        return model_to_dict(self)
 
     def __str__(self):
         return "{}".format(self.name)
