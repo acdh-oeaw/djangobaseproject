@@ -539,6 +539,30 @@ class SkosConcept(models.Model):
         verbose_name="dct:modified"
     )
 
+    def get_rel_obs_names(self):
+        """ returns a list of object names referring to this concept """
+        rel_obs = []
+        for x in self._meta.get_fields():
+            try:
+                related_model = x.related_model._meta.app_label
+            except AttributeError:
+                related_model = 'vocabs'
+            if related_model != 'vocabs':
+                rel_obs.append(x.name)
+        return rel_obs
+
+    def get_rel_obs(self):
+        """ returns a list of querysets of objects referencing this concept """
+        rel_obs = []
+        for x in self.get_rel_obs_names():
+            try:
+                obs = getattr(self, x).all()
+            except AttributeError:
+                rel_field = "{}_set".format(x)
+                obs = getattr(self, rel_field).all()
+            rel_obs.append(obs)
+        return rel_obs
+
     def get_broader(self):
         broader = self.skos_broader.all()
         broader_reverse = SkosConcept.objects.filter(skos_narrower=self)
@@ -636,4 +660,3 @@ def get_all_children(self, include_self=True):
         if 0 < len(_r):
             r.extend(_r)
     return r
-
