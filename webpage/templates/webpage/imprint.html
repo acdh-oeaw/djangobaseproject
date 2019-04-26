@@ -3,19 +3,11 @@
 {% load webpage_extras %}
 {% block title %} Imprint {% endblock %}
 {% block content %}
-<div id="imprint-content" class="container"></div><!-- #imprint-content -->
-<script>
-  const params = {
-    'language': 'both',
-    'projectName': "{% projects_metadata 'title' %}",
-    'projectPurpose': {
-      'de': "{% projects_metadata 'purpose_de' %}",
-      'en': "{% projects_metadata 'purpose_en' %}"
-    }
-  };
-  const imprintService = 'https://shared.acdh.oeaw.ac.at/acdh-common-assets/api/imprint.php';
-  $.get(imprintService, params, function(response){
-    document.getElementById('imprint-content').innerHTML = response;
-  });
-</script>
+<div class="container">
+<div class="card imprint">
+<div class="card-body">
+    {{ imprint_body|safe }}
+</div>
+</div>
+</div>
 {% endblock %}
