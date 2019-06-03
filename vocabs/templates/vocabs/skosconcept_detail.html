@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-md-8">
                     <h1 style="text-align: center;">
-                        <small>skos:Concept</small> {{ object }}
+                        <small><a href="{{ object.get_listview_url }}">skos:Concept</a></small> {{ object }}
                         {% if user.is_authenticated %}
                             <small>
                                 <a href="{% url 'vocabs:skosconcept_update' pk=object.id %}">
