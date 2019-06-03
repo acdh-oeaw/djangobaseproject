@@ -7,13 +7,13 @@
         {% if user.is_authenticated %}
             <small>
                 <a href="{% url 'vocabs:metadata_update' pk=object.id %}">
-                    <i class="far fa-edit" title="edit"></i>
+                    <i class="feather-32" data-feather="edit" title="edit"></i>
                 </a>
             </small>
                 |
             <small>
                 <a href="{% url 'vocabs:metadata_delete' pk=object.id %}">
-                    <i class="far fa-trash-alt" title="delete"></i>
+                    <i class="feather-32" data-feather="trash" title="delete"></i>
                 </a>
             </small>
          {% endif %}

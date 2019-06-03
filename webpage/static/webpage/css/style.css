@@ -1,14 +1,246 @@
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: 'Libre Franklin', sans-serif;
+}
+
+.navbar {
+	border-bottom: 5px solid #254aa5;;
+}
+
+span.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 16px; }
+
+/*remove round corners everywhere*/
+/** {
+  border-radius: 0 !important;
+}*/
 .card {
     overflow: visible;
-    margin-bottom: 20px;
+    border: 0 solid rgba(0,0,0,.125);
+    /*box-shadow: 16px 19px 9px 0px #866161;*/
+    /*box-shadow: 16px 19px 9px 0px #bfbfbf;*/
+    /* box-shadow: 4px 4px 9px 0 rgba(0, 0, 0, .1); */
+    /*box-shadow: 2px 2px 24px 0 rgba(0, 0, 0, .1);*/
+}
+
+.site-page {
+    background-color: #003399;
+    color: white;
+}
+.archent-page {
+    background-color: #9FAEE5;
+    color: white;
+}
+.researchevent-page {
+    background-color: #abd91aff;
+    color: white;
+}
+.monumentprotection-page {
+    background-color: #fbbf18ff;
+    color: white;
 }
 
 a {
-    color: #88dbdf;
+    color: #295495;
+}
+
+header {
+    flex: 0 0 auto;
+}
+
+.main-content{
+    flex: 1 0 auto;
+}
+
+footer {
+    flex: 0 0 auto;
+    background-color: #f8f8f8;
+    padding: 20px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-top: 30px;
+}
+
+/*custom acdh logo css*/
+
+#acdh-logo {
+    width: 25%;
+    height: auto;
+    padding: 10px 0 10px 0;
+}
+
+#github-logo {
+    width: 10%;
+    height: auto;
+    padding: 10px 0 10px 0;
+}
+
+
+@media (max-width: 768px) {
+    #acdh-logo, #orea-logo {
+        width: 15%;
+    }
+    #github-logo {
+        width: 7%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1105px) {
+    .navbar-right {
+        float: none !important;
+    }
+}
+
+/*Button's text is all in caps and bold. When adding html markup text should be all in lowercase. */
+.btn {
+   /* font-weight: bold;
+    font-variant: small-caps;*/
+    white-space: normal;
+    margin-bottom: 10px;
+}
+.separate-panel legend, .legend-blue {
+    /*change color of border when the pallete is chosen*/
+    border: 2px solid #caebf2;
+    background-color: #caebf2;
+    /*color: #ffffff;*/
+    padding: 5px;
+}
+.select2-container {
+ /*   width: 100%;*/
+}
+
+/* css for checkbox widget in filters */
+.chbx-select-multi {
+  /* 1.5-sized Checkboxes */
+  -ms-transform: scale(1.5); /* IE */
+  -moz-transform: scale(1.5); /* FF */
+  -webkit-transform: scale(1.8); /* Safari and Chrome */
+  -o-transform: scale(1.5); /* Opera */
+  padding: 10px;
+  margin: 5px 10px 5px 10px;
+  border: 1px solid #aaa;
+
+}
+/*overriding css for field labels, helptext in filters*/
+.control-label {
+    font-weight: 600;
 }
 .help-block {
-	font-size: 0.9em;
+    font-size: 0.8rem;
 }
-.create-label {
-	font-weight: 700;
+.card-index {
+    padding: 80px;
+    z-index: 1;
+    /*margin-top: -900px;*/
+    margin-top: -80px;
+
+}
+.title-index {
+    font-weight: 900;
+    color: #254aa5;
+    font-size: 350%;
+}
+@media (max-width: 768px) {
+    .card-index {
+        padding: 30px !important;
+    }
+    .title-index {
+    font-weight: 900;
+    font-size: 200% !important;
+}
+
+}
+
+.paragraph-index {
+    font-weight: 900;
+}
+.hr-index {
+    height: 4px;
+    border: 0;
+    background: #254aa5;
+    width: 40%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+.h2-index {
+    color:#254aa5;
+    font-weight: 800;
+    text-align: center;
+}
+#yourmap {
+    z-index: 0;
+    /*min-height: 1000px;*/
+   /* min-height: 450px;*/
+}
+.special-index {
+    padding: 30px;
+    border-radius: 50%;
+    background-color: #fbbf18ff;
+    color: #fff;
+    font-weight: 800;
+    margin-left: -80px;
+    margin-top: -450px;
+    width: 10rem;
+    height: 10rem;
+    z-index: 2;
+}
+
+.btn-index {
+    margin-top: 5px;
+    margin-bottom: 0px;
+    /*margin-left: 10px;
+    margin-right: 10px;*/
+    background-color: #ffffff;
+    color: #254aa5;
+    border: 3px solid #254aa5;
+    font-weight: 800;
+    white-space: normal;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-shadow: 0px 0px 0px 0px #254aa5;
+    transition: box-shadow 0.6s linear;
+}
+
+.btn-index:hover {
+   box-shadow: 0px 0px 0px 2px #254aa5;
+
+}
+
+
+.tooltip-inner {
+  background-color: #fff !important;
+  /*!important is not necessary if you place custom.css at the end of your css calls. For the purpose of this demo, it seems to be required in SO snippet*/
+  color: #000;
+  border: 1px solid #000;
+  text-align: left;
+  max-width: auto;
+}
+
+.tooltip.top .tooltip-arrow {
+  border-top-color: #000;
+}
+
+.tooltip.right .tooltip-arrow {
+  border-right-color: #fff;
+  color: #fff;
+}
+
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #000;
+}
+
+.tooltip.left .tooltip-arrow {
+  border-left-color: #000;
+}
+
+a > .fa-2x {
+    color: #444;
 }

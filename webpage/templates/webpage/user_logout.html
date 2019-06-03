@@ -1,7 +1,9 @@
 {% extends "webpage/base.html" %}
-{% block title %}logout{% endblock %}
+{% load staticfiles %}
+{% load webpage_extras %}
+{% block title %} Logout {% endblock %}
 {% block content %}
-<div class="jumbotron container" style="color:black">
+<div class="jumbotron container">
     <h1>Sayōnara!</h1>
     <p>You've signed out</p>
 </div>
