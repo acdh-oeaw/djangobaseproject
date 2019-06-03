@@ -5,6 +5,11 @@ from . import special_views
 app_name = 'infos'
 urlpatterns = [
     url(
+        r'^project-team/$',
+        special_views.TeamView.as_view(),
+        name='project-team'
+    ),
+    url(
         r'^about-the-project/$',
         special_views.SpecialAboutView.as_view(),
         name='about-the-project'
@@ -33,4 +38,28 @@ urlpatterns = [
         r'^about/delete/(?P<pk>[0-9]+)$',
         views.AboutTheProjectDelete.as_view(),
         name='about_delete'),
+    url(
+        r'^teammember/$',
+        views.TeamMemberListView.as_view(),
+        name='teammember_browse'
+    ),
+    url(
+        r'^teammember/detail/(?P<pk>[0-9]+)$',
+        views.TeamMemberDetailView.as_view(),
+        name='teammember_detail'
+    ),
+    url(
+        r'^teammember/create/$',
+        views.TeamMemberCreate.as_view(),
+        name='teammember_create'
+    ),
+    url(
+        r'^teammember/edit/(?P<pk>[0-9]+)$',
+        views.TeamMemberUpdate.as_view(),
+        name='teammember_edit'
+    ),
+    url(
+        r'^teammember/delete/(?P<pk>[0-9]+)$',
+        views.TeamMemberDelete.as_view(),
+        name='teammember_delete'),
 ]

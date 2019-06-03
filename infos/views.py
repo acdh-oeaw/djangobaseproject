@@ -6,9 +6,57 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView
 from . filters import *
 from . forms import *
-from . tables import AboutTheProjectTable
-from . models import AboutTheProject
+from . tables import AboutTheProjectTable, TeamMemberTable
+from . models import AboutTheProject, TeamMember
 from browsing.browsing_utils import GenericListView, BaseCreateView, BaseUpdateView
+
+
+class TeamMemberListView(GenericListView):
+
+    model = TeamMember
+    filter_class = TeamMemberListFilter
+    formhelper_class = TeamMemberFilterFormHelper
+    table_class = TeamMemberTable
+    init_columns = [
+        'id', 'description',
+    ]
+
+
+class TeamMemberDetailView(DetailView):
+
+    model = TeamMember
+    template_name = 'browsing/generic_detail.html'
+
+
+class TeamMemberCreate(BaseCreateView):
+
+    model = TeamMember
+    form_class = TeamMemberForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TeamMemberCreate, self).dispatch(*args, **kwargs)
+
+
+class TeamMemberUpdate(BaseUpdateView):
+
+    model = TeamMember
+    form_class = TeamMemberForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TeamMemberUpdate, self).dispatch(*args, **kwargs)
+
+
+class TeamMemberDelete(DeleteView):
+    model = TeamMember
+    template_name = 'webpage/confirm_delete.html'
+    success_url = reverse_lazy('info:teammember_browse')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TeamMemberDelete, self).dispatch(*args, **kwargs)
+
 
 
 class AboutTheProjectListView(GenericListView):
