@@ -6,8 +6,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView
 from . filters import *
 from . forms import *
-from . tables import AboutTheProjectTable, TeamMemberTable
-from . models import AboutTheProject, TeamMember
+from . tables import *
+from . models import *
 from browsing.browsing_utils import GenericListView, BaseCreateView, BaseUpdateView
 
 
@@ -58,7 +58,6 @@ class TeamMemberDelete(DeleteView):
         return super(TeamMemberDelete, self).dispatch(*args, **kwargs)
 
 
-
 class AboutTheProjectListView(GenericListView):
 
     model = AboutTheProject
@@ -104,3 +103,50 @@ class AboutTheProjectDelete(DeleteView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AboutTheProjectDelete, self).dispatch(*args, **kwargs)
+
+
+class ProjectInstListView(GenericListView):
+
+    model = ProjectInst
+    filter_class = ProjectInstListFilter
+    formhelper_class = ProjectInstFilterFormHelper
+    table_class = ProjectInstTable
+    init_columns = [
+        'id', 'description',
+    ]
+
+
+class ProjectInstDetailView(DetailView):
+
+    model = ProjectInst
+    template_name = 'browsing/generic_detail.html'
+
+
+class ProjectInstCreate(BaseCreateView):
+
+    model = ProjectInst
+    form_class = ProjectInstForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ProjectInstCreate, self).dispatch(*args, **kwargs)
+
+
+class ProjectInstUpdate(BaseUpdateView):
+
+    model = ProjectInst
+    form_class = ProjectInstForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ProjectInstUpdate, self).dispatch(*args, **kwargs)
+
+
+class ProjectInstDelete(DeleteView):
+    model = ProjectInst
+    template_name = 'webpage/confirm_delete.html'
+    success_url = reverse_lazy('info:projectinst_browse')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ProjectInstDelete, self).dispatch(*args, **kwargs)

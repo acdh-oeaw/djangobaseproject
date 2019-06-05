@@ -62,4 +62,28 @@ urlpatterns = [
         r'^teammember/delete/(?P<pk>[0-9]+)$',
         views.TeamMemberDelete.as_view(),
         name='teammember_delete'),
+    url(
+        r'^projectinst/$',
+        views.ProjectInstListView.as_view(),
+        name='projectinst_browse'
+    ),
+    url(
+        r'^projectinst/detail/(?P<pk>[0-9]+)$',
+        views.ProjectInstDetailView.as_view(),
+        name='projectinst_detail'
+    ),
+    url(
+        r'^projectinst/create/$',
+        views.ProjectInstCreate.as_view(),
+        name='projectinst_create'
+    ),
+    url(
+        r'^projectinst/edit/(?P<pk>[0-9]+)$',
+        views.ProjectInstUpdate.as_view(),
+        name='projectinst_edit'
+    ),
+    url(
+        r'^projectinst/delete/(?P<pk>[0-9]+)$',
+        views.ProjectInstDelete.as_view(),
+        name='projectinst_delete'),
 ]

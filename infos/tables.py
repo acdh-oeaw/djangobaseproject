@@ -1,6 +1,6 @@
 import django_tables2 as tables
 from django_tables2.utils import A
-from . models import AboutTheProject, TeamMember
+from . models import AboutTheProject, TeamMember, ProjectInst
 
 
 class AboutTheProjectTable(tables.Table):
@@ -19,5 +19,15 @@ class TeamMemberTable(tables.Table):
 
     class Meta:
         model = TeamMember
+        sequence = ('id',)
+        attrs = {"class": "table table-responsive table-hover"}
+
+
+class ProjectInstTable(tables.Table):
+
+    id = tables.LinkColumn(verbose_name='ID')
+
+    class Meta:
+        model = ProjectInst
         sequence = ('id',)
         attrs = {"class": "table table-responsive table-hover"}
