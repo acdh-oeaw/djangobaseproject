@@ -183,7 +183,7 @@ class GenericListView(django_tables2.SingleTableView):
                 try:
                     df = pd.DataFrame(
                         list(
-                            self.model.objects.all().values_list(*[x[0] for x in conf_items])
+                            self.get_queryset().values_list(*[x[0] for x in conf_items])
                         ),
                         columns=[x[1] for x in conf_items]
                     )
