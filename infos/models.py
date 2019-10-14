@@ -14,7 +14,7 @@ class ProjectInst(models.Model):
         verbose_name="Abbreviation"
         )
     description = models.TextField(
-        max_length=300, blank=True,
+        blank=True,
         verbose_name="Short description of the Institution"
         )
     website = models.URLField(
@@ -87,7 +87,7 @@ class TeamMember(models.Model):
         verbose_name="Name"
         )
     description = models.TextField(
-        max_length=300, blank=True,
+        blank=True,
         verbose_name="Short description of the Person"
         )
     website = models.URLField(
@@ -166,7 +166,7 @@ class AboutTheProject(models.Model):
         verbose_name="Project's Sub Title"
         )
     description = models.TextField(
-        max_length=300, blank=True,
+        blank=True,
         verbose_name="Project Description"
         )
     author = models.CharField(
