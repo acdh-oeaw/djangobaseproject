@@ -9,6 +9,7 @@ from django.conf import settings
 from django.db.models.fields.related import ManyToManyField
 from django.http import HttpResponse
 from django.utils.safestring import mark_safe
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div, MultiField, HTML
@@ -81,7 +82,7 @@ class GenericListView(django_tables2.SingleTableView):
     filter_class = None
     formhelper_class = None
     context_filter_name = 'filter'
-    paginate_by = 25
+    paginate_by = 50
     template_name = 'browsing/generic_list.html'
     init_columns = []
     enable_merge = False
@@ -210,6 +211,18 @@ class GenericListView(django_tables2.SingleTableView):
             return response
 
 
+class BaseDetailView(DetailView):
+    model = None
+    template_name = 'browsing/generic_create.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['docstring'] = "{}".format(self.model.__doc__)
+        context['class_name'] = "{}".format(self.model.__name__)
+        context['app_name'] = "{}".format(self.model._meta.app_label)
+        return context
+
+
 class BaseCreateView(CreateView):
     model = None
     form_class = None
@@ -250,6 +263,10 @@ def model_to_dict(instance):
                 "name": x.name,
                 "help_text": getattr(x, 'help_text', ''),
             }
+        try:
+            field_dict['extra_fields'] = x.extra
+        except AttributeError:
+            field_dict['extra_fields'] = None
         if 'reverse_related' in f_type:
             values = getattr(instance, x.name, None)
             if values is not None:
@@ -265,6 +282,10 @@ def model_to_dict(instance):
             field_dict['verbose_name'] = getattr(x, 'verbose_name', x.name)
             field_dict['value'] = getattr(instance, x.name, '')
             field_dict['f_type'] = 'FK'
+        elif 'TreeForeignKey' in f_type:
+            field_dict['verbose_name'] = getattr(x, 'verbose_name', x.name)
+            field_dict['value'] = getattr(instance, x.name, '')
+            field_dict['f_type'] = 'FK'
         elif 'related.ManyToManyField' in f_type:
             values = getattr(instance, x.name, None)
             if values is not None:
@@ -276,9 +297,9 @@ def model_to_dict(instance):
         elif 'fields.DateTimeField' in f_type:
             field_value = getattr(instance, x.name, '')
             field_dict['verbose_name'] = getattr(x, 'verbose_name', x.name)
+            field_dict['f_type'] = 'DateTime'
             if field_value:
                 field_dict['value'] = (field_value.strftime("%Y-%m-%d %H:%M:%S"))
-                field_dict['f_type'] = 'DateTime'
         else:
             field_dict['verbose_name'] = getattr(x, 'verbose_name', x.name)
             field_dict['value'] = f"{getattr(instance, x.name, '')}"
