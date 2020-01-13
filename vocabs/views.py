@@ -11,7 +11,7 @@ from .tables import *
 from .filters import SkosConceptListFilter, SkosConceptSchemeListFilter, SkosLabelListFilter, SkosCollectionListFilter
 from browsing.browsing_utils import GenericListView, BaseCreateView, BaseUpdateView
 from .rdf_utils import *
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.http import HttpResponse
 import rdflib
 from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef, RDFS, ConjunctiveGraph
