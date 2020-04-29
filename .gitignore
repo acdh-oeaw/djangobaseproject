@@ -12,6 +12,7 @@ cover/
 
 # IDE
 .idea
+.pip_cache
 
 # migrations
 vocabs/migrations/*
