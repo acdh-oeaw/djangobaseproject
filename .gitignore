@@ -10,6 +10,9 @@ __pycache__/
 .coverage
 cover/
 
+cypress/
+cypress.json
+
 # IDE
 .idea
 .pip_cache
@@ -38,3 +41,4 @@ dev_secret.py
 /arche/data/fileType.json
 /arche/data/fileList.json
 /myenv
+node_modules
