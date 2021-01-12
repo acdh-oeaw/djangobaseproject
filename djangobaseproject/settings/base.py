@@ -28,8 +28,6 @@ INSTALLED_APPS = [
     'django_filters',
     'django_tables2',
     'rest_framework',
-    'leaflet',
-    'idprovider',
     'webpage',
     'browsing',
     'vocabs',
@@ -124,10 +122,10 @@ ARCHE_SETTINGS = {
     'base_url': "https://id.acdh.oeaw.ac.at/{}".format(ROOT_URLCONF.split('.')[0])
 }
 
-VOCABS_DEFAULT_PEFIX = os.path.basename(BASE_DIR)
+VOCABS_DEFAULT_PEFIX = "changeme"
 
 VOCABS_SETTINGS = {
     'default_prefix': VOCABS_DEFAULT_PEFIX,
-    'default_nsgg': "http://www.vocabs/{}/".format(VOCABS_DEFAULT_PEFIX),
+    'default_nsgg': f"http://www.vocabs/{VOCABS_DEFAULT_PEFIX}/",
     'default_lang': "en"
 }
