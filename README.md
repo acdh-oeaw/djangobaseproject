@@ -16,3 +16,29 @@ As the name suggests, this is a basic Django project. The idea of this base proj
   * activate virtual env, e.g. `source myenv/bin/activate`
 * install needed packages `pip install -r requirements.txt`
 
+## Start
+
+* apply migrations `python manage.py migrate --settings=djangobaseproject.settings.dev`
+* start dev-server `python manage.py runserver ---settings=djangobaseproject.settings.dev`
+* open http://127.0.0.1:8000/
+
+
+# included packages
+
+## [acdh-django-browsing](https://github.com/acdh-oeaw/acdh-django-browsing)
+
+Django-App providing some useful things to create browsing views
+
+
+## [acdh-django-vocabs](https://github.com/acdh-oeaw/acdh-django-vocabs)
+
+Curate controlled vocabularies as SKOS
+
+## [acdh-django-geonames](https://github.com/acdh-oeaw/acdh-django-geonames)
+
+A django package providing models and views for Geoname Places
+
+* populate vocabs with geoname-feature codes
+    * `python manage.py import_ftc --lang=en--settings=djangobaseproject.settings.dev`
+* populate db with geoname-places of a given country:
+    * `python manage.py import_places ..--country_code=YU--settings=djangobaseproject.settings.dev`

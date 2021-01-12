@@ -5,6 +5,7 @@ __pycache__/
 
 # sqlite
 /*.sqlite3
+/*.sqlite3-journal
 
 # test coverage
 .coverage
@@ -42,3 +43,8 @@ dev_secret.py
 /arche/data/fileList.json
 /myenv
 node_modules
+
+
+# other things
+
+temp
