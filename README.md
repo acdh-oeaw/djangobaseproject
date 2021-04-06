@@ -13,13 +13,14 @@ As the name suggests, this is a basic Django project. The idea of this base proj
 * remove existing git-repo: `rm -rf .git`
 * [optional]
   * create a virtual env, e.g. `virtualenv myenv`
-  * activate virtual env, e.g. `source myenv/bin/activate`
+  * activate virtual env, e.g. `source myenv/bin/activate` (Windows: `myenv\Scripts\activate`)
 * install needed packages `pip install -r requirements.txt`
 
 ## Start
 
+* make migrations `python manage.py makemigrations --settings=djangobaseproject.settings.dev`
 * apply migrations `python manage.py migrate --settings=djangobaseproject.settings.dev`
-* start dev-server `python manage.py runserver ---settings=djangobaseproject.settings.dev`
+* start dev-server `python manage.py runserver --settings=djangobaseproject.settings.dev`
 * open http://127.0.0.1:8000/
 
 
