@@ -1,6 +1,11 @@
+# DEPRECATED
+
+This repo is not maintained any longer, please check out [djangobase-cookiecutter](https://github.com/acdh-oeaw/djangobase-cookiecutter) instead
+
+
 [![DOI](https://zenodo.org/badge/95352230.svg)](https://zenodo.org/badge/latestdoi/95352230)
 
-# Django Base Project
+## Django Base Project
 
 ## About
 
